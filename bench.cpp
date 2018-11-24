@@ -1,7 +1,6 @@
 #include <time.h>
 #include <Eigen/Dense>
 #include <iostream>
-#include "sgcd.cpp"
 
 using namespace std;
 using namespace Eigen;
@@ -18,6 +17,6 @@ void bench() {
 clang++ -std=c++17 -Ieigen test.cpp -o test-O3 -march=native -mfpmath=sse && ./test
 */
 int main() {
-  test();
+  bench();
 }
 
