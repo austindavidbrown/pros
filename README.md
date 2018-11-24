@@ -9,7 +9,7 @@ Installation
 ```r
 # Install devtools from CRAN
 install.packages("devtools")
-devtools::install_github("austindavidbrown/PROS/R-package")
+devtools::install_github("austindavidbrown/pros/R-package")
 ```
 
 Documentation

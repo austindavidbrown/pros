@@ -29,7 +29,7 @@ double sign(double x) {
   else { return +1.0; }
 }
 
-VectorXd sgcd(VectorXd B, const MatrixXd& X, const VectorXd& y, const double lambda) {
+VectorXd sgcd(VectorXd B, MatrixXd X, VectorXd y, const double lambda) {
   int n = X.rows();
   int p = X.cols();
   int max_iter = 10000;
@@ -81,7 +81,7 @@ VectorXd sgcd(VectorXd B, const MatrixXd& X, const VectorXd& y, const double lam
   return B;
 }
 
-VectorXd predict(const VectorXd& B, const double& intercept, const MatrixXd& X) {
+VectorXd predict(const VectorXd B, const double intercept, const MatrixXd X) {
   int n = X.rows();
   return intercept * VectorXd::Ones(n) + (X * B);
 }
@@ -122,11 +122,11 @@ vector<vector<T>> partition(const vector<T>& S, size_t n) {
   return partitions;
 }
 
-double mean_squared_error(const VectorXd& v, const VectorXd& w) {
+double mean_squared_error(const VectorXd v, const VectorXd w) {
   return (v - w).squaredNorm(); 
 }
 
-MatrixXd warm_start_B_matrix(const MatrixXd& X, const VectorXd& y, vector<double> lambdas) {
+MatrixXd warm_start_B_matrix(MatrixXd X, VectorXd y, vector<double> lambdas) {
   int p = X.cols();
   int L = lambdas.size();
   MatrixXd B_matrix = MatrixXd::Zero(L, p);
@@ -151,7 +151,7 @@ struct CVType {
 };
 
 // TODO I only need to order the lambdas once
-CVType cross_validation(const MatrixXd& X, const VectorXd& y, const double K, vector<double> lambdas) {
+CVType cross_validation(MatrixXd X, VectorXd y, const double K, vector<double> lambdas) {
   int n = X.rows();
   int p = X.cols();
   int L = lambdas.size();
@@ -271,6 +271,7 @@ void test() {
   //
   // CV test
   //
+  /*
   int K_fold = 5;
 
   // create lambdas
@@ -281,12 +282,12 @@ void test() {
   }
 
   CVType cv = cross_validation(X_train, y_train, K_fold, lambdas);
-  cout << cv.risks;
 
   // get the best lambda
   MatrixXf::Index min_row;
   double min = cv.risks.minCoeff(&min_row);
   double best_lambda = cv.lambdas[min_row];
+  */
 
   //
   // Single fit test
