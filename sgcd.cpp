@@ -33,7 +33,7 @@ double sign(double x) {
 VectorXd sgcd(VectorXd B, const MatrixXd& X, const VectorXd& y, const double lambda) {
   int n = X.rows();
   int p = X.cols();
-  int max_iter = 10000;
+  int max_iter = 100000;
   double tolerance = pow(10, -5);
 
   // Create random permutation for coordinate descent
