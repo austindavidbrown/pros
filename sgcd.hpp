@@ -27,8 +27,10 @@ double sign(double x) {
   else { return +1.0; }
 }
 
-// TODO add elasticnet
-VectorXd sgcd(VectorXd B, const MatrixXd& X, const VectorXd& y, const double lambda) {
+//
+// Elastic Net sgcd
+//
+VectorXd sgcd(VectorXd B, const MatrixXd& X, const VectorXd& y, const double alpha, const double lambda) {
   const int n = X.rows();
   const int p = X.cols();
   const int max_iter = 100000;
@@ -52,21 +54,21 @@ VectorXd sgcd(VectorXd B, const MatrixXd& X, const VectorXd& y, const double lam
     for (int& i : I) {
       double Bi_current = B(i);
       VectorXd cX_i = cX.col(i);
-      double DL_i = -1 * cX_i.transpose() * (cy - (cX * B)); // derivative of loss
+      double DL_i = -1 * cX_i.transpose() * (cy - (cX * B)) + (1 - alpha) * lambda * Bi_current; // derivative of loss + penalization
 
       // handle l1 subgradient cases and update
       double g_l1_B_i = sign(Bi_current); // subgrad of l1
       if (g_l1_B_i != 0) {
-        G_j(i) = DL_i + lambda * g_l1_B_i;
+        G_j(i) = DL_i + alpha * lambda * g_l1_B_i;
         B(i) = Bi_current - s * G_j(i);
       } else if (g_l1_B_i == 0) {
-        if (DL_i < -lambda) {
-          G_j(i) = DL_i + lambda;
+        if (DL_i + alpha * lambda < 0) {
+          G_j(i) = DL_i + alpha * lambda;
           B(i) = Bi_current - s * G_j(i);
-        } else if (DL_i > lambda) {
-          G_j(i) = DL_i - lambda;
+        } else if (DL_i - alpha * lambda > 0) {
+          G_j(i) = DL_i - alpha * lambda;
           B(i) = Bi_current - s * G_j(i);
-        } else if (DL_i >= -lambda && DL_i <= lambda) {
+        } else if (DL_i >= -alpha * lambda && DL_i <= alpha * lambda) {
           G_j(i) = DL_i;
           B(i) = 0;
         }
@@ -129,19 +131,19 @@ double mean_squared_error(const VectorXd& v, const VectorXd& w) {
 }
 
 // We do not sort the lambdas here, they are ordered how you want them
-MatrixXd warm_start_B_matrix(const MatrixXd& X, const VectorXd& y, vector<double> lambdas) {
+MatrixXd warm_start_B_matrix(const MatrixXd& X, const VectorXd& y, const double alpha, vector<double> lambdas) {
   int p = X.cols();
   int L = lambdas.size();
   MatrixXd B_matrix = MatrixXd::Zero(L, p);
 
   // do the first one normally
   VectorXd B_0 = VectorXd::Zero(p);
-  B_matrix.row(0) = sgcd(B_0, X, y, lambdas[0]);
+  B_matrix.row(0) = sgcd(B_0, X, y, alpha, lambdas[0]);
 
   // Warm start after the first one
   for (int l = 1; l < L; l++) {
     VectorXd B_warm = B_matrix.row((l - 1)); // warm start
-    B_matrix.row(l) = sgcd(B_warm, X, y, lambdas[l]);
+    B_matrix.row(l) = sgcd(B_warm, X, y, alpha, lambdas[l]);
   }
 
   return B_matrix;
@@ -153,7 +155,7 @@ struct CVType {
 };
 
 // TODO I only need to order the lambdas once
-CVType cross_validation(const MatrixXd& X, const VectorXd& y, const double K, vector<double> lambdas) {
+CVType cross_validation(const MatrixXd& X, const VectorXd& y, const double K, const double alpha, vector<double> lambdas) {
   int n = X.rows();
   int p = X.cols();
   int L = lambdas.size();
@@ -202,7 +204,7 @@ CVType cross_validation(const MatrixXd& X, const VectorXd& y, const double K, ve
 
     // do the computation
     double intercept = y_train.mean();
-    MatrixXd B_matrix = warm_start_B_matrix(X_train, y_train, lambdas);
+    MatrixXd B_matrix = warm_start_B_matrix(X_train, y_train, alpha, lambdas);
     for (int l = 0; l < L; l++) {
       VectorXd B = B_matrix.row(l).transpose();
       test_risks_matrix(l, k) = mean_squared_error(y_test, predict(B, intercept, X_test));
