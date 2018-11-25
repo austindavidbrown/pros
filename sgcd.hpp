@@ -31,10 +31,10 @@ double sign(double x) {
 // TODO step size s = 1/(10**3 + j) # s = 1/(10**7 + j)**(1/2)
 // TODO add elasticnet
 VectorXd sgcd(VectorXd B, const MatrixXd& X, const VectorXd& y, const double lambda) {
-  int n = X.rows();
-  int p = X.cols();
-  int max_iter = 100000;
-  double tolerance = pow(10, -7);
+  const int n = X.rows();
+  const int p = X.cols();
+  const int max_iter = 100000;
+  const double tolerance = pow(10, -7);
 
   // Create random permutation for coordinate descent
   vector<int> I(p);
@@ -76,7 +76,6 @@ VectorXd sgcd(VectorXd B, const MatrixXd& X, const VectorXd& y, const double lam
 
     // stop if subgradient norm squared is small
     if (G_j.squaredNorm() < tolerance) {
-      cout << j << "\n";
       return B;
     }
   }
