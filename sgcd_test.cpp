@@ -1,4 +1,4 @@
-#include "sgcd.cpp"
+#include "sgcd.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -52,12 +52,15 @@ void test() {
 
   //
   // Warm start B matrix test
+  /*
   MatrixXd B_matrix = warm_start_B_matrix(X_train, y_train, lambdas);
   cout << B_matrix;
+  */
 
   //
   // CV test
   //
+  /*
   CVType cv = cross_validation(X_train, y_train, K_fold, lambdas);
   cout << cv.risks << "\n";
 
@@ -69,7 +72,8 @@ void test() {
   MatrixXf::Index min_row;
   double min = cv.risks.minCoeff(&min_row);
   double best_lambda = cv.lambdas[min_row];
-
+  */
+  
   //
   // Single fit test
   //
@@ -79,6 +83,7 @@ void test() {
   VectorXd B_0 = VectorXd::Zero(X_train.cols());
   VectorXd B = sparsify(sgcd(B_0, X_train, y_train, lambda), .01);
   cout << B << "\n";
+  cout << pow(1 + 1, -1/2.0f);
   // cout << mean_squared_error(y_train, predict(B, intercept, X_train));
 }
 

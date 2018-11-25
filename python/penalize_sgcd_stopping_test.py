@@ -52,8 +52,8 @@ def cross_validation_risks(X, y, K, alpha, lambdas_):
 def penalize_sgcd(B, X_, y_, alpha, lambda_):
   n = X_.shape[0]
   p = X_.shape[1]
-  max_iter = 100000
-  tolerance = 10**(-5)
+  max_iter = 10000
+  tolerance = 10**(-8)
   I = np.array([i for i in range(0, p)])
 
   # Center
@@ -62,8 +62,9 @@ def penalize_sgcd(B, X_, y_, alpha, lambda_):
   cy = y_ - np.mean(y_)
 
   for j in range(0, max_iter):
-    s = 10**(-(np.log(n)/np.log(10)))
+    s = 10**(-(np.log(n)/np.log(10))) * 1/((1 + j)**(1/2))
     B_old = np.copy(B) # this is current B; keep track for stopping criterion
+    G_j = np.ones(p) # current subgradient
     for i in np.random.permutation(I):
       Bi_current = B[i] # current B[i]
       cX_i = cX[:, i]
@@ -74,18 +75,24 @@ def penalize_sgcd(B, X_, y_, alpha, lambda_):
       # update
       # handle subgradient cases of l1
       if sub_grad_l1 != 0:
-        B[i] = Bi_current - s * (D_Li + D_Pi + alpha[-1] * lambda_ * sub_grad_l1)
+        G_j[i] = (D_Li + D_Pi + alpha[-1] * lambda_ * sub_grad_l1)
+        B[i] = Bi_current - s * G_j[i]
       elif sub_grad_l1 == 0:
         if D_Li + D_Pi < - alpha[-1] * lambda_:
-          B[i] = Bi_current - s * (D_Li + D_Pi + alpha[-1] * lambda_)
+          G_j[i] = (D_Li + D_Pi + alpha[-1] * lambda_)
+          B[i] = Bi_current - s * G_j[i]
         if D_Li + D_Pi > alpha[-1] * lambda_:
-          B[i] = Bi_current - s * (D_Li + D_Pi - alpha[-1] * lambda_)
+          G_j[i] = (D_Li + D_Pi - alpha[-1] * lambda_)
+          B[i] = Bi_current - s * G_j[i]
         if D_Li + D_Pi >= -alpha[-1] * lambda_ and D_Li + D_Pi <= alpha[-1] * lambda_:
+          G_j[i] = D_Li + D_Pi
           B[i] = 0
 
     # stop if loss is not changing much
-    if (np.abs(np.linalg.norm(cy - cX @ B) - np.linalg.norm(cy - cX @ B_old)) < tolerance):
+    #if (np.abs(np.linalg.norm(cy - cX @ B) - np.linalg.norm(cy - cX @ B_old)) < tolerance):
+    if (np.linalg.norm(G_j) < tolerance):
       print(j)
+      print(np.linalg.norm(G_j))
       return B
   return B
 

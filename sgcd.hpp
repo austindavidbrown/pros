@@ -28,13 +28,13 @@ double sign(double x) {
 }
 
 // TODO stopping criterion
-// TODO step size
+// TODO step size s = 1/(10**3 + j) # s = 1/(10**7 + j)**(1/2)
 // TODO add elasticnet
 VectorXd sgcd(VectorXd B, const MatrixXd& X, const VectorXd& y, const double lambda) {
   int n = X.rows();
   int p = X.cols();
   int max_iter = 100000;
-  double tolerance = pow(10, -5);
+  double tolerance = pow(10, -7);
 
   // Create random permutation for coordinate descent
   vector<int> I(p);
@@ -47,33 +47,36 @@ VectorXd sgcd(VectorXd B, const MatrixXd& X, const VectorXd& y, const double lam
   VectorXd cy = y - y.mean() * VectorXd::Ones(n);
 
   for (int j = 0; j < max_iter; j++) {
-    const double s = pow(10, (-(log(n)/log(10)))); // step size of the same order
-    VectorXd B_old = B; // this is current B; keep track for stopping criterion
-
+    const double s = pow(10, (-(log(n)/log(10)))) * pow(1 + j, -1/2.0f); // step size (Chosen using Nesterov's Lecture Notes)
+    VectorXd G_j = VectorXd::Ones(p); // Current Subgradient
     std::shuffle(std::begin(I), std::end(I), rng); // permute
     for (int& i : I) {
       double Bi_current = B(i);
       VectorXd cX_i = cX.col(i);
-      double D_Li = -1 * cX_i.transpose() * (cy - (cX * B)); // derivative of loss
-      double g_l1_B_i = sign(Bi_current); // subgrad of l1
+      double DL_i = -1 * cX_i.transpose() * (cy - (cX * B)); // derivative of loss
 
-      // update
-      // handle l1 subgradient cases
+      // handle l1 subgradient cases and update
+      double g_l1_B_i = sign(Bi_current); // subgrad of l1
       if (g_l1_B_i != 0) {
-        B(i) = Bi_current - s * (D_Li + lambda * g_l1_B_i);
+        G_j(i) = DL_i + lambda * g_l1_B_i;
+        B(i) = Bi_current - s * G_j(i);
       } else if (g_l1_B_i == 0) {
-        if (D_Li < -lambda) {
-          B(i) = Bi_current - s * (D_Li + lambda);
-        } else if (D_Li > lambda) {
-          B(i) = Bi_current - s * (D_Li - lambda);
-        } else if (D_Li >= -lambda && D_Li <= lambda) {
+        if (DL_i < -lambda) {
+          G_j(i) = DL_i + lambda;
+          B(i) = Bi_current - s * G_j(i);
+        } else if (DL_i > lambda) {
+          G_j(i) = DL_i - lambda;
+          B(i) = Bi_current - s * G_j(i);
+        } else if (DL_i >= -lambda && DL_i <= lambda) {
+          G_j(i) = DL_i;
           B(i) = 0;
         }
       }
     }
 
-    // stop if loss is not changing much
-    if ( abs((cy - cX * B).norm() - (cy - cX * B_old).norm()) < tolerance ) {
+    // stop if subgradient norm squared is small
+    if (G_j.squaredNorm() < tolerance) {
+      cout << j << "\n";
       return B;
     }
   }
