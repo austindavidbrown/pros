@@ -14,7 +14,7 @@ using std::vector;
 // This allows visibility
 extern "C" {
 
-SEXP R_fit(SEXP X_, SEXP y_, SEXP lambda_){
+SEXP R_sgcd(SEXP X_, SEXP y_, SEXP lambda_){
   SEXP result;
   GetRNGstate();
 
@@ -30,13 +30,13 @@ SEXP R_fit(SEXP X_, SEXP y_, SEXP lambda_){
   double* p_y = REAL(y_); // pointer
 
   // Setup
-  Map<Matrix<double, Dynamic, Dynamic, RowMajor>> X(p_X, nrow_X, ncol_X);
+  Map<Matrix<double, Dynamic, Dynamic, ColMajor>> X(p_X, nrow_X, ncol_X); // R is laid out in memory column major
   Map<VectorXd> y(p_y, nrow_y);
   double lambda = REAL(lambda_)[0];
 
   // fit
   VectorXd B_0 = VectorXd::Zero(X.cols());
-  VectorXd B = sparsify(sgcd(B_0, X, y, lambda));
+  VectorXd B = sparsify(sgcd(B_0, X, y, lambda), .01f);
 
   //
   // Copy to R
@@ -53,7 +53,7 @@ SEXP R_fit(SEXP X_, SEXP y_, SEXP lambda_){
   return result;
 }
 
-SEXP R_predict(SEXP X_, SEXP B_, SEXP intercept_){
+SEXP R_predict(SEXP B_, SEXP intercept_, SEXP X_){
   SEXP result;
   GetRNGstate();
 
@@ -74,7 +74,7 @@ SEXP R_predict(SEXP X_, SEXP B_, SEXP intercept_){
   double intercept = REAL(intercept_)[0];
 
   // Predict
-  VectorXd pred = predict(X, B, intercept);
+  VectorXd pred = predict(B, intercept, X);
 
   //
   // Copy to R

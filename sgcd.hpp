@@ -27,8 +27,6 @@ double sign(double x) {
   else { return +1.0; }
 }
 
-// TODO stopping criterion
-// TODO step size s = 1/(10**3 + j) # s = 1/(10**7 + j)**(1/2)
 // TODO add elasticnet
 VectorXd sgcd(VectorXd B, const MatrixXd& X, const VectorXd& y, const double lambda) {
   const int n = X.rows();
@@ -49,6 +47,7 @@ VectorXd sgcd(VectorXd B, const MatrixXd& X, const VectorXd& y, const double lam
   for (int j = 0; j < max_iter; j++) {
     const double s = pow(10, (-(log(n)/log(10)))) * pow(1 + j, -1/2.0f); // step size (Chosen using Nesterov's Lecture Notes)
     VectorXd G_j = VectorXd::Ones(p); // Current Subgradient
+    
     std::shuffle(std::begin(I), std::end(I), rng); // permute
     for (int& i : I) {
       double Bi_current = B(i);
@@ -74,7 +73,7 @@ VectorXd sgcd(VectorXd B, const MatrixXd& X, const VectorXd& y, const double lam
       }
     }
 
-    // stop if subgradient norm squared is small
+    // Stop if subgradient norm squared is small
     if (G_j.squaredNorm() < tolerance) {
       return B;
     }
@@ -84,8 +83,8 @@ VectorXd sgcd(VectorXd B, const MatrixXd& X, const VectorXd& y, const double lam
   return B;
 }
 
-VectorXd predict(const VectorXd& B, const double& intercept, const MatrixXd& X) {
-  int n = X.rows();
+VectorXd predict(const VectorXd& B, const double intercept, const MatrixXd& X) {
+  const int n = X.rows();
   return intercept * VectorXd::Ones(n) + (X * B);
 }
 

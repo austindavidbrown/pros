@@ -12,7 +12,7 @@
 #' @export
 pros = function(X, y, lambda) {
   y = matrix(as.vector(t(y)), ncol = 1) # convert to column vector
-  B = .Call("R_fit", as.matrix(X), y, as.double(lambda))
+  B = .Call("R_sgcd", as.matrix(X), y, as.double(lambda))
 
   res = list("B" = B, "intercept" = mean(y))
   class(res) = "pros"
@@ -35,7 +35,7 @@ predict.pros = function(prosObj, X) {
   B = matrix(as.vector(t(prosObj$B)), ncol = 1) # convert to column vector
   intercept = prosObj$intercept
 
-  return ( .Call("R_predict", as.matrix(X), B, as.double(intercept)) )
+  return ( .Call("R_predict", B, as.double(intercept), as.matrix(X)) )
 }
 
 
@@ -105,14 +105,27 @@ test_ = function() {
   X_test = read.csv("../../X_test.csv", header = F)
   y_test = read.csv("../../y_test.csv", header = F)
 
-  lambda = .7
+  ###
+  # fit test
+  ###
+  lambda = .01
+  .Call("R_sgcd", as.matrix(X_train), matrix(as.vector(t(y_train)), ncol = 1), as.double(lambda))
+  fit = pros(X_train, y_train, .01)
+  fit
+
+  ###
+  # predict test
+  ###
+  .Call("R_predict", matrix(c(1, 1, 1, 1, 1), ncol = 1), as.double(mean(t(y_test))), as.matrix(X_test))
+  pred = predict(fit, X_test)
+  pred
+
+  ###
+  # CV test
+  ###
   K_fold = 5
   lambdas = c(.01, .5, 1)
 
-  fit = pros(X_train, y_train, .1)
-  pred = predict(fit, X_test)
-
-  # CV test
   .Call("R_cross_validation", as.matrix(X_train), matrix(as.vector(t(y_train)), ncol = 1), as.double(K_fold), as.vector(lambdas))
   cv = cv.pros(X_train, y_train, K_fold, lambdas)
   print(cv)

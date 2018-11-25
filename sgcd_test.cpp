@@ -82,8 +82,7 @@ void test() {
 
   VectorXd B_0 = VectorXd::Zero(X_train.cols());
   VectorXd B = sparsify(sgcd(B_0, X_train, y_train, lambda), .01);
-  cout << B << "\n";
-  cout << pow(1 + 1, -1/2.0f);
+  cout << "\n" << B << "\n";
   // cout << mean_squared_error(y_train, predict(B, intercept, X_train));
 }
 
