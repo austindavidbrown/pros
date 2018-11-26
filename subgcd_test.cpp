@@ -45,8 +45,8 @@ void test() {
   double intercept = y_train.mean();
 
   // create alpha
-  double d[] = {1.0f, 0.0f};
-  Map<VectorXd> alpha(d, 2);
+  double d[] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+  Map<Vector7d> alpha(d);
 
   // create lambdas
   vector<double> lambdas;
@@ -59,6 +59,7 @@ void test() {
   //
   // CV test
   //
+  /*
   CVType cv = cross_validation(X_train, y_train, K_fold, alpha, lambdas);
   cout << cv.risks << "\n";
 
@@ -70,20 +71,24 @@ void test() {
   MatrixXf::Index min_row;
   double min = cv.risks.minCoeff(&min_row);
   double best_lambda = cv.lambdas[min_row];
+  */
 
   //
   // Single fit test
   //
   VectorXd B_0 = VectorXd::Zero(X_train.cols());
-  VectorXd B = sparsify(subgcd(B_0, X_train, y_train, alpha, lambda), .01);
+  VectorXd B = subgcd(B_0, X_train, y_train, alpha, lambda);
   cout << "\n" << B << "\n";
   cout << mean_squared_error(y_train, predict(B, intercept, X_train)) << "\n";
 
   //
   // Warm start test
   //
+  /*
   MatrixXd B_matrix = warm_start_subgcd(X_train, y_train, alpha, lambdas);
   cout << B_matrix.row(B_matrix.rows() - 1).transpose() << "\n";
+  */
+
 }
 
 int main() {

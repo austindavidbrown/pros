@@ -13,6 +13,10 @@
 #' @export
 pros = function(X, y, alpha, lambda) {
   y = matrix(as.vector(t(y)), ncol = 1) # convert to column vector
+  
+  if (length(alpha) != 7) {
+    stop("alpha needs to be length 7")
+  }
   alpha = matrix(as.vector(t(alpha)), ncol = 1) # convert to column vector
 
   B = .Call("R_subgcd", as.matrix(X), y, alpha, as.double(lambda))
@@ -116,8 +120,8 @@ test_ = function() {
   # fit test
   ###
   lambda = .01
-  alpha = c(1, 0)
-  .Call("R_subgcd", as.matrix(X_train), matrix(as.vector(t(y_train)), ncol = 1), matrix(as.vector(t(c(1, 0))), ncol = 1), as.double(lambda))
+  alpha = c(1, 0, 0, 0, 0, 0, 0)
+  .Call("R_subgcd", as.matrix(X_train), matrix(as.vector(t(y_train)), ncol = 1), matrix(as.vector(t(alpha)), ncol = 1), as.double(lambda))
   fit = pros(X_train, y_train, alpha, lambda)
   fit
 

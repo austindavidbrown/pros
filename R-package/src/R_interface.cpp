@@ -30,19 +30,17 @@ SEXP R_subgcd(SEXP X_, SEXP y_, SEXP alpha_, SEXP lambda_){
   double* p_y = REAL(y_); // pointer
 
   // Handle alpha
-  SEXP dim_alpha = getAttrib(alpha_, R_DimSymbol);
-  const int nrow_alpha = INTEGER(dim_alpha)[0];
   double* p_alpha = REAL(alpha_); // pointer
 
   // Setup
   Map<Matrix<double, Dynamic, Dynamic, ColMajor>> X(p_X, nrow_X, ncol_X); // R is laid out in memory column major
   Map<VectorXd> y(p_y, nrow_y);
-  Map<VectorXd> alpha(p_alpha, nrow_alpha);
+  Map<Vector7d> alpha(p_alpha);
   double lambda = REAL(lambda_)[0];
 
   // fit
   VectorXd B_0 = VectorXd::Zero(X.cols());
-  VectorXd B = sparsify(subgcd(B_0, X, y, alpha, lambda), .01f);
+  VectorXd B = subgcd(B_0, X, y, alpha, lambda);
 
   //
   // Copy to R
@@ -113,8 +111,6 @@ SEXP R_cross_validation(SEXP X_, SEXP y_, SEXP K_fold_, SEXP alpha_, SEXP lambda
   double* p_y = REAL(y_); // pointer
 
   // Handle alpha
-  SEXP dim_alpha = getAttrib(alpha_, R_DimSymbol);
-  const int nrow_alpha = INTEGER(dim_alpha)[0];
   double* p_alpha = REAL(alpha_); // pointer
 
   // Handle lambdas
@@ -124,7 +120,7 @@ SEXP R_cross_validation(SEXP X_, SEXP y_, SEXP K_fold_, SEXP alpha_, SEXP lambda
   Map<Matrix<double, Dynamic, Dynamic, RowMajor>> X(p_X, nrow_X, ncol_X);
   Map<VectorXd> y(p_y, nrow_y);
   double K_fold = REAL(K_fold_)[0];
-  Map<VectorXd> alpha(p_alpha, nrow_alpha);
+  Map<Vector7d> alpha(p_alpha);
 
   // Build lambdas
   vector<double> lambdas;

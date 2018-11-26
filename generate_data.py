@@ -1,7 +1,7 @@
 import numpy as np
 
 # Generate data
-n = 100
+n = 1000
 p = 5
 
 A = np.array(np.repeat(3, p - int(1/2 * p))) # nonzero features
