@@ -1,4 +1,4 @@
-#include "sgcd.hpp"
+#include "subgcd.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -30,7 +30,7 @@ M load_csv (const std::string & path) {
 }
 
 /*
-clang++ -Wall -Wextra -std=c++17 -I ./eigen/ sgcd_test.cpp -o sgcd_test && ./sgcd_test
+clang++ -Wall -Wextra -std=c++17 -I ./eigen/ subgcd_test.cpp -o subgcd_test && ./subgcd_test
 */
 void test() {
   //std::cout << std::setprecision(std::numeric_limits<long double>::digits10 + 1); // set precision
@@ -83,7 +83,7 @@ void test() {
   // Single fit test
   //
   VectorXd B_0 = VectorXd::Zero(X_train.cols());
-  VectorXd B = sparsify(sgcd(B_0, X_train, y_train, alpha, lambda), .01);
+  VectorXd B = sparsify(subgcd(B_0, X_train, y_train, alpha, lambda), .01);
   cout << "\n" << B << "\n";
   cout << mean_squared_error(y_train, predict(B, intercept, X_train)) << "\n";
 }
