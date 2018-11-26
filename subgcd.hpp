@@ -28,12 +28,13 @@ double sign(double x) {
 }
 
 //
-// Elastic Net subgcd
+// Elastic Net fit with Subgradient coordinate descent
+// Step size: Nesterov
 //
-VectorXd subgcd(VectorXd B, const MatrixXd& X, const VectorXd& y, const double alpha, const double lambda) {
+VectorXd subgcd(VectorXd B, const MatrixXd& X, const VectorXd& y, const VectorXd& alpha, const double lambda) {
   const int n = X.rows();
   const int p = X.cols();
-  const int max_iter = 100000;
+  const int max_iter = 10000;
   const double tolerance = pow(10, -7);
 
   // Create random permutation for coordinate descent
@@ -54,21 +55,21 @@ VectorXd subgcd(VectorXd B, const MatrixXd& X, const VectorXd& y, const double a
     for (int& i : I) {
       double Bi_current = B(i);
       VectorXd cX_i = cX.col(i);
-      double DL_i = -1 * cX_i.transpose() * (cy - (cX * B)) + (1 - alpha) * lambda * Bi_current; // derivative of loss + penalization
+      double DL_i = -1 * cX_i.transpose() * (cy - (cX * B)) + (1 - alpha(0)) * lambda * Bi_current; // derivative of loss + penalization
 
       // handle l1 subgradient cases and update
       double g_l1_B_i = sign(Bi_current); // subgrad of l1
       if (g_l1_B_i != 0) {
-        G_j(i) = DL_i + alpha * lambda * g_l1_B_i;
+        G_j(i) = DL_i + alpha(0) * lambda * g_l1_B_i;
         B(i) = Bi_current - s * G_j(i);
       } else if (g_l1_B_i == 0) {
-        if (DL_i + alpha * lambda < 0) {
-          G_j(i) = DL_i + alpha * lambda;
+        if (DL_i + alpha(0) * lambda < 0) {
+          G_j(i) = DL_i + alpha(0) * lambda;
           B(i) = Bi_current - s * G_j(i);
-        } else if (DL_i - alpha * lambda > 0) {
-          G_j(i) = DL_i - alpha * lambda;
+        } else if (DL_i - alpha(0) * lambda > 0) {
+          G_j(i) = DL_i - alpha(0) * lambda;
           B(i) = Bi_current - s * G_j(i);
-        } else if (DL_i >= -alpha * lambda && DL_i <= alpha * lambda) {
+        } else if (DL_i >= -alpha(0) * lambda && DL_i <= alpha(0) * lambda) {
           G_j(i) = DL_i;
           B(i) = 0;
         }
@@ -87,7 +88,7 @@ VectorXd subgcd(VectorXd B, const MatrixXd& X, const VectorXd& y, const double a
 
 // Returns a matrix of B
 // We do not sort the lambdas here, they are ordered how you want them
-MatrixXd warm_start_subgcd(const MatrixXd& X, const VectorXd& y, const double alpha, vector<double> lambdas) {
+MatrixXd warm_start_subgcd(const MatrixXd& X, const VectorXd& y, const VectorXd& alpha, vector<double> lambdas) {
   int p = X.cols();
   int L = lambdas.size();
   MatrixXd B_matrix = MatrixXd::Zero(L, p);
@@ -156,7 +157,7 @@ struct CVType {
 };
 
 // TODO I only need to order the lambdas once
-CVType cross_validation(const MatrixXd& X, const VectorXd& y, const double K, const double alpha, vector<double> lambdas) {
+CVType cross_validation(const MatrixXd& X, const VectorXd& y, const double K, const VectorXd& alpha, vector<double> lambdas) {
   int n = X.rows();
   int p = X.cols();
   int L = lambdas.size();

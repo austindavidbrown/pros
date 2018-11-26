@@ -2,7 +2,7 @@
 #include <Eigen/Dense>
 #include <vector>
 #include <iostream>
-#include "sgcd.hpp"
+#include "subgcd.hpp"
 
 // R stuff here ORDER MATTERS
 #include <R.h>
@@ -14,7 +14,7 @@ using std::vector;
 // This allows visibility
 extern "C" {
 
-SEXP R_sgcd(SEXP X_, SEXP y_, SEXP lambda_){
+SEXP R_subgcd(SEXP X_, SEXP y_, SEXP alpha_, SEXP lambda_){
   SEXP result;
   GetRNGstate();
 
@@ -29,14 +29,20 @@ SEXP R_sgcd(SEXP X_, SEXP y_, SEXP lambda_){
   const int nrow_y = INTEGER(dim_y)[0];
   double* p_y = REAL(y_); // pointer
 
+  // Handle alpha
+  SEXP dim_alpha = getAttrib(alpha_, R_DimSymbol);
+  const int nrow_alpha = INTEGER(dim_alpha)[0];
+  double* p_alpha = REAL(alpha_); // pointer
+
   // Setup
   Map<Matrix<double, Dynamic, Dynamic, ColMajor>> X(p_X, nrow_X, ncol_X); // R is laid out in memory column major
   Map<VectorXd> y(p_y, nrow_y);
+  Map<VectorXd> alpha(p_alpha, nrow_alpha);
   double lambda = REAL(lambda_)[0];
 
   // fit
   VectorXd B_0 = VectorXd::Zero(X.cols());
-  VectorXd B = sparsify(sgcd(B_0, X, y, lambda), .01f);
+  VectorXd B = sparsify(subgcd(B_0, X, y, alpha, lambda), .01f);
 
   //
   // Copy to R
@@ -91,7 +97,7 @@ SEXP R_predict(SEXP B_, SEXP intercept_, SEXP X_){
   return result;
 }
 
-SEXP R_cross_validation(SEXP X_, SEXP y_, SEXP K_fold_, SEXP lambdas_){  
+SEXP R_cross_validation(SEXP X_, SEXP y_, SEXP K_fold_, SEXP alpha_, SEXP lambdas_){  
   SEXP res;
   GetRNGstate();
 
@@ -106,6 +112,11 @@ SEXP R_cross_validation(SEXP X_, SEXP y_, SEXP K_fold_, SEXP lambdas_){
   const int nrow_y = INTEGER(dim_y)[0];
   double* p_y = REAL(y_); // pointer
 
+  // Handle alpha
+  SEXP dim_alpha = getAttrib(alpha_, R_DimSymbol);
+  const int nrow_alpha = INTEGER(dim_alpha)[0];
+  double* p_alpha = REAL(alpha_); // pointer
+
   // Handle lambdas
   const int L = Rf_length(lambdas_);
 
@@ -113,13 +124,14 @@ SEXP R_cross_validation(SEXP X_, SEXP y_, SEXP K_fold_, SEXP lambdas_){
   Map<Matrix<double, Dynamic, Dynamic, RowMajor>> X(p_X, nrow_X, ncol_X);
   Map<VectorXd> y(p_y, nrow_y);
   double K_fold = REAL(K_fold_)[0];
+  Map<VectorXd> alpha(p_alpha, nrow_alpha);
 
   // Build lambdas
   vector<double> lambdas;
   lambdas.assign(REAL(lambdas_), REAL(lambdas_) + L);
 
   // CV
-  CVType cv = cross_validation(X, y, K_fold, lambdas);
+  CVType cv = cross_validation(X, y, K_fold, alpha, lambdas);
   vector<double> cv_lambdas = cv.lambdas;
   VectorXd cv_risks = cv.risks;
 

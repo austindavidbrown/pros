@@ -41,9 +41,12 @@ void test() {
   VectorXd y_test = load_csv<MatrixXd>("y_test.csv");
 
   int K_fold = 5;
-  double alpha = 1;
   double lambda = .1;
   double intercept = y_train.mean();
+
+  // create alpha
+  double d[] = {1.0f, 0.0f};
+  Map<VectorXd> alpha(d, 2);
 
   // create lambdas
   vector<double> lambdas;
@@ -52,20 +55,10 @@ void test() {
     lambdas.push_back(lambdas[i - 1] + .1);
   }
   // sort(lambdas.begin(), lambdas.end(), std::greater<double>()); // sort in place descending
-
-
-  //
-  // Warm start B matrix test
-  //
-  /*
-  MatrixXd B_matrix = warm_start_B_matrix(X_train, y_train, alpha, lambdas);
-  cout << B_matrix << "\n";
-  */
   
   //
   // CV test
   //
-  /*
   CVType cv = cross_validation(X_train, y_train, K_fold, alpha, lambdas);
   cout << cv.risks << "\n";
 
@@ -77,7 +70,6 @@ void test() {
   MatrixXf::Index min_row;
   double min = cv.risks.minCoeff(&min_row);
   double best_lambda = cv.lambdas[min_row];
-  */
 
   //
   // Single fit test
@@ -86,6 +78,12 @@ void test() {
   VectorXd B = sparsify(subgcd(B_0, X_train, y_train, alpha, lambda), .01);
   cout << "\n" << B << "\n";
   cout << mean_squared_error(y_train, predict(B, intercept, X_train)) << "\n";
+
+  //
+  // Warm start test
+  //
+  MatrixXd B_matrix = warm_start_subgcd(X_train, y_train, alpha, lambdas);
+  cout << B_matrix.row(B_matrix.rows() - 1).transpose() << "\n";
 }
 
 int main() {

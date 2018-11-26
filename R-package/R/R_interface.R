@@ -4,15 +4,18 @@
 #' 
 #' @param X the data matrix
 #' @param y the vector response
+#' @param alpha the vector response
 #' @param lambda A lambda value
 #' 
 #' @return 
 #' A class \code{pros} with
 #'
 #' @export
-pros = function(X, y, lambda) {
+pros = function(X, y, alpha, lambda) {
   y = matrix(as.vector(t(y)), ncol = 1) # convert to column vector
-  B = .Call("R_sgcd", as.matrix(X), y, as.double(lambda))
+  alpha = matrix(as.vector(t(alpha)), ncol = 1) # convert to column vector
+
+  B = .Call("R_subgcd", as.matrix(X), y, alpha, as.double(lambda))
 
   res = list("B" = B, "intercept" = mean(y))
   class(res) = "pros"
@@ -46,6 +49,7 @@ predict.pros = function(prosObj, X) {
 #' @param X the data matrix
 #' @param y the vector response
 #' @param K_fold partition size 
+#' @param alpha
 #' @param lambdas lambda values to be evaluated
 #' 
 #' @return 
@@ -57,12 +61,14 @@ predict.pros = function(prosObj, X) {
 #' }
 #'
 #' @export
-cv.pros = function(X, y, K_fold, lambdas) {
+cv.pros = function(X, y, K_fold, alpha, lambdas) {
   y = matrix(as.vector(t(y)), ncol = 1) # convert to column vector
+  alpha = matrix(as.vector(t(alpha)), ncol = 1) # convert to column vector
 
-  res = .Call("R_cross_validation", as.matrix(X), y, as.double(K_fold), as.vector(lambdas))
+  res = .Call("R_cross_validation", as.matrix(X), y, as.double(K_fold), alpha, as.vector(lambdas))
   res$X = X
   res$y = y
+  res$alpha = alpha
   class(res) = "cv_pros"
   return ( res )
 }
@@ -81,8 +87,9 @@ cv.pros = function(X, y, K_fold, lambdas) {
 predict.cv_pros = function(cv_prosObj, X_new) {
   X = cv_prosObj$X
   y = cv_prosObj$y
+  alpha = cv_prosObj$alpha
   lambda = cv_prosObj$best_lambda
-  fit = pros(X, y, lambda)
+  fit = pros(X, y, alpha, lambda)
   res = predict(fit, X_new)
   return ( res )
 }
@@ -96,8 +103,8 @@ predict.cv_pros = function(cv_prosObj, X_new) {
 # Test
 ###
 test_ = function() {
-  #system("R CMD SHLIB R_interface.cpp")
-  #dyn.load("R_interface.so")
+  system("R CMD SHLIB R_interface.cpp")
+  dyn.load("R_interface.so")
 
   X_train = read.csv("../../X_train.csv", header = F)
   y_train = read.csv("../../y_train.csv", header = F)
@@ -109,8 +116,9 @@ test_ = function() {
   # fit test
   ###
   lambda = .01
-  .Call("R_sgcd", as.matrix(X_train), matrix(as.vector(t(y_train)), ncol = 1), as.double(lambda))
-  fit = pros(X_train, y_train, .01)
+  alpha = c(1, 0)
+  .Call("R_subgcd", as.matrix(X_train), matrix(as.vector(t(y_train)), ncol = 1), matrix(as.vector(t(c(1, 0))), ncol = 1), as.double(lambda))
+  fit = pros(X_train, y_train, alpha, lambda)
   fit
 
   ###
@@ -126,8 +134,8 @@ test_ = function() {
   K_fold = 5
   lambdas = c(.01, .5, 1)
 
-  .Call("R_cross_validation", as.matrix(X_train), matrix(as.vector(t(y_train)), ncol = 1), as.double(K_fold), as.vector(lambdas))
-  cv = cv.pros(X_train, y_train, K_fold, lambdas)
+  .Call("R_cross_validation", as.matrix(X_train), matrix(as.vector(t(y_train)), ncol = 1), as.double(K_fold), matrix(as.vector(t(alpha)), ncol = 1), as.vector(lambdas))
+  cv = cv.pros(X_train, y_train, K_fold, alpha, lambdas)
   print(cv)
 
   predict(cv, X_test)
