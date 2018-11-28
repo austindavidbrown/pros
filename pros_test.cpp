@@ -1,4 +1,4 @@
-#include "subgcd.hpp"
+#include "pros.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -30,7 +30,7 @@ M load_csv (const std::string & path) {
 }
 
 /*
-clang++ -Wall -Wextra -std=c++17 -I ./eigen/ subgcd_test.cpp -o subgcd_test && ./subgcd_test
+clang++ -Wall -Wextra -std=c++17 -I ./eigen/ pros_test.cpp -o pros_test && ./pros_test
 */
 void test() {
   //std::cout << std::setprecision(std::numeric_limits<long double>::digits10 + 1); // set precision

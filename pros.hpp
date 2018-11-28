@@ -38,8 +38,8 @@ double sign(double x) {
 }
 
 //
-// Elastic Net fit with Subgradient coordinate descent
-// Step size: Nesterov
+// Subgradient coordinate descent
+// Step size: From Nesterov's Lecture Notes
 //
 VectorXd subgcd(VectorXd B, const MatrixXd& X, const VectorXd& y, const Vector7d& alpha, const double lambda) {
   const int n = X.rows();
