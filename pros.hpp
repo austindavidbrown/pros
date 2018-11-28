@@ -129,8 +129,7 @@ VectorXd subgrad_cd(VectorXd B, const MatrixXd& X, const VectorXd& y, const Vect
       // derivative of loss + penalization
       double DL_i = -1 * cX_i.transpose() * (cy - (cX * B)) 
                   + alpha(1) * lambda * Bi_current + alpha(2) * lambda * pow(Bi_current, 3) 
-                  + alpha(3) * lambda * pow(Bi_current, 5) + alpha(4) * lambda * pow(Bi_current, 7) + alpha(5) * lambda * pow(Bi_current, 9)
-                  + alpha(6) * lambda * logexpsum(B);
+                  + alpha(3) * lambda * pow(Bi_current, 5) + alpha(4) * lambda * pow(Bi_current, 7) + alpha(5) * lambda * pow(Bi_current, 9);
 
       // handle l1 subgradient cases and update
       double g_l1_B_i = sign(Bi_current); // subgrad of l1
@@ -250,6 +249,7 @@ CVType cross_validation_subgrad_cd(const MatrixXd& X, const VectorXd& y, const d
 /// =====================================================================================
 
 
+// TODO add alpha
 //
 // Proximal Gradient Coordinate Descent
 // Step size: From Nesterov's Lecture Notes
@@ -276,17 +276,20 @@ VectorXd proximal_gradient_cd(VectorXd B, const MatrixXd& X, const VectorXd& y, 
 
     std::shuffle(std::begin(I), std::end(I), rng); // permute
     for (int& i : I) {
-      // derivative of loss
-      DL_j(i) = -1 * cX.col(i).transpose() * (cy - (cX * B));
+      // derivative of loss + differentiable penalizations
+      DL_j(i) = -1 * cX.col(i).transpose() * (cy - (cX * B))
+                + alpha(1) * lambda * B(i) + alpha(2) * lambda * pow(B(i), 3) 
+                + alpha(3) * lambda * pow(B(i), 5) + alpha(4) * lambda * pow(B(i), 7) + alpha(5) * lambda * pow(B(i), 9);
+
       const double v_i = B(i) - h_j * DL_j(i); // gradient step
 
       // Soft Thresholding
-      if (v_i < -h_j * lambda) {
-        B(i) = v_i + h_j * lambda;
-      } else if (v_i >= -h_j * lambda && v_i <= h_j * lambda) {
+      if (v_i < -h_j * alpha(0) * lambda) {
+        B(i) = v_i + h_j * alpha(0) * lambda;
+      } else if (v_i >= -h_j * alpha(0) * lambda && v_i <= h_j * alpha(0) * lambda) {
         B(i) = 0;
-      } else if (v_i > h_j * lambda) {
-        B(i) = v_i - h_j * lambda;
+      } else if (v_i > h_j * alpha(0) * lambda) {
+        B(i) = v_i - h_j * alpha(0) * lambda;
       }
     }
 

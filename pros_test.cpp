@@ -68,6 +68,7 @@ void test() {
   VectorXd B_prox = proximal_gradient_cd(B_0, X_train, y_train, alpha, lambda);
   cout << "\n" << B_prox << "\n";
   cout << mean_squared_error(y_train, predict(B_prox, intercept, X_train)) << "\n";
+
   /*
   //
   // Warm start test
@@ -91,7 +92,7 @@ void test() {
   double prox_best_lambda = cv_prox.lambdas[min_row];
   */
 
-  /*
+
   // -----------------
   // Subgradient Testing
   // -----------------
@@ -102,7 +103,8 @@ void test() {
   VectorXd B = subgrad_cd(B_0, X_train, y_train, alpha, lambda);
   cout << "\n" << B << "\n";
   cout << mean_squared_error(y_train, predict(B, intercept, X_train)) << "\n";
-
+  
+  /*
   //
   // Warm start test
   //
