@@ -31,11 +31,27 @@ double logexpsum(const VectorXd& v) {
   return log(s);
 }
 
-double sign(double x) {
+double sign(const double x) {
   if (x < 0) { return -1.0; }
   else if (x == 0) { return 0.0; }
   else { return +1.0; }
 }
+
+VectorXd sign(VectorXd v) {
+  for (int i = 0; i < v.rows(); i++) {
+    if (v(i) < 0) { 
+      v(i) = -1.0;
+    } else if (v(i) > 0) { 
+      v(i) = +1.0;
+    } else { 
+      v(i) = 0.0;
+    }
+  }
+  return v;
+}
+
+// Subgradient Coordinate Descent
+/// =====================================================================================
 
 //
 // Subgradient coordinate descent
@@ -170,7 +186,7 @@ struct CVType {
   vector<double> lambdas;
 };
 
-// TODO I only need to order the lambdas once
+
 CVType cross_validation(const MatrixXd& X, const VectorXd& y, const double K, const Vector7d& alpha, vector<double> lambdas) {
   int n = X.rows();
   int p = X.cols();
@@ -233,3 +249,59 @@ CVType cross_validation(const MatrixXd& X, const VectorXd& y, const double K, co
   cv.lambdas = lambdas;
   return cv;
 }
+
+
+// Proximal Gradient
+/// =====================================================================================
+
+
+//
+// Proximal Gradient Coordinate Descent
+// Step size: From Nesterov's Lecture Notes
+//
+VectorXd proximal_gradient_cd(VectorXd B, const MatrixXd& X, const VectorXd& y, const Vector7d& alpha, const double lambda) {
+  const int n = X.rows();
+  const int p = X.cols();
+  const int max_iter = 10000;
+  const double tolerance = pow(10, -8);
+
+  // Create random permutation for coordinate descent
+  vector<int> I(p);
+  std::iota (std::begin(I), std::end(I), 0);
+  auto rng = std::default_random_engine {};
+
+  // Center
+  MatrixXd C = MatrixXd::Identity(n, n) - 1/((double)n) * VectorXd::Ones(n) * VectorXd::Ones(n).transpose();
+  MatrixXd cX = C * X;
+  VectorXd cy = y - y.mean() * VectorXd::Ones(n);
+
+  for (int j = 0; j < max_iter; j++) {
+    const double h_j = pow(10, (-(log(n)/log(10)))) * pow(1 + j, -1/2.0f); // step size
+    VectorXd DL_j = VectorXd::Ones(p); // Derivative of Loss for stopping criterion
+
+    std::shuffle(std::begin(I), std::end(I), rng); // permute
+    for (int& i : I) {
+      // derivative of loss
+      DL_j(i) = -1 * cX.col(i).transpose() * (cy - (cX * B));
+      const double v_i = B(i) - h_j * DL_j(i); // gradient step
+
+      // Soft Thresholding
+      if (v_i < -h_j * lambda) {
+        B(i) = v_i + h_j * lambda;
+      } else if (v_i >= -h_j * lambda && v_i <= h_j * lambda) {
+        B(i) = 0;
+      } else if (v_i > h_j * lambda) {
+        B(i) = v_i - h_j * lambda;
+      }
+    }
+
+    // Stop if subgradient norm squared is small
+    if ( (DL_j + lambda * sign(B)).squaredNorm() < tolerance ) {
+      return B;
+    }
+  }
+
+  std::cout << "Failed to converge!\n";
+  return B;
+}
+

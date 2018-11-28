@@ -15,7 +15,6 @@ def prox(B, X_, y_, lambda_):
 
   for j in range(0, max_iter):
     h_j = 10**(-(np.log(n)/np.log(10)))
-    B_old = np.copy(B) # for stopping criterion
     DL_j = np.ones(p) 
     for i in np.random.permutation(I):
       DL_j[i] = -1 * cX[:, i].T @ (cy - (cX @ B)) # derivative of loss

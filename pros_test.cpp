@@ -39,6 +39,7 @@ void test() {
   VectorXd y_train = load_csv<MatrixXd>("y_train.csv");
   MatrixXd X_test = load_csv<MatrixXd>("X_test.csv");
   VectorXd y_test = load_csv<MatrixXd>("y_test.csv");
+  VectorXd B_0 = VectorXd::Zero(X_train.cols());
 
   int K_fold = 5;
   double lambda = .1;
@@ -55,7 +56,7 @@ void test() {
     lambdas.push_back(lambdas[i - 1] + .1);
   }
   // sort(lambdas.begin(), lambdas.end(), std::greater<double>()); // sort in place descending
-  
+
   //
   // CV test
   //
@@ -76,11 +77,12 @@ void test() {
   //
   // Single fit test
   //
-  VectorXd B_0 = VectorXd::Zero(X_train.cols());
+  /*
   VectorXd B = subgcd(B_0, X_train, y_train, alpha, lambda);
   cout << "\n" << B << "\n";
   cout << mean_squared_error(y_train, predict(B, intercept, X_train)) << "\n";
-
+  */
+  
   //
   // Warm start test
   //
@@ -89,6 +91,16 @@ void test() {
   cout << B_matrix.row(B_matrix.rows() - 1).transpose() << "\n";
   */
 
+
+  // -----------------
+  // Proximal Gradient Testing
+  // -----------------
+
+  //
+  // Single fit test
+  //
+  VectorXd B_prox = proximal_gradient_cd(B_0, X_train, y_train, alpha, lambda);
+  cout << "\n" << B_prox << "\n";
 }
 
 int main() {
