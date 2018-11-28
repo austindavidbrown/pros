@@ -6,12 +6,13 @@
 #' @param y the vector response
 #' @param alpha the vector response
 #' @param lambda A lambda value
+#' @param algorithm
 #' 
 #' @return 
 #' A class \code{pros} with
 #'
 #' @export
-pros = function(X, y, alpha, lambda) {
+pros = function(X, y, alpha, lambda, algorithm = "subgradient_cd") {
   y = matrix(as.vector(t(y)), ncol = 1) # convert to column vector
   
   if (length(alpha) != 7) {
@@ -19,7 +20,7 @@ pros = function(X, y, alpha, lambda) {
   }
   alpha = matrix(as.vector(t(alpha)), ncol = 1) # convert to column vector
 
-  B = .Call("R_subgcd", as.matrix(X), y, alpha, as.double(lambda))
+  B = .Call("R_fit", as.matrix(X), y, alpha, as.double(lambda), toString(algorithm))
 
   res = list("B" = B, "intercept" = mean(y))
   class(res) = "pros"
@@ -55,6 +56,7 @@ predict.pros = function(prosObj, X) {
 #' @param K_fold partition size 
 #' @param alpha
 #' @param lambdas lambda values to be evaluated
+#' @param algorithm
 #' 
 #' @return 
 #' A class \code{cv_pros} with
@@ -65,11 +67,11 @@ predict.pros = function(prosObj, X) {
 #' }
 #'
 #' @export
-cv.pros = function(X, y, K_fold, alpha, lambdas) {
+cv.pros = function(X, y, K_fold, alpha, lambdas, algorithm = "subgradient_cd") {
   y = matrix(as.vector(t(y)), ncol = 1) # convert to column vector
   alpha = matrix(as.vector(t(alpha)), ncol = 1) # convert to column vector
 
-  res = .Call("R_cross_validation", as.matrix(X), y, as.double(K_fold), alpha, as.vector(lambdas))
+  res = .Call("R_cross_validation", as.matrix(X), y, as.double(K_fold), alpha, as.vector(lambdas), toString(algorithm))
   res$X = X
   res$y = y
   res$alpha = alpha
@@ -99,10 +101,6 @@ predict.cv_pros = function(cv_prosObj, X_new) {
 }
 
 
-
-
-
-
 ###
 # Test
 ###
@@ -121,7 +119,7 @@ test_ = function() {
   ###
   lambda = .01
   alpha = c(1, 0, 0, 0, 0, 0, 0)
-  .Call("R_subgcd", as.matrix(X_train), matrix(as.vector(t(y_train)), ncol = 1), matrix(as.vector(t(alpha)), ncol = 1), as.double(lambda))
+  .Call("R_fit", as.matrix(X_train), matrix(as.vector(t(y_train)), ncol = 1), matrix(as.vector(t(alpha)), ncol = 1), as.double(lambda), toString("subgradient_cd"))
   fit = pros(X_train, y_train, alpha, lambda)
   fit
 
@@ -138,7 +136,8 @@ test_ = function() {
   K_fold = 5
   lambdas = c(.01, .5, 1)
 
-  .Call("R_cross_validation", as.matrix(X_train), matrix(as.vector(t(y_train)), ncol = 1), as.double(K_fold), matrix(as.vector(t(alpha)), ncol = 1), as.vector(lambdas))
+  .Call("R_cross_validation", as.matrix(X_train), matrix(as.vector(t(y_train)), ncol = 1), as.double(K_fold), 
+        matrix(as.vector(t(alpha)), ncol = 1), as.vector(lambdas), toString("subgradient_cd"))
   cv = cv.pros(X_train, y_train, K_fold, alpha, lambdas)
   print(cv)
 

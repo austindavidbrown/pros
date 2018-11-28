@@ -2,7 +2,7 @@
 #include <Eigen/Dense>
 #include <vector>
 #include <iostream>
-#include "subgcd.hpp"
+#include "pros.hpp"
 
 // R stuff here ORDER MATTERS
 #include <R.h>
@@ -10,11 +10,13 @@
 
 using namespace Eigen;
 using std::vector;
+using std::cout;
 
 // This allows visibility
 extern "C" {
 
-SEXP R_subgcd(SEXP X_, SEXP y_, SEXP alpha_, SEXP lambda_){
+
+SEXP R_fit(SEXP X_, SEXP y_, SEXP alpha_, SEXP lambda_, SEXP algorithm_){
   SEXP result;
   GetRNGstate();
 
@@ -32,6 +34,9 @@ SEXP R_subgcd(SEXP X_, SEXP y_, SEXP alpha_, SEXP lambda_){
   // Handle alpha
   double* p_alpha = REAL(alpha_); // pointer
 
+  // Handle algorithm
+  const char *alg_name = CHAR(asChar(algorithm_));
+
   // Setup
   Map<Matrix<double, Dynamic, Dynamic, ColMajor>> X(p_X, nrow_X, ncol_X); // R is laid out in memory column major
   Map<VectorXd> y(p_y, nrow_y);
@@ -40,7 +45,14 @@ SEXP R_subgcd(SEXP X_, SEXP y_, SEXP alpha_, SEXP lambda_){
 
   // fit
   VectorXd B_0 = VectorXd::Zero(X.cols());
-  VectorXd B = subgcd(B_0, X, y, alpha, lambda);
+  VectorXd B;
+  if (strcmp("subgradient_cd", alg_name) == 0) {
+    cout << "Using Subgradient Coordinate Descent\n";
+    B = subgrad_cd(B_0, X, y, alpha, lambda);
+  } else {
+    cout << "Using Proximal Gradient Coordinate Descent\n";
+    B = proximal_gradient_cd(B_0, X, y, alpha, lambda);
+  }
 
   //
   // Copy to R
@@ -55,6 +67,86 @@ SEXP R_subgcd(SEXP X_, SEXP y_, SEXP alpha_, SEXP lambda_){
   PutRNGstate();
   UNPROTECT(1);
   return result;
+}
+
+SEXP R_cross_validation(SEXP X_, SEXP y_, SEXP K_fold_, SEXP alpha_, SEXP lambdas_, SEXP algorithm_){  
+  SEXP res;
+  GetRNGstate();
+
+  // Handle X
+  SEXP dim_X = getAttrib(X_, R_DimSymbol);
+  const int nrow_X = INTEGER(dim_X)[0];
+  const int ncol_X = INTEGER(dim_X)[1];
+  double* p_X = REAL(X_); // pointer
+
+  // Handle y
+  SEXP dim_y = getAttrib(y_, R_DimSymbol);
+  const int nrow_y = INTEGER(dim_y)[0];
+  double* p_y = REAL(y_); // pointer
+
+  // Handle alpha
+  double* p_alpha = REAL(alpha_); // pointer
+
+  // Handle lambdas
+  const int L = Rf_length(lambdas_);
+
+  // Handle algorithm
+  const char *alg_name = CHAR(asChar(algorithm_));
+
+  // Setup
+  Map<Matrix<double, Dynamic, Dynamic, RowMajor>> X(p_X, nrow_X, ncol_X);
+  Map<VectorXd> y(p_y, nrow_y);
+  double K_fold = REAL(K_fold_)[0];
+  Map<Vector7d> alpha(p_alpha);
+
+  // Build lambdas
+  vector<double> lambdas;
+  lambdas.assign(REAL(lambdas_), REAL(lambdas_) + L);
+
+  // CV
+  CVType cv;
+  if (strcmp("subgradient_cd", alg_name) == 0) {
+    cout << "Using Subgradient Coordinate Descent\n";
+    cv = cross_validation_subgrad_cd(X, y, K_fold, alpha, lambdas);
+  } else {
+    cout << "Using Proximal Gradient Coordinate Descent\n";
+    cv = cross_validation_proximal_gradient_cd(X, y, K_fold, alpha, lambdas);
+  }
+  vector<double> cv_lambdas = cv.lambdas;
+  VectorXd cv_risks = cv.risks;
+
+  // get location of minimum
+  MatrixXf::Index min_row;
+  cv.risks.minCoeff(&min_row);
+  double best_lambda = cv.lambdas[min_row];
+
+  //
+  // Copy to R
+  //
+  const char *names[] = {"best_lambda", "lambdas", "risks", ""};
+  res = PROTECT(mkNamed(VECSXP, names)); // create response
+
+  SET_VECTOR_ELT(res, 0, ScalarReal(best_lambda));
+
+  // Copy lambdas
+  SEXP res_lambdas;
+  PROTECT(res_lambdas = Rf_allocVector(REALSXP, cv_lambdas.size()));
+  for (size_t i = 0; i < cv_lambdas.size(); i++) {
+    REAL(res_lambdas)[i] = cv_lambdas[i];
+  }
+  SET_VECTOR_ELT(res, 1, res_lambdas);
+
+  // Copy Risks
+  SEXP res_risks;
+  PROTECT(res_risks = Rf_allocVector(REALSXP, cv_risks.rows()));
+  for (int i = 0; i < cv_risks.rows(); i++) {
+    REAL(res_risks)[i] = cv_risks(i);
+  }
+  SET_VECTOR_ELT(res, 2, res_risks);
+
+  PutRNGstate();
+  UNPROTECT(3);
+  return res;
 }
 
 SEXP R_predict(SEXP B_, SEXP intercept_, SEXP X_){
@@ -93,76 +185,6 @@ SEXP R_predict(SEXP B_, SEXP intercept_, SEXP X_){
   PutRNGstate();
   UNPROTECT(1);
   return result;
-}
-
-SEXP R_cross_validation(SEXP X_, SEXP y_, SEXP K_fold_, SEXP alpha_, SEXP lambdas_){  
-  SEXP res;
-  GetRNGstate();
-
-  // Handle X
-  SEXP dim_X = getAttrib(X_, R_DimSymbol);
-  const int nrow_X = INTEGER(dim_X)[0];
-  const int ncol_X = INTEGER(dim_X)[1];
-  double* p_X = REAL(X_); // pointer
-
-  // Handle y
-  SEXP dim_y = getAttrib(y_, R_DimSymbol);
-  const int nrow_y = INTEGER(dim_y)[0];
-  double* p_y = REAL(y_); // pointer
-
-  // Handle alpha
-  double* p_alpha = REAL(alpha_); // pointer
-
-  // Handle lambdas
-  const int L = Rf_length(lambdas_);
-
-  // Setup
-  Map<Matrix<double, Dynamic, Dynamic, RowMajor>> X(p_X, nrow_X, ncol_X);
-  Map<VectorXd> y(p_y, nrow_y);
-  double K_fold = REAL(K_fold_)[0];
-  Map<Vector7d> alpha(p_alpha);
-
-  // Build lambdas
-  vector<double> lambdas;
-  lambdas.assign(REAL(lambdas_), REAL(lambdas_) + L);
-
-  // CV
-  CVType cv = cross_validation(X, y, K_fold, alpha, lambdas);
-  vector<double> cv_lambdas = cv.lambdas;
-  VectorXd cv_risks = cv.risks;
-
-  // get location of minimum
-  MatrixXf::Index min_row;
-  cv.risks.minCoeff(&min_row);
-  double best_lambda = cv.lambdas[min_row];
-
-  //
-  // Copy to R
-  //
-  const char *names[] = {"best_lambda", "lambdas", "risks", ""};
-  res = PROTECT(mkNamed(VECSXP, names)); // create response
-
-  SET_VECTOR_ELT(res, 0, ScalarReal(best_lambda));
-
-  // Copy lambdas
-  SEXP res_lambdas;
-  PROTECT(res_lambdas = Rf_allocVector(REALSXP, cv_lambdas.size()));
-  for (size_t i = 0; i < cv_lambdas.size(); i++) {
-    REAL(res_lambdas)[i] = cv_lambdas[i];
-  }
-  SET_VECTOR_ELT(res, 1, res_lambdas);
-
-  // Copy Risks
-  SEXP res_risks;
-  PROTECT(res_risks = Rf_allocVector(REALSXP, cv_risks.rows()));
-  for (int i = 0; i < cv_risks.rows(); i++) {
-    REAL(res_risks)[i] = cv_risks(i);
-  }
-  SET_VECTOR_ELT(res, 2, res_risks);
-
-  PutRNGstate();
-  UNPROTECT(3);
-  return res;
 }
 
 }
