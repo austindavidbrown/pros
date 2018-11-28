@@ -57,11 +57,62 @@ void test() {
   }
   // sort(lambdas.begin(), lambdas.end(), std::greater<double>()); // sort in place descending
 
+
+  // -----------------
+  // Proximal Gradient Testing
+  // -----------------
+
+  //
+  // Single fit test
+  //
+  VectorXd B_prox = proximal_gradient_cd(B_0, X_train, y_train, alpha, lambda);
+  cout << "\n" << B_prox << "\n";
+  cout << mean_squared_error(y_train, predict(B_prox, intercept, X_train)) << "\n";
+  /*
+  //
+  // Warm start test
+  //
+  MatrixXd B_prox_matrix = warm_start_proximal_gradient_cd(X_train, y_train, alpha, lambdas);
+  cout << B_prox_matrix.row(B_prox_matrix.rows() - 1).transpose() << "\n";
+
   //
   // CV test
   //
+  CVType cv_prox = cross_validation_proximal_gradient_cd(X_train, y_train, K_fold, alpha, lambdas);
+  cout << cv_prox.risks << "\n";
+
+  for (auto& lambda : cv_prox.lambdas) {
+    cout << lambda << " ";
+  }
+
+  // get the best lambda
+  MatrixXf::Index min_row;
+  double prox_min = cv_prox.risks.minCoeff(&min_row);
+  double prox_best_lambda = cv_prox.lambdas[min_row];
+  */
+
   /*
-  CVType cv = cross_validation(X_train, y_train, K_fold, alpha, lambdas);
+  // -----------------
+  // Subgradient Testing
+  // -----------------
+
+  //
+  // Single fit test
+  //
+  VectorXd B = subgrad_cd(B_0, X_train, y_train, alpha, lambda);
+  cout << "\n" << B << "\n";
+  cout << mean_squared_error(y_train, predict(B, intercept, X_train)) << "\n";
+
+  //
+  // Warm start test
+  //
+  MatrixXd B_matrix = warm_start_subgrad_cd(X_train, y_train, alpha, lambdas);
+  cout << B_matrix.row(B_matrix.rows() - 1).transpose() << "\n";
+
+  //
+  // CV test
+  //
+  CVType cv = cross_validation_subgrad_cd(X_train, y_train, K_fold, alpha, lambdas);
   cout << cv.risks << "\n";
 
   for (auto& lambda : cv.lambdas) {
@@ -73,34 +124,6 @@ void test() {
   double min = cv.risks.minCoeff(&min_row);
   double best_lambda = cv.lambdas[min_row];
   */
-
-  //
-  // Single fit test
-  //
-  /*
-  VectorXd B = subgcd(B_0, X_train, y_train, alpha, lambda);
-  cout << "\n" << B << "\n";
-  cout << mean_squared_error(y_train, predict(B, intercept, X_train)) << "\n";
-  */
-  
-  //
-  // Warm start test
-  //
-  /*
-  MatrixXd B_matrix = warm_start_subgcd(X_train, y_train, alpha, lambdas);
-  cout << B_matrix.row(B_matrix.rows() - 1).transpose() << "\n";
-  */
-
-
-  // -----------------
-  // Proximal Gradient Testing
-  // -----------------
-
-  //
-  // Single fit test
-  //
-  VectorXd B_prox = proximal_gradient_cd(B_0, X_train, y_train, alpha, lambda);
-  cout << "\n" << B_prox << "\n";
 }
 
 int main() {
