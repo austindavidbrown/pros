@@ -4,7 +4,7 @@
 \alias{cv.pros}
 \title{Cross Validation}
 \usage{
-cv.pros(X, y, K_fold, lambdas)
+cv.pros(X, y, K_fold, alpha, lambdas, algorithm = "subgradient_cd")
 }
 \arguments{
 \item{X}{the data matrix}
@@ -14,6 +14,8 @@ cv.pros(X, y, K_fold, lambdas)
 \item{K_fold}{partition size}
 
 \item{lambdas}{lambda values to be evaluated}
+
+\item{algorithm}{}
 }
 \value{
 A class \code{cv_pros} with

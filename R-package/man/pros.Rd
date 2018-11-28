@@ -4,14 +4,18 @@
 \alias{pros}
 \title{Fit}
 \usage{
-pros(X, y, lambda)
+pros(X, y, alpha, lambda, algorithm = "subgradient_cd")
 }
 \arguments{
 \item{X}{the data matrix}
 
 \item{y}{the vector response}
 
+\item{alpha}{the vector response}
+
 \item{lambda}{A lambda value}
+
+\item{algorithm}{}
 }
 \value{
 A class \code{pros} with
