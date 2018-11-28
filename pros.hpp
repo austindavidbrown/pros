@@ -249,7 +249,6 @@ CVType cross_validation_subgrad_cd(const MatrixXd& X, const VectorXd& y, const d
 /// =====================================================================================
 
 
-// TODO add alpha
 //
 // Proximal Gradient Coordinate Descent
 // Step size: From Nesterov's Lecture Notes
