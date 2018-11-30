@@ -54,11 +54,6 @@ vector<vector<T>> partition(const vector<T>& S, size_t n) {
   return partitions;
 }
 
-VectorXd predict(const VectorXd& B, const double intercept, const MatrixXd& X) {
-  const int n = X.rows();
-  return intercept * VectorXd::Ones(n) + (X * B);
-}
-
 
 // Proximal Gradient
 /// =====================================================================================
@@ -204,6 +199,12 @@ CVType cross_validation_proximal_gradient_cd(const MatrixXd& X, const VectorXd& 
   cv.lambdas = lambdas;
   return cv;
 }
+
+VectorXd predict(const VectorXd& B, const double intercept, const MatrixXd& X) {
+  const int n = X.rows();
+  return intercept * VectorXd::Ones(n) + (X * B);
+}
+
 
 
 
