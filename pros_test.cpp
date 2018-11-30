@@ -29,9 +29,9 @@ M load_csv (const std::string & path) {
     return Map<Matrix<typename M::Scalar, M::RowsAtCompileTime, M::ColsAtCompileTime, RowMajor>>(values.data(), rows, values.size()/rows);
 }
 
-/*
-clang++ -Wall -Wextra -std=c++17 -I ./eigen/ pros_test.cpp -o pros_test && ./pros_test
-*/
+//
+// Test
+//
 void test() {
   //std::cout << std::setprecision(std::numeric_limits<long double>::digits10 + 1); // set precision
 
@@ -46,8 +46,8 @@ void test() {
   double intercept = y_train.mean();
 
   // create alpha
-  double d[] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
-  Map<Vector7d> alpha(d);
+  double alpha_data[] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+  Map<Vector7d> alpha(alpha_data);
 
   // create lambdas
   vector<double> lambdas;
@@ -66,8 +66,8 @@ void test() {
   // Single fit test
   //
   VectorXd B_prox = proximal_gradient_cd(B_0, X_train, y_train, alpha, lambda);
-  cout << "\n" << B_prox << "\n";
-  cout << mean_squared_error(y_train, predict(B_prox, intercept, X_train)) << "\n";
+  cout << "\nB:\n" << B_prox << "\n";
+  cout << "\nMSE: " << mean_squared_error(y_train, predict(B_prox, intercept, X_train)) << "\n";
 
   /*
   //
@@ -92,6 +92,12 @@ void test() {
   double prox_best_lambda = cv_prox.lambdas[min_row];
   */
 
+
+
+
+
+
+
   // -----------------
   // Subgradient Testing
   // -----------------
@@ -100,8 +106,8 @@ void test() {
   // Single fit test
   //
   VectorXd B = subgrad_cd(B_0, X_train, y_train, alpha, lambda);
-  cout << "\n" << B << "\n";
-  cout << mean_squared_error(y_train, predict(B, intercept, X_train)) << "\n";
+  cout << "\nB:\n" << B << "\n";
+  cout << "\nMSE: " << mean_squared_error(y_train, predict(B, intercept, X_train)) << "\n";
   
   /*
   //

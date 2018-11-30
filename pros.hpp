@@ -54,48 +54,10 @@ vector<vector<T>> partition(const vector<T>& S, size_t n) {
   return partitions;
 }
 
-double logexpsum(const VectorXd& v) {
-  double s = 0.0;
-  for (int i = 0; i < v.rows(); i++) {
-    s  = s + exp(v(i));
-  }
-  return log(s);
-}
-
-double sign(const double x) {
-  if (x < 0) { return -1.0; }
-  else if (x == 0) { return 0.0; }
-  else { return +1.0; }
-}
-
-VectorXd sign(VectorXd v) {
-  for (int i = 0; i < v.rows(); i++) {
-    if (v(i) < 0) { 
-      v(i) = -1.0;
-    } else if (v(i) > 0) { 
-      v(i) = +1.0;
-    } else { 
-      v(i) = 0.0;
-    }
-  }
-  return v;
-}
-
 VectorXd predict(const VectorXd& B, const double intercept, const MatrixXd& X) {
   const int n = X.rows();
   return intercept * VectorXd::Ones(n) + (X * B);
 }
-
-VectorXd sparsify(VectorXd B, double tolerance) {
-  for (int i = 0; i < B.rows(); i++) {
-    if (B(i) < tolerance) {
-      B(i) = 0.0f;
-    }
-  }
-  return B;
-}
-
-
 
 
 // Proximal Gradient
@@ -104,27 +66,31 @@ VectorXd sparsify(VectorXd B, double tolerance) {
 
 //
 // Proximal Gradient Coordinate Descent
-// Step size: Diminishing from Nesterov's Lecture Notes
+// Step size: 
+// Diminishing from Nesterov's Lecture Notes: pow(1 + j, -1/2.0f)
+// Constant is performing better: 1/((double)max_iter)
 //
 VectorXd proximal_gradient_cd(VectorXd B, const MatrixXd& X, const VectorXd& y, const Vector7d& alpha, const double lambda) {
   const int n = X.rows();
   const int p = X.cols();
   const int max_iter = 10000;
-  const double tolerance = pow(10, -8);
+  const double tolerance = pow(10, -7);
 
   // Create random permutation for coordinate descent
   vector<int> I(p);
   std::iota (std::begin(I), std::end(I), 0);
   auto rng = std::default_random_engine {};
 
-  // Center
-  MatrixXd C = MatrixXd::Identity(n, n) - 1/((double)n) * VectorXd::Ones(n) * VectorXd::Ones(n).transpose();
-  MatrixXd cX = C * X;
-  VectorXd cy = y - y.mean() * VectorXd::Ones(n);
+  // Convert X, y to mean 0
+  MatrixXd cX = MatrixXd(n, p);
+  for (int j = 0; j < X.cols(); j++) {
+    cX.col(j) = X.col(j) - (X.col(j).mean() * VectorXd::Ones(n));
+  }
+  VectorXd cy = y - (y.mean() * VectorXd::Ones(n));
 
   for (int j = 0; j < max_iter; j++) {
     const VectorXd B_old = B; // Copy B for stopping criterion
-    const double h_j = pow(10, (-(log(n)/log(10)))) * pow(1 + j, -1/2.0f); // step size
+    const double h_j = 1/((double)max_iter); // step size
 
     std::shuffle(std::begin(I), std::end(I), rng); // permute
     for (int& i : I) {
@@ -259,9 +225,36 @@ CVType cross_validation_proximal_gradient_cd(const MatrixXd& X, const VectorXd& 
 
 
 
-
+/// DEPRECATED!!!!!
 // Subgradient Coordinate Descent
 /// =====================================================================================
+
+double logexpsum(const VectorXd& v) {
+  double s = 0.0;
+  for (int i = 0; i < v.rows(); i++) {
+    s  = s + exp(v(i));
+  }
+  return log(s);
+}
+
+double sign(const double x) {
+  if (x < 0) { return -1.0; }
+  else if (x == 0) { return 0.0; }
+  else { return +1.0; }
+}
+
+VectorXd sign(VectorXd v) {
+  for (int i = 0; i < v.rows(); i++) {
+    if (v(i) < 0) { 
+      v(i) = -1.0;
+    } else if (v(i) > 0) { 
+      v(i) = +1.0;
+    } else { 
+      v(i) = 0.0;
+    }
+  }
+  return v;
+}
 
 //
 // Subgradient coordinate descent
@@ -278,9 +271,11 @@ VectorXd subgrad_cd(VectorXd B, const MatrixXd& X, const VectorXd& y, const Vect
   std::iota (std::begin(I), std::end(I), 0);
   auto rng = std::default_random_engine {};
 
-  // Center
-  MatrixXd C = MatrixXd::Identity(n, n) - 1/((double)n) * VectorXd::Ones(n) * VectorXd::Ones(n).transpose();
-  MatrixXd cX = C * X;
+  // Copy a Standardize X and y
+  MatrixXd cX = MatrixXd(n, p);
+  for (int j = 0; j < X.cols(); j++) {
+    cX.col(j) = (X.col(j) - X.col(j).mean() * VectorXd::Ones(n));
+  }
   VectorXd cy = y - y.mean() * VectorXd::Ones(n);
 
   for (int j = 0; j < max_iter; j++) {

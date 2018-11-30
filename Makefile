@@ -1,9 +1,10 @@
 
+# Testing
 default:
 	clang++ -Wall -Wextra -std=c++17 -I ./eigen/ pros_test.cpp -o pros_test
 	./pros_test
 
-
+# Production
 production:
 	clang++ -std=c++17 -I ./eigen/ test.cpp -o test -DNDEBUG -O3 -march=native -mfpmath=sse && ./test
 

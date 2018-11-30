@@ -11,15 +11,15 @@ intercept_true = 5
 X_train = np.zeros((n, p))
 for i in range(0, n):
   X_train[i, :] = np.random.multivariate_normal(np.zeros(p), np.identity(p))
-err_train = np.random.multivariate_normal(np.zeros(n), np.identity(n)) # error 
-y_train = np.repeat(intercept_true, n) + (X_train @ B_true) + err_train
+# err_train = np.random.multivariate_normal(np.zeros(n), np.identity(n)) # error 
+y_train = np.repeat(intercept_true, n) + (X_train @ B_true)
 
 n_test = int(n/3)
 X_test = np.zeros((n_test, p))
 for i in range(0, n_test):
   X_test[i, :] = np.random.multivariate_normal(np.zeros(p), np.identity(p))
-err_test = np.random.multivariate_normal(np.zeros(n_test), np.identity(n_test)) # error
-y_test = np.repeat(intercept_true, n_test) + (X_test @ B_true) + err_test
+# err_test = np.random.multivariate_normal(np.zeros(n_test), np.identity(n_test)) # error
+y_test = np.repeat(intercept_true, n_test) + (X_test @ B_true)
 
 # Save to file
 np.savetxt("X_train.csv", np.asarray(X_train), delimiter=",")
