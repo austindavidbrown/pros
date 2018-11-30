@@ -7,14 +7,13 @@ Installation
 -------
 
 ```r
-# Install devtools from CRAN
-install.packages("devtools")
+install.packages("devtools") # Install devtools from CRAN
 devtools::install_github("austindavidbrown/pros/R-package")
 ```
 
 Documentation
 -------
-See the reference manual
+See the reference manual in the R package.
 
 License
 -------
