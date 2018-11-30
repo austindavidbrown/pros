@@ -92,7 +92,6 @@ void test() {
   double prox_best_lambda = cv_prox.lambdas[min_row];
   */
 
-
   // -----------------
   // Subgradient Testing
   // -----------------
