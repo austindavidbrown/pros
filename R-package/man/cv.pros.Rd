@@ -4,18 +4,20 @@
 \alias{cv.pros}
 \title{Cross Validation}
 \usage{
-cv.pros(X, y, K_fold, alpha, lambdas, algorithm = "subgradient_cd")
+cv.pros(X, y, K_fold, alpha, lambdas, algorithm = "proximal_gradient_cd")
 }
 \arguments{
 \item{X}{the data matrix}
 
-\item{y}{the vector response}
+\item{y}{the response vector}
 
 \item{K_fold}{partition size}
 
-\item{lambdas}{lambda values to be evaluated}
+\item{alpha}{convex combination}
 
-\item{algorithm}{}
+\item{lambdas}{A vector of Lagrangian penalization values to be evaluated}
+
+\item{algorithm}{the optimization algorithm}
 }
 \value{
 A class \code{cv_pros} with

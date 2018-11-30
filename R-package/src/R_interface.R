@@ -137,7 +137,7 @@ test_ = function() {
   lambdas = c(.01, .5, 1)
 
   .Call("R_cross_validation", as.matrix(X_train), matrix(as.vector(t(y_train)), ncol = 1), as.double(K_fold), 
-        matrix(as.vector(t(alpha)), ncol = 1), as.vector(lambdas), toString("subgradient_cd"))
+        matrix(as.vector(t(alpha)), ncol = 1), as.vector(lambdas), toString("proximal_gradient_cd"))
   cv = cv.pros(X_train, y_train, K_fold, alpha, lambdas)
   print(cv)
 

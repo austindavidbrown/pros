@@ -4,18 +4,18 @@
 \alias{pros}
 \title{Fit}
 \usage{
-pros(X, y, alpha, lambda, algorithm = "subgradient_cd")
+pros(X, y, alpha, lambda, algorithm = "proximal_gradient_cd")
 }
 \arguments{
 \item{X}{the data matrix}
 
-\item{y}{the vector response}
+\item{y}{the response vector response}
 
-\item{alpha}{the vector response}
+\item{alpha}{convex combination}
 
-\item{lambda}{A lambda value}
+\item{lambda}{The Lagrangian penalization value}
 
-\item{algorithm}{}
+\item{algorithm}{the optimization algorithm}
 }
 \value{
 A class \code{pros} with
