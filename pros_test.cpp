@@ -41,9 +41,10 @@ void test() {
   VectorXd y_test = load_csv<MatrixXd>("y_test.csv");
   VectorXd B_0 = VectorXd::Zero(X_train.cols());
 
+  double intercept = y_train.mean();
   int K_fold = 5;
   double lambda = .1;
-  double intercept = y_train.mean();
+  const int max_iter = 10000;
 
   // create alpha
   double alpha_data[] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
@@ -65,32 +66,37 @@ void test() {
   //
   // Single fit test
   //
-  VectorXd B_prox = proximal_gradient_cd(B_0, X_train, y_train, alpha, lambda);
-  cout << "\nB:\n" << B_prox << "\n";
-  cout << "\nMSE: " << mean_squared_error(y_train, predict(B_prox, intercept, X_train)) << "\n";
+  cout << "\nSingle fit test\n";
+  VectorXd B = proximal_gradient_cd(B_0, X_train, y_train, alpha, lambda, max_iter);
+  cout << "\nB:\n" << B << "\n";
+  cout << "\nMSE: " << mean_squared_error(y_train, predict(B, intercept, X_train)) << "\n";
 
-  /*
+  
   //
   // Warm start test
   //
-  MatrixXd B_prox_matrix = warm_start_proximal_gradient_cd(X_train, y_train, alpha, lambdas);
-  cout << B_prox_matrix.row(B_prox_matrix.rows() - 1).transpose() << "\n";
+  cout << "\nWarm start test\n";
+  MatrixXd B_matrix = warm_start_proximal_gradient_cd(X_train, y_train, alpha, lambdas, max_iter);
+  cout << "\nB Matrix last:\n" << B_matrix.row(B_matrix.rows() - 1).transpose() << "\n";
 
   //
   // CV test
   //
-  CVType cv_prox = cross_validation_proximal_gradient_cd(X_train, y_train, K_fold, alpha, lambdas);
-  cout << cv_prox.risks << "\n";
+  cout << "\nCV test\n";
+  CVType cv = cross_validation_proximal_gradient_cd(X_train, y_train, K_fold, alpha, lambdas, max_iter);
+  cout << "\nCV Risks:\n" << cv.risks << "\n";
 
-  for (auto& lambda : cv_prox.lambdas) {
+  cout << "\nOrdered Lambdas\n";
+  for (auto& lambda : cv.lambdas) {
     cout << lambda << " ";
   }
+  cout << "\n";
 
   // get the best lambda
   MatrixXf::Index min_row;
-  double prox_min = cv_prox.risks.minCoeff(&min_row);
-  double prox_best_lambda = cv_prox.lambdas[min_row];
-  */
+  double min = cv.risks.minCoeff(&min_row);
+  double best_lambda = cv.lambdas[min_row];
+  cout << "\nBest Lambda:\n" << best_lambda << "\n";
 
 
 
@@ -102,13 +108,15 @@ void test() {
   // Subgradient Testing
   // -----------------
 
+  /*
   //
   // Single fit test
   //
   VectorXd B = subgrad_cd(B_0, X_train, y_train, alpha, lambda);
   cout << "\nB:\n" << B << "\n";
   cout << "\nMSE: " << mean_squared_error(y_train, predict(B, intercept, X_train)) << "\n";
-  
+  */
+
   /*
   //
   // Warm start test
