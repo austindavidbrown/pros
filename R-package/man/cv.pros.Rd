@@ -4,7 +4,9 @@
 \alias{cv.pros}
 \title{Cross Validation}
 \usage{
-cv.pros(X, y, K_fold, alpha, lambdas, algorithm = "proximal_gradient_cd")
+cv.pros(X, y, K_fold = 5, alpha = c(1, 0, 0, 0, 0, 0, 0),
+  lambdas = seq(10^(-7), 1, 0.1), algorithm = "proximal_gradient_cd",
+  max_iter = 10000, tolerance = 10^(-7))
 }
 \arguments{
 \item{X}{the data matrix}

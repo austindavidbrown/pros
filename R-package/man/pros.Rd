@@ -4,7 +4,9 @@
 \alias{pros}
 \title{Fit}
 \usage{
-pros(X, y, alpha, lambda, algorithm = "proximal_gradient_cd")
+pros(X, y, alpha = c(1, 0, 0, 0, 0, 0, 0), lambda,
+  algorithm = "proximal_gradient_cd", max_iter = 10000,
+  tolerance = 10^(-7))
 }
 \arguments{
 \item{X}{the data matrix}

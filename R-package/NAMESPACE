@@ -1,2 +1,8 @@
+# exportPattern("^[^\\.]")
+
 useDynLib(pros)
-exportPattern("^[^\\.]")
+
+S3method(predict,cv_pros)
+S3method(predict,pros)
+export(cv.pros)
+export(pros)

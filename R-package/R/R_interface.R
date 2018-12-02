@@ -12,9 +12,9 @@
 #' A class \code{pros} with
 #'
 #' @export
-pros = function(X, y, alpha, lambda, algorithm = "proximal_gradient_cd") {
+pros = function(X, y, alpha = c(1, 0, 0, 0, 0, 0, 0), lambda, algorithm = "proximal_gradient_cd", max_iter = 10000, tolerance = 10^(-7)) {
   y = matrix(as.vector(t(y)), ncol = 1) # convert to column vector
-  
+
   if (length(alpha) != 7) {
     stop("alpha needs to be length 7")
   }
@@ -67,7 +67,7 @@ predict.pros = function(prosObj, X) {
 #' }
 #'
 #' @export
-cv.pros = function(X, y, K_fold, alpha, lambdas, algorithm = "proximal_gradient_cd") {
+cv.pros = function(X, y, K_fold = 5, alpha = c(1, 0, 0, 0, 0, 0, 0), lambdas = seq(10^(-7), 1, .1), algorithm = "proximal_gradient_cd", max_iter = 10000, tolerance = 10^(-7)) {
   y = matrix(as.vector(t(y)), ncol = 1) # convert to column vector
   alpha = matrix(as.vector(t(alpha)), ncol = 1) # convert to column vector
 
@@ -104,7 +104,7 @@ predict.cv_pros = function(cv_prosObj, X_new) {
 ###
 # Test
 ###
-test_ = function() {
+test = function() {
   system("R CMD SHLIB R_interface.cpp")
   dyn.load("R_interface.so")
 
@@ -117,10 +117,8 @@ test_ = function() {
   ###
   # fit test
   ###
-  lambda = .01
-  alpha = c(1, 0, 0, 0, 0, 0, 0)
-  .Call("R_fit", as.matrix(X_train), matrix(as.vector(t(y_train)), ncol = 1), matrix(as.vector(t(alpha)), ncol = 1), as.double(lambda), toString("proximal_gradient_cd"))
-  fit = pros(X_train, y_train, alpha, lambda)
+  .Call("R_fit", as.matrix(X_train), matrix(as.vector(t(y_train)), ncol = 1), matrix(as.vector(t(c(1, 0, 0, 0, 0, 0, 0))), ncol = 1), as.double(.01), toString("proximal_gradient_cd"))
+  fit = pros(X_train, y_train, lambda = .1)
   fit
 
   ###
@@ -133,12 +131,9 @@ test_ = function() {
   ###
   # CV test
   ###
-  K_fold = 5
-  lambdas = c(.01, .5, 1)
-
-  .Call("R_cross_validation", as.matrix(X_train), matrix(as.vector(t(y_train)), ncol = 1), as.double(K_fold), 
-        matrix(as.vector(t(alpha)), ncol = 1), as.vector(lambdas), toString("subgradient_cd"))
-  cv = cv.pros(X_train, y_train, K_fold, alpha, lambdas)
+  .Call("R_cross_validation", as.matrix(X_train), matrix(as.vector(t(y_train)), ncol = 1), as.double(5), 
+        matrix(as.vector(t(c(1, 0, 0, 0, 0, 0, 0))), ncol = 1), c(.01, .5, 1), toString("subgradient_cd"))
+  cv = cv.pros(X_train, y_train)
   print(cv)
 
   predict(cv, X_test)
