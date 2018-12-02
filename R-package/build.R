@@ -1,3 +1,12 @@
+library(devtools)
+install_github("devtools") # you need the latest version
+# install_github("roxygen3")
+
+library(roxygen3)
+roxygenise("path/to/my/package")
+
+
+
 devtools::document()
 devtools::check(manual = T)
 
