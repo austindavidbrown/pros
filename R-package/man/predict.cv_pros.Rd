@@ -2,18 +2,23 @@
 % Please edit documentation in R/pros.R
 \name{predict.cv_pros}
 \alias{predict.cv_pros}
-\title{CV Prediction}
+\title{Cross-validation Prediction}
 \usage{
 \method{predict}{cv_pros}(cv_prosObj, X_new)
 }
 \arguments{
 \item{cv_prosObj}{an object of class \code{cv_pros}}
 
-\item{X_new}{the data matrix}
+\item{X_new}{the matrix of the data to predict}
 }
 \value{
-A \code{vector} of predictions
+A \code{vector} of prediction values.
 }
 \description{
-The Prediction function
+The cross-validation prediction function.
+}
+\examples{
+cv = cv.pros(X_train, y_train)
+pred = predict(cv, X_test)
+
 }

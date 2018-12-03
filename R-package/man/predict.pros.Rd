@@ -2,18 +2,23 @@
 % Please edit documentation in R/pros.R
 \name{predict.pros}
 \alias{predict.pros}
-\title{Prediction}
+\title{Pros Prediction}
 \usage{
 \method{predict}{pros}(prosObj, X)
 }
 \arguments{
 \item{prosObj}{an object of class \code{pros}}
 
-\item{X}{the data matrix}
+\item{X}{the matrix of the data to predict}
 }
 \value{
-A \code{vector} of predictions
+A \code{vector} of prediction values.
 }
 \description{
-The Prediction function
+The prediction function.
+}
+\examples{
+fit = pros(X_train, y_train, lambda = .1)
+pred = predict(fit, X_test)
+
 }

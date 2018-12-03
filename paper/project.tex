@@ -188,6 +188,13 @@ This is a descent method, line search can be done, and the stopping criterion is
 Further, the convergence theory is the same as coordinate descent due to the Moreau-Yoshida regularization.
 The random permutation is done so that convergence analysis can be rigorously established.
 
+If we make the reasonable assumption that $\beta$ is bounded by a very large number, then we can use the standard convergence analysis.
+By Nesterov (2012) \cite{nesterov2}, we can extend the result if it has not been already to recover the the convergence rate
+\[
+E(f(\beta^k)) - f(\beta^{*})  = O(\frac{1}{k}).
+\]
+where the $kth$ step differs from the implementation and is a computationally cheap coordinate wise update. 
+
 To improve the speed of cross-validation, warm starting (See \cite{glmnet}) was used shown below.
 
 \vspace{.5cm}
@@ -241,17 +248,19 @@ The R interface is purposefully simple and similar to popular packages such as \
 There are single fitting and prediction functions
 
 \begin{verbatim}
-> fit <- pros(X, y, alpha, lambda, algorithm)
+> fit <- pros(X, y, alpha)
 > predict(fit, new_X)
 \end{verbatim}
 
 and warm-start cross-validation and prediction functions
 
 \begin{verbatim}
-> cv <- cv.pros(X, y, alpha, lambda_sequence, algorithm)
+> cv <- cv.pros(X, y, alpha)
 > predict(cv, new_X)
 \end{verbatim}
 
+These functions are shown in their simplest forms and have many additional parameters.
+We refer the reader to the reference manual to the package \cite{pros}.
 The package has no dependencies and is available here for download here
 \href{https://github.com/austindavidbrown/pros}{github.com/austindavidbrown/pros}.
 
@@ -281,6 +290,9 @@ Zou, H. and Hastie, T. (2005). Regularization and variable selection via the ela
 
 \bibitem{nesterov}
 Yurii Nesterov. 2014. Introductory Lectures on Convex Optimization: A Basic Course (1 ed.). Springer Publishing Company, Incorporated.
+
+\bibitem{nesterov2}
+Y. Nesterov. Efficiency of coordinate descent methods on huge-scale optimiza- tion problems. SIAM Journal on Optimization, 22:341–362, 2012.
 
 \end{thebibliography}
 

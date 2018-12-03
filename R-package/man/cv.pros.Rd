@@ -2,33 +2,47 @@
 % Please edit documentation in R/pros.R
 \name{cv.pros}
 \alias{cv.pros}
-\title{Cross Validation}
+\title{Cross-validation}
 \usage{
 cv.pros(X, y, K_fold = 5, alpha = c(1, 0, 0, 0, 0, 0, 0),
   lambdas = seq(10^(-7), 1, 0.1), algorithm = "proximal_gradient_cd",
   max_iter = 10000, tolerance = 10^(-7))
 }
 \arguments{
-\item{X}{the data matrix}
+\item{X}{the matrix of the data}
 
-\item{y}{the response vector}
+\item{y}{the vector of response values}
 
-\item{K_fold}{partition size}
+\item{alpha}{the convex combination of length 7 corresponding to the penalties:
+\itemize{
+  \item l1 penalty
+  \item l2 penalty
+  \item l4 penalty
+  \item l6 penalty
+  \item l8 penalty
+  \item l10 penalty
+}}
 
-\item{alpha}{convex combination}
+\item{lambdas}{A vector of dual penalization values to be evaluated}
 
-\item{lambdas}{A vector of Lagrangian penalization values to be evaluated}
+\item{algorithm}{the optimization algorithm 
+\itemize{
+  \item proximal_gradient_cd
+  \item subgradient_cd
+}}
 
-\item{algorithm}{the optimization algorithm}
+\item{max_iter}{maximum iterations. This also tunes the step size.}
+
+\item{tolerance}{tolerance}
 }
 \value{
-A class \code{cv_pros} with
-\itemize{
-  \item \code{best_lambda} the  best lambda.
-  \item \code{lambdas} the lambda values
-  \item \code{risks} the cross-validation risks
-}
+A class \code{cv_pros}
 }
 \description{
-The K-fold cross-validation function
+The K-fold cross-validation function.
+}
+\examples{
+cv = cv.pros(X_train, y_train)
+pred = predict(cv, X_test)
+
 }

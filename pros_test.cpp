@@ -32,7 +32,7 @@ M load_csv (const std::string & path) {
 //
 // Test
 //
-void test() {
+void test_prox() {
   //std::cout << std::setprecision(std::numeric_limits<long double>::digits10 + 1); // set precision
 
   MatrixXd X_train = load_csv<MatrixXd>("X_train.csv");
@@ -98,13 +98,9 @@ void test() {
   double min = cv.risks.minCoeff(&min_row);
   double best_lambda = cv.lambdas[min_row];
   cout << "\nBest Lambda:\n" << best_lambda << "\n";
+}
 
-
-
-
-
-
-
+void test_subgrad() {
   // -----------------
   // Subgradient Testing
   // -----------------
@@ -142,7 +138,9 @@ void test() {
   */
 }
 
+
 int main() {
-  test();
+  test_prox();
+  test_subgrad();
 }
 

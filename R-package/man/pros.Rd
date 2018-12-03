@@ -2,26 +2,47 @@
 % Please edit documentation in R/pros.R
 \name{pros}
 \alias{pros}
-\title{Fit}
+\title{Pros}
 \usage{
 pros(X, y, alpha = c(1, 0, 0, 0, 0, 0, 0), lambda,
   algorithm = "proximal_gradient_cd", max_iter = 10000,
   tolerance = 10^(-7))
 }
 \arguments{
-\item{X}{the data matrix}
+\item{X}{the matrix of the data}
 
-\item{y}{the response vector response}
+\item{y}{the vector of response values}
 
-\item{alpha}{convex combination}
+\item{alpha}{the convex combination of length 7 corresponding to the penalties:
+\itemize{
+  \item l1 penalty
+  \item l2 penalty
+  \item l4 penalty
+  \item l6 penalty
+  \item l8 penalty
+  \item l10 penalty
+}}
 
-\item{lambda}{The Lagrangian penalization value}
+\item{lambda}{the dual penalization value}
 
-\item{algorithm}{the optimization algorithm}
+\item{algorithm}{the optimization algorithm 
+\itemize{
+  \item proximal_gradient_cd
+  \item subgradient_cd
+}}
+
+\item{max_iter}{maximum iterations. This also tunes the step size.}
+
+\item{tolerance}{tolerance}
 }
 \value{
-A class \code{pros} with
+A class \code{pros}
 }
 \description{
-The fit function for a specific lambda value
+The fit function for a specific lambda value.
+}
+\examples{
+fit = pros(X_train, y_train, lambda = .1)
+pred = predict(fit, X_test)
+
 }

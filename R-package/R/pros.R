@@ -1,15 +1,33 @@
-#' Fit
+#' Pros
 #' 
-#' The fit function for a specific lambda value
+#' The fit function for a specific lambda value.
 #' 
-#' @param X the data matrix
-#' @param y the response vector response
-#' @param alpha convex combination
-#' @param lambda The Lagrangian penalization value
-#' @param algorithm the optimization algorithm
+#' @param X the matrix of the data
+#' @param y the vector of response values
+#' @param alpha the convex combination of length 7 corresponding to the penalties:
+#' \itemize{
+#'   \item l1 penalty
+#'   \item l2 penalty
+#'   \item l4 penalty
+#'   \item l6 penalty
+#'   \item l8 penalty
+#'   \item l10 penalty
+#' }
+#' @param lambda the dual penalization value
+#' @param algorithm the optimization algorithm 
+#' \itemize{
+#'   \item proximal_gradient_cd
+#'   \item subgradient_cd
+#' }
+#' @param max_iter maximum iterations. This also tunes the step size.
+#' @param tolerance tolerance
 #' 
 #' @return 
-#' A class \code{pros} with
+#' A class \code{pros}
+#'
+#' @examples
+#' fit = pros(X_train, y_train, lambda = .1)
+#' pred = predict(fit, X_test)
 #'
 #' @export
 pros = function(X, y, alpha = c(1, 0, 0, 0, 0, 0, 0), lambda, algorithm = "proximal_gradient_cd", max_iter = 10000, tolerance = 10^(-7)) {
@@ -30,15 +48,19 @@ pros = function(X, y, alpha = c(1, 0, 0, 0, 0, 0, 0), lambda, algorithm = "proxi
 }
 
 
-#' Prediction
+#' Pros Prediction
 #' 
-#' The Prediction function
+#' The prediction function.
 #' 
 #' @param prosObj an object of class \code{pros}
-#' @param X the data matrix 
+#' @param X the matrix of the data to predict
 #' 
 #' @return 
-#' A \code{vector} of predictions
+#' A \code{vector} of prediction values.
+#'
+#' @examples
+#' fit = pros(X_train, y_train, lambda = .1)
+#' pred = predict(fit, X_test)
 #'
 #' @export
 predict.pros = function(prosObj, X) {
@@ -49,24 +71,36 @@ predict.pros = function(prosObj, X) {
 }
 
 
-#' Cross Validation
+#' Cross-validation
 #' 
-#' The K-fold cross-validation function
+#' The K-fold cross-validation function.
 #' 
-#' @param X the data matrix
-#' @param y the response vector
-#' @param K_fold partition size 
-#' @param alpha convex combination
-#' @param lambdas A vector of Lagrangian penalization values to be evaluated
-#' @param algorithm the optimization algorithm
-#' 
-#' @return 
-#' A class \code{cv_pros} with
+#' @param X the matrix of the data
+#' @param y the vector of response values
+#' @param alpha the convex combination of length 7 corresponding to the penalties:
 #' \itemize{
-#'   \item \code{best_lambda} the  best lambda.
-#'   \item \code{lambdas} the lambda values
-#'   \item \code{risks} the cross-validation risks
+#'   \item l1 penalty
+#'   \item l2 penalty
+#'   \item l4 penalty
+#'   \item l6 penalty
+#'   \item l8 penalty
+#'   \item l10 penalty
 #' }
+#' @param lambdas A vector of dual penalization values to be evaluated
+#' @param algorithm the optimization algorithm 
+#' \itemize{
+#'   \item proximal_gradient_cd
+#'   \item subgradient_cd
+#' }
+#' @param max_iter maximum iterations. This also tunes the step size.
+#' @param tolerance tolerance
+#'
+#' @return 
+#' A class \code{cv_pros}
+#'
+#' @examples
+#' cv = cv.pros(X_train, y_train)
+#' pred = predict(cv, X_test)
 #'
 #' @export
 cv.pros = function(X, y, K_fold = 5, alpha = c(1, 0, 0, 0, 0, 0, 0), lambdas = seq(10^(-7), 1, .1), algorithm = "proximal_gradient_cd", max_iter = 10000, tolerance = 10^(-7)) {
@@ -83,15 +117,19 @@ cv.pros = function(X, y, K_fold = 5, alpha = c(1, 0, 0, 0, 0, 0, 0), lambdas = s
   return ( res )
 }
 
-#' CV Prediction
+#' Cross-validation Prediction
 #' 
-#' The Prediction function
+#' The cross-validation prediction function.
 #' 
 #' @param cv_prosObj an object of class \code{cv_pros}
-#' @param X_new the data matrix
+#' @param X_new the matrix of the data to predict
 #' 
 #' @return 
-#' A \code{vector} of predictions
+#' A \code{vector} of prediction values.
+#'
+#' @examples
+#' cv = cv.pros(X_train, y_train)
+#' pred = predict(cv, X_test)
 #'
 #' @export
 predict.cv_pros = function(cv_prosObj, X_new) {

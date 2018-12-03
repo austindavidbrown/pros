@@ -5,7 +5,7 @@ devtools::check(manual = T)
 
 
 # generate reference manual
-# R CMD Rd2pdf ./ --force -o manual.pdf
+R CMD Rd2pdf ./ --force -o pros.pdf
 
 
 ##
