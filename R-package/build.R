@@ -1,5 +1,8 @@
+# tools::package_native_routine_registration_skeleton("./", "src/init.c")
+
 devtools::document()
 devtools::check(manual = T)
+
 
 # generate reference manual
 # R CMD Rd2pdf ./ --force -o manual.pdf
