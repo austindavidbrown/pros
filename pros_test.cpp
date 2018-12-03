@@ -44,7 +44,8 @@ void test() {
   double intercept = y_train.mean();
   int K_fold = 5;
   double lambda = .1;
-  const int max_iter = 10000;
+  int max_iter = 10000;
+  double tolerance = pow(10, -7);
 
   // create alpha
   double alpha_data[] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
@@ -67,7 +68,7 @@ void test() {
   // Single fit test
   //
   cout << "\nSingle fit test\n";
-  VectorXd B = proximal_gradient_cd(B_0, X_train, y_train, alpha, lambda, max_iter);
+  VectorXd B = proximal_gradient_cd(B_0, X_train, y_train, alpha, lambda, max_iter, tolerance);
   cout << "\nB:\n" << B << "\n";
   cout << "\nMSE: " << mean_squared_error(y_train, predict(B, intercept, X_train)) << "\n";
 
@@ -76,14 +77,14 @@ void test() {
   // Warm start test
   //
   cout << "\nWarm start test\n";
-  MatrixXd B_matrix = warm_start_proximal_gradient_cd(X_train, y_train, alpha, lambdas, max_iter);
+  MatrixXd B_matrix = warm_start_proximal_gradient_cd(X_train, y_train, alpha, lambdas, max_iter, tolerance);
   cout << "\nB Matrix last:\n" << B_matrix.row(B_matrix.rows() - 1).transpose() << "\n";
 
   //
   // CV test
   //
   cout << "\nCV test\n";
-  CVType cv = cross_validation_proximal_gradient_cd(X_train, y_train, K_fold, alpha, lambdas, max_iter);
+  CVType cv = cross_validation_proximal_gradient_cd(X_train, y_train, K_fold, alpha, lambdas, max_iter, tolerance);
   cout << "\nCV Risks:\n" << cv.risks << "\n";
 
   cout << "\nOrdered Lambdas\n";
