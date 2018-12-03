@@ -1,3 +1,3 @@
-CXX = clang++
+CXX = g++
 CXX_STD = CXX17
-PKG_CXXFLAGS = -std=c++17 -Wall -Ieigen -O3 -march=native -mfpmath=sse
+PKG_CXXFLAGS = -std=c++17 -Ieigen -O3 -march=native -mfpmath=sse
