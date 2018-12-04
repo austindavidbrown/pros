@@ -66,7 +66,6 @@ pros = function(X, y, alpha = c(1, 0, 0, 0, 0, 0, 0), lambda, algorithm = "proxi
 predict.pros = function(prosObj, X) {
   B = matrix(as.vector(t(prosObj$B)), ncol = 1) # convert to column vector
   intercept = prosObj$intercept
-
   return ( .Call("R_predict", B, as.double(intercept), as.matrix(X)) )
 }
 
@@ -113,6 +112,8 @@ cv.pros = function(X, y, K_fold = 5, alpha = c(1, 0, 0, 0, 0, 0, 0), lambdas = s
   res$X = X
   res$y = y
   res$alpha = alpha
+  res$max_iter = max_iter
+  res$tolerance = tolerance
   class(res) = "cv_pros"
   return ( res )
 }
@@ -137,7 +138,9 @@ predict.cv_pros = function(cv_prosObj, X_new) {
   y = cv_prosObj$y
   alpha = cv_prosObj$alpha
   lambda = cv_prosObj$best_lambda
-  fit = pros(X, y, alpha, lambda)
+  max_iter = cv_prosObj$max_iter
+  tolerance = cv_prosObj$tolerance
+  fit = pros(X, y, alpha = alpha, lambda = lambda, max_iter = max_iter, tolerance = tolerance)
   res = predict(fit, X_new)
   return ( res )
 }
@@ -147,14 +150,14 @@ predict.cv_pros = function(cv_prosObj, X_new) {
 # Test
 ###
 test = function() {
-  system("R CMD SHLIB R_interface.cpp")
-  dyn.load("R_interface.so")
+  system("cd ../src; R CMD SHLIB R_interface.cpp")
+  dyn.load("../src/R_interface.so")
 
-  X_train = read.csv("../../X_train.csv", header = F)
-  y_train = read.csv("../../y_train.csv", header = F)
+  X_train = data.matrix(read.csv("../../data/X_train.csv", header = F))
+  y_train = data.matrix(read.csv("../../data/y_train.csv", header = F))
 
-  X_test = read.csv("../../X_test.csv", header = F)
-  y_test = read.csv("../../y_test.csv", header = F)
+  X_test = data.matrix(read.csv("../../data/X_test.csv", header = F))
+  y_test = data.matrix(read.csv("../../data/y_test.csv", header = F))
 
   max_iter = 10000
   alpha = c(1, 0, 0, 0, 0, 0, 0)
@@ -162,7 +165,7 @@ test = function() {
   lambdas = c(.01, .5, 1)
   algorithm = "proximal_gradient_cd"
   K_fold = 5
-  tolerance = 10^(-7)
+  tolerance = 10^(-3)
   
   ###
   # fit test
@@ -170,15 +173,17 @@ test = function() {
   .Call("R_fit", as.matrix(X_train), matrix(as.vector(t(y_train)), ncol = 1),
                  matrix(as.vector(t(alpha)), ncol = 1), as.double(lambda), toString(algorithm),
                  as.integer(max_iter), as.double(tolerance))
-  fit = pros(X_train, y_train, lambda = .1)
-  fit
+  prosObj = pros(X_train, y_train, lambda = .1)
+  prosObj
 
   ###
   # predict test
   ###
   .Call("R_predict", matrix(c(1, 1, 1, 1, 1), ncol = 1), as.double(mean(t(y_test))), as.matrix(X_test))
-  pred = predict(fit, X_test)
-  pred
+  pred = predict(fit, X_train)
+  
+  mean((y_train - predict(fit, X_train))^2)
+  mean((y_test - predict(fit, X_test))^2)
 
   ###
   # CV test
@@ -189,6 +194,7 @@ test = function() {
   cv = cv.pros(X_train, y_train)
   print(cv)
 
-  predict(cv, X_test)
+  mean((y_train - predict(cv, X_train))^2)
+  mean((y_test - predict(cv, X_test))^2)
 
 }

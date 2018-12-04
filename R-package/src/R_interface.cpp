@@ -105,7 +105,7 @@ SEXP R_cross_validation(SEXP X_, SEXP y_, SEXP K_fold_, SEXP alpha_, SEXP lambda
   const double tolerance = REAL(tolerance_)[0];
 
   // Setup
-  Map<Matrix<double, Dynamic, Dynamic, RowMajor>> X(p_X, nrow_X, ncol_X);
+  Map<Matrix<double, Dynamic, Dynamic, ColMajor>> X(p_X, nrow_X, ncol_X);
   Map<VectorXd> y(p_y, nrow_y);
   double K_fold = REAL(K_fold_)[0];
   Map<Vector7d> alpha(p_alpha);
@@ -161,7 +161,6 @@ SEXP R_cross_validation(SEXP X_, SEXP y_, SEXP K_fold_, SEXP alpha_, SEXP lambda
 
 SEXP R_predict(SEXP B_, SEXP intercept_, SEXP X_){
   SEXP result;
-  GetRNGstate();
 
   // Handle X
   SEXP dim_X = getAttrib(X_, R_DimSymbol) ;
@@ -175,7 +174,7 @@ SEXP R_predict(SEXP B_, SEXP intercept_, SEXP X_){
   double* p_B = REAL(B_); // pointer
 
   // Setup
-  Map<Matrix<double, Dynamic, Dynamic, RowMajor>> X(p_X, nrow_X, ncol_X);
+  Map<Matrix<double, Dynamic, Dynamic, ColMajor>> X(p_X, nrow_X, ncol_X);
   Map<VectorXd> B(p_B, nrow_B);
   double intercept = REAL(intercept_)[0];
 
@@ -192,7 +191,6 @@ SEXP R_predict(SEXP B_, SEXP intercept_, SEXP X_){
     REAL(result)[i] = pred(i);
   }
 
-  PutRNGstate();
   UNPROTECT(1);
   return result;
 }
