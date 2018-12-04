@@ -1,7 +1,7 @@
 
 # Testing
 default:
-	clang++ -Wall -Wextra -std=c++17 -I ./eigen/ pros_test.cpp -o pros_test
+	clang++ -Wall -Wextra -std=c++17 -I ./eigen/ pros_test.cpp -O3 -o pros_test
 	./pros_test
 
 # Production

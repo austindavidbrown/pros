@@ -69,11 +69,11 @@ It seems reasonable that a scientist or researcher may want to "bow" out the fea
 \begin{center}
 \begin{minipage}{.5\textwidth}
   \centering
-  \includegraphics[width=.9\linewidth]{elasticnet.pdf}
+  \includegraphics[width=.9\linewidth]{elasticnet.png}
 \end{minipage}%
 \begin{minipage}{.5\textwidth}
   \centering
-  \includegraphics[width=.9\linewidth]{new_penalty_4_moment.pdf}
+  \includegraphics[width=.9\linewidth]{new_penalty_4_moment.png}
 \end{minipage}
 \captionof{figure}{A particular ElasticNet penalty shown on the left and a new penalty shown on the right shown to "bow" out the feasible set.}
 \end{center}
@@ -81,35 +81,13 @@ It seems reasonable that a scientist or researcher may want to "bow" out the fea
 Alternatively, the researcher wants to impose "stability" into their solutions by restricting the feasible set.
 This is analagous to moment conditions in some sense since the researcher wants to control the sparsity along with the height and width of their solution.
 
-\forceindent Another penalty I would like to explore in the future is combining the  $\norm{\cdot}_1$ and $\norm{\cdot}_\infty$ as
-\[
-P'(\lambda) = \lambda \alpha_1 \norm{\beta}_1 + \lambda \alpha_2 \norm{\beta}_\infty 
-\]
-This is be shown in the figure below.
-
-\begin{center}
-\begin{minipage}{.5\textwidth}
-  \centering
-  \includegraphics[width=.9\linewidth]{elasticnet.pdf}
-\end{minipage}%
-\begin{minipage}{.5\textwidth}
-  \centering
-  \includegraphics[width=.9\linewidth]{new_penalty_l1_and_linf.pdf}
-\end{minipage}
-\captionof{figure}{Elasticnet on the left and l1 and infinity norm on the right}
-\end{center}
-
-I believe this can be solved with the ADMM algorithm, but I ran out of time.
-
-
-
 
 \section{Implementation}
 
 
 In this section, we discuss how the package was implemented.
 In the glmnet paper \cite{glmnet}, Friedman, Hastie and Tibshirani use coordinate descent.
-With the elasticnet \cite{elasticnet} penalty, the coordinate wise minimization yields an analytic, closed form solution and line search or step size rules are not needed. With the penalty that we propose
+With the elasticnet \cite{elasticnet} penalty, the coordinate wise minimization yields an analytic, closed form solution and line search or step size rules are not needed. The penalty that we propose
 \[
 P(\lambda) = \lambda \alpha_1 \norm{\beta}_1 + \lambda \sum_{k = 1}^{5} \alpha_k \norm{\beta}_{2k}^{2k} 
 \]

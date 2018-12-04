@@ -1,0 +1,12 @@
+Step sizes in R packages.
+
+Fast Cross Validation algorithm
+
+Simulations
+
+Lasso comparison
+
+Do you want me to publish to CRAN?
+
+
+Where can I find information on tuning alpha?

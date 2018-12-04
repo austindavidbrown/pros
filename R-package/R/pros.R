@@ -30,7 +30,7 @@
 #' pred = predict(fit, X_test)
 #'
 #' @export
-pros = function(X, y, alpha = c(1, 0, 0, 0, 0, 0, 0), lambda, algorithm = "proximal_gradient_cd", max_iter = 10000, tolerance = 10^(-7)) {
+pros = function(X, y, alpha = c(1, 0, 0, 0, 0, 0, 0), lambda, algorithm = "proximal_gradient_cd", max_iter = 10000, tolerance = 10^(-3)) {
   y = matrix(as.vector(t(y)), ncol = 1) # convert to column vector
 
   if (length(alpha) != 7) {
@@ -103,7 +103,7 @@ predict.pros = function(prosObj, X) {
 #' pred = predict(cv, X_test)
 #'
 #' @export
-cv.pros = function(X, y, K_fold = 5, alpha = c(1, 0, 0, 0, 0, 0, 0), lambdas = seq(10^(-7), 1, .1), algorithm = "proximal_gradient_cd", max_iter = 10000, tolerance = 10^(-7)) {
+cv.pros = function(X, y, K_fold = 5, alpha = c(1, 0, 0, 0, 0, 0, 0), lambdas = seq(10^(-7), 1, .1), algorithm = "proximal_gradient_cd", max_iter = 10000, tolerance = 10^(-3)) {
   y = matrix(as.vector(t(y)), ncol = 1) # convert to column vector
   alpha = matrix(as.vector(t(alpha)), ncol = 1) # convert to column vector
 
