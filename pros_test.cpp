@@ -88,7 +88,7 @@ void test_prostate() {
 
   // get the best lambda
   MatrixXf::Index min_row;
-  double min = cv.risks.minCoeff(&min_row);
+  cv.risks.minCoeff(&min_row);
   double best_lambda = cv.lambdas[min_row];
   cout << "\nBest Lambda:\n" << best_lambda << "\n";
 
@@ -119,7 +119,6 @@ void test_prox() {
   for (int i = 1; i < 10; i++) {
     lambdas.push_back(lambdas[i - 1] + .1);
   }
-  // sort(lambdas.begin(), lambdas.end(), std::greater<double>()); // sort in place descending
 
 
   // -----------------
@@ -157,7 +156,7 @@ void test_prox() {
 
   // get the best lambda
   MatrixXf::Index min_row;
-  double min = cv.risks.minCoeff(&min_row);
+  cv.risks.minCoeff(&min_row);
   double best_lambda = cv.lambdas[min_row];
   cout << "\nBest Lambda:\n" << best_lambda << "\n";
 }
@@ -210,7 +209,7 @@ void bench() {
 }
 
 int main() {
-  test_prostate();
+  //test_prostate();
   test_prox();
 }
 
