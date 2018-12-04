@@ -193,10 +193,14 @@ CVType cross_validation_proximal_gradient_cd(const MatrixXd& X, const VectorXd& 
     }
 
     // do the computation
-    double intercept = y_train.mean();
     MatrixXd B_matrix = warm_start_proximal_gradient_cd(X_train, y_train, alpha, lambdas, max_iter, tolerance);
     for (int l = 0; l < L; l++) {
       VectorXd B = B_matrix.row(l).transpose();
+
+      // compute the intercept
+      int n = X_train.rows();
+      double intercept = 1/((double)n) *  VectorXd::Ones(n).transpose() * (y_train.mean() * VectorXd::Ones(n) - (X_train * B));
+
       test_risks_matrix(l, k) = mean_squared_error(y_test, predict(B, intercept, X_test));
     }
   }
@@ -393,10 +397,14 @@ CVType cross_validation_subgrad_cd(const MatrixXd& X, const VectorXd& y, const d
     }
 
     // do the computation
-    double intercept = y_train.mean();
     MatrixXd B_matrix = warm_start_subgrad_cd(X_train, y_train, alpha, lambdas);
     for (int l = 0; l < L; l++) {
       VectorXd B = B_matrix.row(l).transpose();
+
+      // compute the intercept
+      int n = X_train.rows();
+      double intercept = 1/((double)n) *  VectorXd::Ones(n).transpose() * (y_train.mean() * VectorXd::Ones(n) - (X_train * B));
+      
       test_risks_matrix(l, k) = mean_squared_error(y_test, predict(B, intercept, X_test));
     }
   }

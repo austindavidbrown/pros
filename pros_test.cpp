@@ -40,9 +40,8 @@ void test_prostate() {
   VectorXd y_test = load_csv<MatrixXd>("data/prostate_y_test.csv");
   VectorXd B_0 = VectorXd::Zero(X_train.cols());
 
-  double intercept = y_train.mean();
   int K_fold = 10;
-  double lambda = .1;
+  double lambda = .01;
   int max_iter = 100000;
   double tolerance = pow(10, -3);
 
@@ -63,6 +62,11 @@ void test_prostate() {
   cout << "\nProstate Single fit test\n";
   VectorXd B = proximal_gradient_cd(B_0, X_train, y_train, alpha, lambda, max_iter, tolerance);
   cout << "\nB:\n" << B << "\n";
+
+  int n = X_train.rows();
+  double intercept = 1/((double)n) *  VectorXd::Ones(n).transpose() * (y_train.mean() * VectorXd::Ones(n) - (X_train * B)); // mean
+  cout << "\nintercept:\n" << intercept << "\n";
+
   cout << "\nMSE: " << (y_train - predict(B, intercept, X_train)).squaredNorm() << "\n";
   cout << "\nTest MSE: " << (y_test - predict(B, intercept, X_test)).squaredNorm() << "\n";
 
@@ -103,7 +107,6 @@ void test_prox() {
   VectorXd y_test = load_csv<MatrixXd>("data/y_test.csv");
   VectorXd B_0 = VectorXd::Zero(X_train.cols());
 
-  double intercept = y_train.mean();
   int K_fold = 10;
   double lambda = .1;
   int max_iter = 10000;
@@ -130,6 +133,11 @@ void test_prox() {
   //
   cout << "\nSingle fit test\n";
   VectorXd B = proximal_gradient_cd(B_0, X_train, y_train, alpha, lambda, max_iter, tolerance);
+
+  int n = X_train.rows();
+  double intercept = 1/((double)n) *  VectorXd::Ones(n).transpose() * (y_train.mean() * VectorXd::Ones(n) - (X_train * B));
+  cout << "\nintercept:\n" << intercept << "\n";
+
   cout << "\nB:\n" << B << "\n";
   cout << "\ntest MSE: " << (y_test - predict(B, intercept, X_test)).squaredNorm() << "\n";
 
