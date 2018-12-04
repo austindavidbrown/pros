@@ -17,7 +17,7 @@ extern "C" {
 
 
 SEXP R_fit(SEXP X_, SEXP y_, SEXP alpha_, SEXP lambda_, SEXP algorithm_, SEXP max_iter_, SEXP tolerance_){
-  SEXP result;
+  SEXP res;
   GetRNGstate();
 
   // Handle X
@@ -59,19 +59,31 @@ SEXP R_fit(SEXP X_, SEXP y_, SEXP alpha_, SEXP lambda_, SEXP algorithm_, SEXP ma
     B = proximal_gradient_cd(B_0, X, y, alpha, lambda, max_iter, tolerance);
   }
 
+  // compute intercept
+  int n = X.rows();
+  double intercept = 1/((double)n) *  VectorXd::Ones(n).transpose() * (y.mean() * VectorXd::Ones(n) - (X * B));
+
+
   //
   // Copy to R
   //
-  PROTECT(result = Rf_allocVector(REALSXP, B.rows()));
+  const char *names[] = {"B", "intercept", ""};
+  res = PROTECT(mkNamed(VECSXP, names)); // create response
 
-  // Copy
+  // Copy B
+  SEXP res_B;
+  PROTECT(res_B = Rf_allocVector(REALSXP, B.rows()));
   for (int i = 0; i < B.rows(); i++) {
-    REAL(result)[i] = B(i);
+    REAL(res_B)[i] = B(i);
   }
+  SET_VECTOR_ELT(res, 0, res_B);
+
+  // Copy intercept
+  SET_VECTOR_ELT(res, 1, ScalarReal(intercept));
 
   PutRNGstate();
-  UNPROTECT(1);
-  return result;
+  UNPROTECT(2);
+  return res;
 }
 
 SEXP R_cross_validation(SEXP X_, SEXP y_, SEXP K_fold_, SEXP alpha_, SEXP lambdas_, SEXP algorithm_, SEXP max_iter_, SEXP tolerance_){  

@@ -38,11 +38,9 @@ pros = function(X, y, alpha = c(1, 0, 0, 0, 0, 0, 0), lambda, algorithm = "proxi
   }
   alpha = matrix(as.vector(t(alpha)), ncol = 1) # convert to column vector
 
-  B = .Call("R_fit", as.matrix(X), y, 
+  res = .Call("R_fit", as.matrix(X), y, 
             alpha, as.double(lambda), toString(algorithm), 
             as.integer(max_iter), as.double(tolerance))
-
-  res = list("B" = B, "intercept" = mean(y))
   class(res) = "pros"
   return ( res )
 }
@@ -173,8 +171,8 @@ test = function() {
   .Call("R_fit", as.matrix(X_train), matrix(as.vector(t(y_train)), ncol = 1),
                  matrix(as.vector(t(alpha)), ncol = 1), as.double(lambda), toString(algorithm),
                  as.integer(max_iter), as.double(tolerance))
-  prosObj = pros(X_train, y_train, lambda = .1)
-  prosObj
+  fit = pros(X_train, y_train, lambda = .1)
+  fit
 
   ###
   # predict test
@@ -194,7 +192,8 @@ test = function() {
   cv = cv.pros(X_train, y_train)
   print(cv)
 
-  mean((y_train - predict(cv, X_train))^2)
-  mean((y_test - predict(cv, X_test))^2)
+  print(mean((y_train - predict(cv, X_train))^2))
+  print(mean((y_test - predict(cv, X_test))^2))
 
 }
+test()
