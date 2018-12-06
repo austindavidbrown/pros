@@ -56,7 +56,7 @@ This can be interpreted as imposing "stability" on the random variable $X$.
 \item If statisticians so freely impose such constraints then we should build a tool to allow scientists and researchers to impose such constraints on their real problems.
 
 \item  In this project, we build a package implements this idea.
-The goal is to build upon the "stability" property of ElasticNet \cite{elasticnet} and create a tool available to scientists and researchers.
+The goal is to build upon the idea of ElasticNet \cite{elasticnet} and create a tool available to scientists and researchers.
 
 \end{itemize}
 
@@ -81,7 +81,7 @@ shown on the left. Extending this idea, a new penalty $P(x) = \frac{1}{2} |x| + 
 \end{center}
 \vspace{.5cm}
 
-It seems reasonable that a scientist or researcher may want the option to "bow" out the feasible set even more.
+It seems reasonable that a scientist or researcher may want the option to "bow" out the feasible set.
 
 %%%
 % Slide
@@ -103,7 +103,7 @@ with penalty
 where $y \in \R^n$, $X \in M_{n \times p}(\R)$, and $\beta \in \R^p$, $\lambda \in \R_{+}$ and $\alpha$'s are convex combinations or use separate tuning parameters instead.
 
 \vspace{1cm}
-This is a convex, separable penalty separable, but the derivative is not Lipschitz.
+This is a convex, separable penalty, but the derivative is not Lipschitz.
 
 %%%
 % Slide
@@ -194,6 +194,8 @@ Set $k \gets 0$
 
 \item Convergence theory is unchanged from differentiable functions.
 
+\item Coordinate descent theory is possibly developed here by Nesterov (2012). The iterations are cheap so 1/k convergence is actually really good.
+
 \end{itemize}
 
 %%%
@@ -213,7 +215,7 @@ $\beta^{Warm} \gets \beta^0$
 
 \For{$k \in 1, \ldots, N$}{
 
-  $\beta^k \gets$ by Cross-Validation with $\lambda_{(k)}$ warm started with $\beta^{Warm}$.
+  $\beta^k \gets$ Using Cross-Validation with $\lambda_{(k)}$ warm started with $\beta^{Warm}$.
 
   $\beta^{Warm} \gets \beta^k$
 }
@@ -296,7 +298,8 @@ There are 8 predictors and 1 response is the log of the prostate specific antige
 
 \item \textbf{pros} \cite{pros} was used to fit the new penalty.
 
-\item This was not an extensive study due to time.
+\item This was not an extensive study due to time and the code is available to you at the \textbf{pros} repository \cite{pros}.
+I also don't really know the best way to tune my own method :(.
 
 \end{itemize}
 
@@ -306,16 +309,19 @@ There are 8 predictors and 1 response is the log of the prostate specific antige
 \newpage
 \section*{The Prostate Cancer Dataset Results}
 
+Random seed = 8989. Varying results for glmnet: sometimes lower sometimes higher.
+
 \begin{center}
 \begingroup
 \setlength{\tabcolsep}{6pt} % Default value: 6pt
 \renewcommand{\arraystretch}{2} % Default value: 1
 \begin{tabular}{ l l l}
 \textbf{Penalty} & \textbf{Tuning} & \textbf{Test MSE} \\
-Lasso Penalty (glmnet) & $\lambda = 0.001572009$ & 0.4558642 \\
-ElasticNet Penalty (glmnet) & $\alpha = (1/2, 1/2)$, $\lambda = 0.01677868$  & 0.4539746 \\
-New Penalty (pros) & $\alpha = (1/3, 0, 0, 0, 0, 2/3, 0)$, $\lambda = 20$ & 0.4443996 \\
-New Penalty (pros) & $\alpha = (1/5, 0, 1/5, 1/5, 1/5, 1/5, 0)$, $\lambda = 50$ & 0.4479282 \\
+Lasso Penalty (glmnet) & $\alpha = (1, 0)$ & 0.4558642 \\
+ElasticNet Penalty (glmnet) & $\alpha = (1/2, 1/2)$  & 0.4554527   \\
+New Penalty (pros) & $\alpha = (1/5, 0, 0, 0, 0, 4/5), \lambda = 54.02$ & 0.4442196 \\
+New Penalty (pros) & $\alpha = (1/5, 0, 1/5, 1/5, 1/5, 1/5), \lambda = 54$ & 0.4474082 \\
+New Penalty (pros) & $\alpha = (1/2, 0, 0, 0, 0, 1/2), \lambda = 21.05$ & 0.4441578 \\
 \end{tabular}
 \endgroup
 \end{center}
@@ -327,7 +333,11 @@ New Penalty (pros) & $\alpha = (1/5, 0, 1/5, 1/5, 1/5, 1/5, 0)$, $\lambda = 50$ 
 \section*{Conclusion}
 
 \begin{itemize}
-\item I would like to explore the remaining penalizations.
+\item I think that there are many "good" solutions to real problems.
+
+\item We can get "statistics" on these solutions by imposing more norms on the feasible sets building upon the Elasticnet \cite{elasticnet} idea.
+
+\item I would like to explore even more sparsity inducing penalizations such as
 
 \[
 \lambda P'(\beta) = \lambda \alpha_1 \norm{\beta}_1 + \lambda \alpha_2 \norm{\beta}_\infty 
@@ -337,14 +347,28 @@ New Penalty (pros) & $\alpha = (1/5, 0, 1/5, 1/5, 1/5, 1/5, 0)$, $\lambda = 50$ 
 \lambda P''(\beta) = \lambda \alpha_1 \norm{\beta}_1 + \lambda \sum_{k = 2}^{10} \alpha_k \norm{\beta}_{k}
 \]
 
+\end{itemize}
 
-\item Step size issue i.e. Find a fast line search.
+%%%
+% Slide
+%%%
+\newpage
+\section*{Things to Address}
+
+\begin{itemize}
+
+\item Currently, you have to tune a step size. I need to implement a fast line search. This is not too difficult actually just ran out of time.
+
+\item C++ offers many random number generators. I need to make sure I am handling this correctly and interopting with R properly.
+This is subtle and tricky.
+Also am I using a good one? I don't know.
+
+\item overflow fixes
+
+\item passing data between R and C in the fastest way.
 
 \item Look into convergence analysis.
 
-\item Look into ADMM.
-
-\item Most importantly, I think that we can bring new methods that may be useful to scientists and researchers and we can further study their properties.
 \end{itemize}
 
 %
