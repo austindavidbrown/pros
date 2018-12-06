@@ -32,7 +32,7 @@
 \setlength{\footskip}{-1cm}
  
 
-\title{Combining $l^1$ Penalization with Higher Moment Stability Constraints in Regression Models}
+\title{Combining $l^1$ Penalization with Higher Moment Constraints in Regression Models}
 \author{Austin David Brown}
 \date{\today}
 
@@ -56,7 +56,8 @@ This can be interpreted as imposing "stability" on the random variable $X$.
 \item If statisticians so freely impose such constraints then we should build a tool to allow scientists and researchers to impose such constraints on their real problems.
 
 \item  In this project, we build a package implements this idea.
-The goal is not to create the best predicting method, but instead build a tool that will allow researchers to explore stability and what a "stable" solution to their problem may look like.
+The goal is to build upon the "stability" property of ElasticNet \cite{elasticnet} and create a tool available to scientists and researchers.
+
 \end{itemize}
 
 %%%
@@ -65,7 +66,7 @@ The goal is not to create the best predicting method, but instead build a tool t
 \newpage
 \section*{Geometric Motivation}
 Consider for example an Elasticnet \cite{elasticnet} penalty $Q(x) = \frac{1}{2} |x| + \frac{1}{2} |y| + \frac{1}{2} |x|^2 + \frac{1}{2} |y|^2 \le 1$
-shown on the left and a new penalty $P(x) = \frac{1}{2} |x| + \frac{1}{2} |y| + \frac{1}{2} |x|^4 + \frac{1}{2} |y|^4 \le 1$ shown on the right.
+shown on the left. Extending this idea, a new penalty $P(x) = \frac{1}{2} |x| + \frac{1}{2} |y| + \frac{1}{2} |x|^4 + \frac{1}{2} |y|^4 \le 1$ shown on the right.
 
 \vspace{.5cm}
 \begin{center}
@@ -80,64 +81,29 @@ shown on the left and a new penalty $P(x) = \frac{1}{2} |x| + \frac{1}{2} |y| + 
 \end{center}
 \vspace{.5cm}
 
-It seems reasonable that a scientist may want the option to "bow" out the feasible set even more.
+It seems reasonable that a scientist or researcher may want the option to "bow" out the feasible set even more.
 
 %%%
 % Slide
 %%%
 \newpage
-\section*{Penalizations}
+\section*{The Setup}
 
-Define these penalizations to try to impose more "stability" for scientists and researchers (try to extend the Elasticnet idea)
-
-\[
-P(\lambda) = \lambda \alpha_0 \norm{\beta}_1 + \lambda \sum_{k = 1}^{5} \alpha_k \norm{\beta}_{2k}^{2k} 
-\]
-
-\[
-P'(\lambda) = \lambda \alpha_1 \norm{\beta}_1 + \lambda \alpha_2 \norm{\beta}_\infty 
-\]
-
-\[
-P''(\lambda) = \lambda \alpha_1 \norm{\beta}_1 + \lambda \sum_{k = 2}^{10} \alpha_k \norm{\beta}_{k}
-\]
-
-where $\lambda \in \R_{+}$ and $\alpha$'s are convex combinations or use separate tuning parameters instead.
-These are convex and $P$ is strongly convex!
-
-%%%
-% Slide
-%%%
-\newpage
-\section*{Objective}
-
-Let
+Define a new penalty to try to impose more "stability" for scientists and researchers (try to extend the Elasticnet idea). Let
 \[
 L_{\lambda}(\beta) = \frac{1}{2} \norm{y - X \beta}_2^2 + \lambda P(\beta)
 \]
-be the objective with $y \in \R^n$ centered, $X \in M_{n \times p}(\R)$ centered, and $\beta \in \R^p$.
+
+with penalty
+
+\[
+\lambda P(\beta) = \lambda \alpha_0 \norm{\beta}_1 + \lambda \sum_{k = 1}^{5} \alpha_k \norm{\beta}_{2k}^{2k} 
+\]
+
+where $y \in \R^n$, $X \in M_{n \times p}(\R)$, and $\beta \in \R^p$, $\lambda \in \R_{+}$ and $\alpha$'s are convex combinations or use separate tuning parameters instead.
 
 \vspace{1cm}
-
-\begin{itemize}
-\item I only had time to do Euclidean loss but this can be extended.
-
-\item I only had time to implement the first penalization, so consider only the first one from here on out.
-
-\item I now know how to do the others actually.
-\end{itemize}
-
-%%%
-% Slide
-%%%
-\newpage
-\section*{The Plan}
-
-\begin{itemize}
-
-\item \textbf{glmnet} \cite{glmnet} uses coordinate descent, but the implementation cannot be used and a new algorithm needs to be used.
-
-\end{itemize}
+This is a convex, separable penalty separable, but the derivative is not Lipschitz.
 
 %%%
 % Slide
@@ -168,7 +134,6 @@ Set $k \gets 0$
 }
 
 \end{algorithm}
-\vspace{.5cm}
 
 %%%
 % Slide
@@ -177,18 +142,15 @@ Set $k \gets 0$
 \section*{Drawbacks}
 
 \begin{itemize}
-\item Not a descent method. 
+\item Not a descent method.
 
 \item No good stopping criterion.
 
-\item The stopping criterion is also expensive at $O(n^2)$ flops.
-
 \item Convergence theory is worse.
 
-\item Rarely produces sparse solutions really small values instead.
+\item Tends to produce really small values instead of truly sparse solutions.
 
 \end{itemize}
-
 
 %%%
 % Slide
@@ -218,7 +180,6 @@ Set $k \gets 0$
   $k \gets k + 1$
 }
 \end{algorithm}
-\vspace{.5cm}
 
 %%%
 % Slide
@@ -239,7 +200,31 @@ Set $k \gets 0$
 % Slide
 %%%
 \newpage
-\section*{Architecture}
+\section*{Cross-Validation Implementation}
+
+\vspace{.5cm}
+\begin{algorithm}[H]
+\caption{Warm Start Cross-Validation}
+Choose a sequence of Langrangian dual variables $\lambda_1, \ldots, \lambda_N$, and initial value $\beta^0$.
+
+Order $\lambda_{(1)}, \ldots, \lambda_{(N)}$ descending.
+
+$\beta^{Warm} \gets \beta^0$ 
+
+\For{$k \in 1, \ldots, N$}{
+
+  $\beta^k \gets$ by Cross-Validation with $\lambda_{(k)}$ warm started with $\beta^{Warm}$.
+
+  $\beta^{Warm} \gets \beta^k$
+}
+
+\end{algorithm}
+
+%%%
+% Slide
+%%%
+\newpage
+\section*{Package Architecture}
 
 Written entirely in C++ for speed using Eigen \cite{eigen} and can be interfaced to many other popular languages.
 
@@ -265,7 +250,14 @@ Written entirely in C++ for speed using Eigen \cite{eigen} and can be interfaced
 % Slide 8
 %%%
 \newpage
-\section*{Simple, Familiar Interface and No Dependencies}
+\section*{Penalized Regression on Steroids}
+
+Installation: 
+
+\begin{verbatim}
+> devtools::install_github("austindavidbrown/pros/R-package")
+\end{verbatim}
+
 
 A single fit function with prediction
 
@@ -281,65 +273,77 @@ A cross-validation fit function with prediction
 > predict(cv, new_X)
 \end{verbatim}
 
-Ran out of time for plotting, but this would be cool.
+There is even a \href{https://github.com/austindavidbrown/pros/blob/master/R-package/pros.pdf}{reference manual}.
 
-No dependencies! I did not use RCPP.
 
 %%%
 % Slide
 %%%
 \newpage
-\section*{Cross-Validation Implementation}
+\section*{The Prostate Cancer Dataset Analysis}
 
-\vspace{.5cm}
-\begin{algorithm}[H]
-\caption{Warm Start Cross-Validation}
-Choose a sequence of Langrangian dual variables $\lambda_1, \ldots, \lambda_N$, and initial value $\beta^0$.
-
-Order $\lambda_{(1)}, \ldots, \lambda_{(N)}$ descending.
-
-$\beta^{Warm} \gets \beta^0$ 
-
-\For{$k \in 1, \ldots, N$}{
-
-  $\beta^k \gets$ by Cross-Validation with $\lambda_{(k)}$ warm started with $\beta^{Warm}$.
-
-  $\beta^{Warm} \gets \beta^k$
-}
-
-\end{algorithm}
-\vspace{.5cm}
-
-%%%
-% Slide
-%%%
-\newpage
-\section*{Penalized Regression on Steroids}
-
-
-\begin{Large}
-\href{https://github.com/austindavidbrown/pros}{Penalized Regression on Steroids on Github}
-\end{Large}
+This is a popular dataset from Stamey et al. \cite{prostate} and analyzed in the ElasticNet paper Zou and Hastie \cite{elasticnet}.
+There are 8 predictors and 1 response is the log of the prostate specific antigen.
 
 \begin{itemize}
-\item The name doesn't fit really since I only implemented 1 penalization
+\item The data is split into a training set with 67 observations and a test set with 30 observations.
 
-\item Talk about python prototype
+\item The predictor data was standardized.
 
-\item Show how to download
+\item 10-fold cross-validation and manual tuning due to time constraint of the project were used.
 
-\item Show the reference manual
+\item The \textbf{glmnet} \cite{glmnet} library was used to fit and tune the Lasso and a naive un-tuned ElasticNet.
+
+\item \textbf{pros} \cite{pros} was used to fit the new penalty.
+
+\item This was not an extensive study due to time.
+
 \end{itemize}
 
 %%%
 % Slide
 %%%
 \newpage
-\section*{Open Questions}
+\section*{The Prostate Cancer Dataset Results}
 
-How to handle users and step sizes since we want to make it easy for users to use.
+\begin{center}
+\begingroup
+\setlength{\tabcolsep}{6pt} % Default value: 6pt
+\renewcommand{\arraystretch}{2} % Default value: 1
+\begin{tabular}{ l l l}
+\textbf{Penalty} & \textbf{Tuning} & \textbf{Test MSE} \\
+Lasso Penalty (glmnet) & $\lambda = 0.001572009$ & 0.4558642 \\
+ElasticNet Penalty (glmnet) & $\alpha = (1/2, 1/2)$, $\lambda = 0.01677868$  & 0.4539746 \\
+New Penalty (pros) & $\alpha = (1/3, 0, 0, 0, 0, 2/3, 0)$, $\lambda = 20$ & 0.4443996 \\
+New Penalty (pros) & $\alpha = (1/5, 0, 1/5, 1/5, 1/5, 1/5, 0)$, $\lambda = 50$ & 0.4479282 \\
+\end{tabular}
+\endgroup
+\end{center}
 
-Backtracking line search?
+%%%
+% Slide
+%%%
+\newpage
+\section*{Conclusion}
+
+\begin{itemize}
+\item I would like to explore the remaining penalizations.
+
+\[
+\lambda P'(\beta) = \lambda \alpha_1 \norm{\beta}_1 + \lambda \alpha_2 \norm{\beta}_\infty 
+\]
+
+\[
+\lambda P''(\beta) = \lambda \alpha_1 \norm{\beta}_1 + \lambda \sum_{k = 2}^{10} \alpha_k \norm{\beta}_{k}
+\]
+
+
+\item Step size issue i.e. Find a fast line search.
+
+\item Look into convergence analysis.
+
+\item Most importantly, I think that we can bring new methods that may be useful to scientists and researchers and we can further study their properties.
+\end{itemize}
 
 %
 % Bib
@@ -347,6 +351,10 @@ Backtracking line search?
 \newpage
 \small
 \begin{thebibliography}{1}
+
+\bibitem{prostate}
+Stamey, T.A., Kabalin, J.N., McNeal, J.E., Johnstone, I.M., Freiha, F., Redwine, E.A. and Yang, N. (1989)
+Prostate specific antigen in the diagnosis and treatment of adenocarcinoma of the prostate: II. radical prostatectomy treated patients, Journal of Urology 141(5), 1076–1083.
 
 \bibitem{pros}
 PROS. \href{https://github.com/austindavidbrown/pros}{github.com/austindavidbrown/pros}
