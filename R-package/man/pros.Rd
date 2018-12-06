@@ -6,7 +6,7 @@
 \usage{
 pros(X, y, alpha = c(1, 0, 0, 0, 0, 0), lambda,
   algorithm = "proximal_gradient_cd", max_iter = 1e+05,
-  tolerance = 10^(-3))
+  tolerance = 10^(-3), random_seed = 0)
 }
 \arguments{
 \item{X}{the matrix of the data}
@@ -34,6 +34,8 @@ pros(X, y, alpha = c(1, 0, 0, 0, 0, 0), lambda,
 \item{max_iter}{maximum iterations. This also tunes the step size.}
 
 \item{tolerance}{tolerance}
+
+\item{random_seed}{random seed}
 }
 \value{
 A class \code{pros}

@@ -20,7 +20,6 @@ SEXP R_fit(SEXP X_, SEXP y_,
            SEXP alpha_, SEXP lambda_, SEXP algorithm_, 
            SEXP max_iter_, SEXP tolerance_, SEXP random_seed_){
   SEXP res;
-  GetRNGstate();
 
   // Handle X
   SEXP dim_X = getAttrib(X_, R_DimSymbol);
@@ -86,7 +85,6 @@ SEXP R_fit(SEXP X_, SEXP y_,
   // Copy intercept
   SET_VECTOR_ELT(res, 1, ScalarReal(intercept));
 
-  PutRNGstate();
   UNPROTECT(2);
   return res;
 }
@@ -95,7 +93,6 @@ SEXP R_cross_validation(SEXP X_, SEXP y_,
                         SEXP K_fold_, SEXP alpha_, SEXP lambdas_, SEXP algorithm_, 
                         SEXP max_iter_, SEXP tolerance_, SEXP random_seed_){  
   SEXP res;
-  GetRNGstate();
 
   // Handle X
   SEXP dim_X = getAttrib(X_, R_DimSymbol);
@@ -176,7 +173,6 @@ SEXP R_cross_validation(SEXP X_, SEXP y_,
   }
   SET_VECTOR_ELT(res, 2, res_risks);
 
-  PutRNGstate();
   UNPROTECT(3);
   return res;
 }
