@@ -18,7 +18,7 @@ typedef long double ld;
 typedef Matrix<long double, Dynamic, Dynamic> MatrixXld;
 typedef Matrix<long double, Dynamic, 1> VectorXld;
 
-typedef Matrix<double, 7, 1> Vector7d;
+typedef Matrix<double, 6, 1> Vector6d;
 
 struct CVType {
   VectorXd risks;
@@ -70,7 +70,7 @@ VectorXd predict(const VectorXd& B, const double intercept, const MatrixXd& X) {
 // Possible change: Diminishing from Nesterov's Lecture Notes: pow(1 + j, -1/2.0f)
 //
 VectorXd proximal_gradient_cd(VectorXd B, const MatrixXd& X, const VectorXd& y, 
-                              const Vector7d& alpha, const double lambda, 
+                              const Vector6d& alpha, const double lambda, 
                               const int max_iter, const double tolerance) {
   const int n = X.rows();
   const int p = X.cols();
@@ -123,7 +123,7 @@ VectorXd proximal_gradient_cd(VectorXd B, const MatrixXd& X, const VectorXd& y,
 // Returns a matrix of B
 // We do not sort the lambdas here, they are ordered how you want them
 MatrixXd warm_start_proximal_gradient_cd(const MatrixXd& X, const VectorXd& y, 
-                                         const Vector7d& alpha, vector<double> lambdas, 
+                                         const Vector6d& alpha, vector<double> lambdas, 
                                          const int max_iter, const double tolerance) {
   int p = X.cols();
   int L = lambdas.size();
@@ -144,7 +144,7 @@ MatrixXd warm_start_proximal_gradient_cd(const MatrixXd& X, const VectorXd& y,
 
 // Prox Gradient Cross Validation
 CVType cross_validation_proximal_gradient_cd(const MatrixXd& X, const VectorXd& y, 
-                                             const double K, const Vector7d& alpha, vector<double> lambdas, 
+                                             const double K, const Vector6d& alpha, vector<double> lambdas, 
                                              const int max_iter, const double tolerance) {
   int n = X.rows();
   int p = X.cols();
@@ -268,7 +268,7 @@ VectorXd sign(VectorXd v) {
 // Subgradient coordinate descent
 // Step size: From Nesterov's Lecture Notes
 //
-VectorXd subgrad_cd(VectorXd B, const MatrixXd& X, const VectorXd& y, const Vector7d& alpha, const double lambda) {
+VectorXd subgrad_cd(VectorXd B, const MatrixXd& X, const VectorXd& y, const Vector6d& alpha, const double lambda) {
   const int n = X.rows();
   const int p = X.cols();
   const int max_iter = 10000;
@@ -330,7 +330,7 @@ VectorXd subgrad_cd(VectorXd B, const MatrixXd& X, const VectorXd& y, const Vect
 
 // Returns a matrix of B
 // We do not sort the lambdas here, they are ordered how you want them
-MatrixXd warm_start_subgrad_cd(const MatrixXd& X, const VectorXd& y, const Vector7d& alpha, vector<double> lambdas) {
+MatrixXd warm_start_subgrad_cd(const MatrixXd& X, const VectorXd& y, const Vector6d& alpha, vector<double> lambdas) {
   int p = X.cols();
   int L = lambdas.size();
   MatrixXd B_matrix = MatrixXd::Zero(L, p);
@@ -349,7 +349,7 @@ MatrixXd warm_start_subgrad_cd(const MatrixXd& X, const VectorXd& y, const Vecto
 }
 
 // Subgradient Cross Validation
-CVType cross_validation_subgrad_cd(const MatrixXd& X, const VectorXd& y, const double K, const Vector7d& alpha, vector<double> lambdas) {
+CVType cross_validation_subgrad_cd(const MatrixXd& X, const VectorXd& y, const double K, const Vector6d& alpha, vector<double> lambdas) {
   int n = X.rows();
   int p = X.cols();
   int L = lambdas.size();

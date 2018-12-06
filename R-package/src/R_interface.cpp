@@ -46,7 +46,7 @@ SEXP R_fit(SEXP X_, SEXP y_, SEXP alpha_, SEXP lambda_, SEXP algorithm_, SEXP ma
   // Setup
   Map<Matrix<double, Dynamic, Dynamic, ColMajor>> X(p_X, nrow_X, ncol_X); // R is laid out in memory column major
   Map<VectorXd> y(p_y, nrow_y);
-  Map<Vector7d> alpha(p_alpha);
+  Map<Vector6d> alpha(p_alpha);
   double lambda = REAL(lambda_)[0];
 
   // fit
@@ -120,7 +120,7 @@ SEXP R_cross_validation(SEXP X_, SEXP y_, SEXP K_fold_, SEXP alpha_, SEXP lambda
   Map<Matrix<double, Dynamic, Dynamic, ColMajor>> X(p_X, nrow_X, ncol_X);
   Map<VectorXd> y(p_y, nrow_y);
   double K_fold = REAL(K_fold_)[0];
-  Map<Vector7d> alpha(p_alpha);
+  Map<Vector6d> alpha(p_alpha);
 
   // Build lambdas
   vector<double> lambdas;

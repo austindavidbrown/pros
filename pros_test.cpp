@@ -46,8 +46,8 @@ void test_prostate() {
   double tolerance = pow(10, -3);
 
   // create alpha
-  double alpha_data[] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
-  Map<Vector7d> alpha(alpha_data);
+  double alpha_data[] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+  Map<Vector6d> alpha(alpha_data);
 
   // create lambdas
   vector<double> lambdas;
@@ -113,8 +113,8 @@ void test_prox() {
   double tolerance = pow(10, -3);
 
   // create alpha
-  double alpha_data[] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
-  Map<Vector7d> alpha(alpha_data);
+  double alpha_data[] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+  Map<Vector6d> alpha(alpha_data);
 
   // create lambdas
   vector<double> lambdas;
