@@ -330,6 +330,48 @@ New Penalty (pros) & $\alpha = (1/2, 0, 0, 0, 0, 1/2), \lambda = 21.05$ & 0.4441
 % Slide
 %%%
 \newpage
+\section*{The Boston Housing Dataset Analysis}
+
+The Boston Housing dataset is popular from Harrison et al. \cite{boston_housing}.
+There are 13 predictors and the response is the median value of owner-occupied homes in \$1000s.
+
+\begin{itemize}
+\item The data is randomly split into a training set with 404 observations and a test set with 102 observations.
+
+\item The predictor data is standardized.
+
+\item Basic 10-fold cross-validation no real tuning.
+
+\item The \textbf{glmnet} \cite{glmnet} library was used for the Lasso and the ElasticNet.
+
+\item \textbf{pros} \cite{pros} was used to fit the new penalty.
+\end{itemize}
+
+%%%
+% Slide
+%%%
+\newpage
+\section*{The Boston Housing Dataset Results}
+
+Random seed = 8989. Varying results for glmnet: sometimes lower sometimes higher.
+
+\begin{center}
+\begingroup
+\setlength{\tabcolsep}{6pt} % Default value: 6pt
+\renewcommand{\arraystretch}{2} % Default value: 1
+\begin{tabular}{ l l l}
+\textbf{Penalty} & \textbf{Tuning} & \textbf{Test MSE} \\
+Lasso Penalty (glmnet) & $\alpha = (1, 0)$ & 28.52329 \\
+ElasticNet Penalty (glmnet) & $\alpha = (1/2, 1/2)$  & 27.46224   \\
+New Penalty (pros) & $\alpha = (1/2, 0, 0, 0, 0, 1/2)$ & 26.3852 \\
+\end{tabular}
+\endgroup
+\end{center}
+
+%%%
+% Slide
+%%%
+\newpage
 \section*{Conclusion}
 
 \begin{itemize}
@@ -377,6 +419,11 @@ You need to pass in a seed from R and I use the 64-bit Mersenne Twister by Matsu
 \newpage
 \small
 \begin{thebibliography}{1}
+
+\bibitem{boston_housing}
+Harrison, D. and Rubinfeld, D.L. (1978) Hedonic prices and the
+     demand for clean air.  J. Environ. Economics and Management 5,
+     81-102.
 
 \bibitem{prostate}
 Stamey, T.A., Kabalin, J.N., McNeal, J.E., Johnstone, I.M., Freiha, F., Redwine, E.A. and Yang, N. (1989)
