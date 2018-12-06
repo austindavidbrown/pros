@@ -112,7 +112,7 @@ void test_prox() {
   double lambda = .1;
   int max_iter = 10000;
   double tolerance = pow(10, -3);
-  int random_seed = 145235342;
+  int random_seed = 34525345;
 
   // create alpha
   double alpha_data[] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
@@ -224,8 +224,8 @@ void test_random_gen() {
   std::iota (std::begin(I), std::end(I), 0);
   std::random_device rd;
   cout << rd();
-  std::seed_seq seed{rd(), rd(), rd(), rd(), rd(), rd(), rd(), rd()};
-  std::mt19937 rng(seed);
+  std::seed_seq random_seed{rd(), rd(), rd(), rd(), rd(), rd(), rd(), rd()};
+  std::mt19937_64 rng(random_seed);
   time_t start = clock();
   std::shuffle(std::begin(I), std::end(I), rng); // permute
   std::cout << (double)(clock() - start) / CLOCKS_PER_SEC * 1000 << "ms" << std::endl;

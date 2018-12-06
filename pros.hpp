@@ -75,10 +75,10 @@ VectorXd proximal_gradient_cd(VectorXd B, const MatrixXd& X, const VectorXd& y,
   const int n = X.rows();
   const int p = X.cols();
 
-  // Create random permutation for coordinate descent
+  // Create random permutation for coordinate descent using the Mersenne twister random number engine 64 bit
   vector<int> I(p);
   std::iota (std::begin(I), std::end(I), 0);
-  auto rng = std::default_random_engine {};
+  std::mt19937_64 rng(random_seed);
 
   // Center: Convert X, y to mean 0
   MatrixXd cX = MatrixXd(n, p);
@@ -152,10 +152,10 @@ CVType cross_validation_proximal_gradient_cd(const MatrixXd& X, const VectorXd& 
   MatrixXd test_risks_matrix = MatrixXd::Zero(L, K);
   sort(lambdas.begin(), lambdas.end(), std::greater<double>()); // sort the lambdas in place descending
 
-  // Create random permutation
+  // Create random permutation using the Mersenne twister random number engine 64 bit
   vector<int> I(n);
   std::iota (std::begin(I), std::end(I), 0);
-  auto rng = std::default_random_engine {};
+  std::mt19937_64 rng(random_seed);
   std::shuffle(std::begin(I), std::end(I), rng); // permute
 
   vector<vector<int>> partitions = partition(I, K);
