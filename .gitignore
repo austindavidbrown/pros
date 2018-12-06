@@ -1,15 +1,7 @@
 references/
-X_train.csv
-y_train.csv
-X_test.csv
-y_test.csv
 
-#files being edited
-*~
-# make and build files
-*.lst
-*.o
-*.eep
-*.lss
-*.map
-*.sym
+R-package/src/R_interface.o
+R-package/src/R_interface.so
+
+-*.o
+-*.so

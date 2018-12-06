@@ -44,6 +44,7 @@ void test_prostate() {
   double lambda = .01;
   int max_iter = 100000;
   double tolerance = pow(10, -3);
+  int random_seed = 145235342;
 
   // create alpha
   double alpha_data[] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
@@ -60,7 +61,7 @@ void test_prostate() {
   // Single fit test
   //
   cout << "\nProstate Single fit test\n";
-  VectorXd B = proximal_gradient_cd(B_0, X_train, y_train, alpha, lambda, max_iter, tolerance);
+  VectorXd B = proximal_gradient_cd(B_0, X_train, y_train, alpha, lambda, max_iter, tolerance, random_seed);
   cout << "\nB:\n" << B << "\n";
 
   int n = X_train.rows();
@@ -74,14 +75,14 @@ void test_prostate() {
   // Warm start test
   //
   cout << "\nWarm start test\n";
-  MatrixXd B_matrix = warm_start_proximal_gradient_cd(X_train, y_train, alpha, lambdas, max_iter, tolerance);
+  MatrixXd B_matrix = warm_start_proximal_gradient_cd(X_train, y_train, alpha, lambdas, max_iter, tolerance, random_seed);
   cout << "\nB Matrix last:\n" << B_matrix.row(B_matrix.rows() - 1).transpose() << "\n";
 
   //
   // CV test
   //
   cout << "\nCV test\n";
-  CVType cv = cross_validation_proximal_gradient_cd(X_train, y_train, K_fold, alpha, lambdas, max_iter, tolerance);
+  CVType cv = cross_validation_proximal_gradient_cd(X_train, y_train, K_fold, alpha, lambdas, max_iter, tolerance, random_seed);
   cout << "\nCV Risks:\n" << cv.risks << "\n";
 
   cout << "\nOrdered Lambdas\n";
@@ -111,6 +112,7 @@ void test_prox() {
   double lambda = .1;
   int max_iter = 10000;
   double tolerance = pow(10, -3);
+  int random_seed = 145235342;
 
   // create alpha
   double alpha_data[] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
@@ -132,7 +134,7 @@ void test_prox() {
   // Single fit test
   //
   cout << "\nSingle fit test\n";
-  VectorXd B = proximal_gradient_cd(B_0, X_train, y_train, alpha, lambda, max_iter, tolerance);
+  VectorXd B = proximal_gradient_cd(B_0, X_train, y_train, alpha, lambda, max_iter, tolerance, random_seed);
 
   int n = X_train.rows();
   double intercept = 1/((double)n) *  VectorXd::Ones(n).transpose() * (y_train.mean() * VectorXd::Ones(n) - (X_train * B));
@@ -146,14 +148,14 @@ void test_prox() {
   // Warm start test
   //
   cout << "\nWarm start test\n";
-  MatrixXd B_matrix = warm_start_proximal_gradient_cd(X_train, y_train, alpha, lambdas, max_iter, tolerance);
+  MatrixXd B_matrix = warm_start_proximal_gradient_cd(X_train, y_train, alpha, lambdas, max_iter, tolerance, random_seed);
   cout << "\nB Matrix last:\n" << B_matrix.row(B_matrix.rows() - 1).transpose() << "\n";
 
   //
   // CV test
   //
   cout << "\nCV test\n";
-  CVType cv = cross_validation_proximal_gradient_cd(X_train, y_train, K_fold, alpha, lambdas, max_iter, tolerance);
+  CVType cv = cross_validation_proximal_gradient_cd(X_train, y_train, K_fold, alpha, lambdas, max_iter, tolerance, random_seed);
   cout << "\nCV Risks:\n" << cv.risks << "\n";
 
   cout << "\nOrdered Lambdas\n";
@@ -216,8 +218,28 @@ void bench() {
   std::cout << (double)(clock() - start) / CLOCKS_PER_SEC * 1000 << "ms" << std::endl;
 }
 
+void test_random_gen() {
+  int n = 10;
+  vector<int> I(n);
+  std::iota (std::begin(I), std::end(I), 0);
+  std::random_device rd;
+  cout << rd();
+  std::seed_seq seed{rd(), rd(), rd(), rd(), rd(), rd(), rd(), rd()};
+  std::mt19937 rng(seed);
+  time_t start = clock();
+  std::shuffle(std::begin(I), std::end(I), rng); // permute
+  std::cout << (double)(clock() - start) / CLOCKS_PER_SEC * 1000 << "ms" << std::endl;
+
+  cout << "\n";
+  for (auto& i : I) {
+    cout << i << " ";
+  }
+  cout << "\n";
+}
+
 int main() {
   //test_prostate();
   test_prox();
+  //test_random_gen();
 }
 

@@ -16,7 +16,9 @@ using std::cout;
 extern "C" {
 
 
-SEXP R_fit(SEXP X_, SEXP y_, SEXP alpha_, SEXP lambda_, SEXP algorithm_, SEXP max_iter_, SEXP tolerance_){
+SEXP R_fit(SEXP X_, SEXP y_, 
+           SEXP alpha_, SEXP lambda_, SEXP algorithm_, 
+           SEXP max_iter_, SEXP tolerance_, SEXP random_seed_){
   SEXP res;
   GetRNGstate();
 
@@ -40,8 +42,11 @@ SEXP R_fit(SEXP X_, SEXP y_, SEXP alpha_, SEXP lambda_, SEXP algorithm_, SEXP ma
   // Handle max_iter
   const int max_iter = INTEGER(max_iter_)[0];
 
- // Handle tolerance
+  // Handle tolerance
   const double tolerance = REAL(tolerance_)[0];
+
+  // Handle random seed
+  const int random_seed = INTEGER(random_seed_)[0];
 
   // Setup
   Map<Matrix<double, Dynamic, Dynamic, ColMajor>> X(p_X, nrow_X, ncol_X); // R is laid out in memory column major
@@ -56,7 +61,7 @@ SEXP R_fit(SEXP X_, SEXP y_, SEXP alpha_, SEXP lambda_, SEXP algorithm_, SEXP ma
     cout << "Using Subgradient Coordinate Descent!\n";
     B = subgrad_cd(B_0, X, y, alpha, lambda);
   } else {
-    B = proximal_gradient_cd(B_0, X, y, alpha, lambda, max_iter, tolerance);
+    B = proximal_gradient_cd(B_0, X, y, alpha, lambda, max_iter, tolerance, random_seed);
   }
 
   // compute intercept
@@ -86,7 +91,9 @@ SEXP R_fit(SEXP X_, SEXP y_, SEXP alpha_, SEXP lambda_, SEXP algorithm_, SEXP ma
   return res;
 }
 
-SEXP R_cross_validation(SEXP X_, SEXP y_, SEXP K_fold_, SEXP alpha_, SEXP lambdas_, SEXP algorithm_, SEXP max_iter_, SEXP tolerance_){  
+SEXP R_cross_validation(SEXP X_, SEXP y_, 
+                        SEXP K_fold_, SEXP alpha_, SEXP lambdas_, SEXP algorithm_, 
+                        SEXP max_iter_, SEXP tolerance_, SEXP random_seed_){  
   SEXP res;
   GetRNGstate();
 
@@ -116,6 +123,9 @@ SEXP R_cross_validation(SEXP X_, SEXP y_, SEXP K_fold_, SEXP alpha_, SEXP lambda
  // Handle tolerance
   const double tolerance = REAL(tolerance_)[0];
 
+  // Handle random seed
+  const int random_seed = INTEGER(random_seed_)[0];
+
   // Setup
   Map<Matrix<double, Dynamic, Dynamic, ColMajor>> X(p_X, nrow_X, ncol_X);
   Map<VectorXd> y(p_y, nrow_y);
@@ -132,7 +142,7 @@ SEXP R_cross_validation(SEXP X_, SEXP y_, SEXP K_fold_, SEXP alpha_, SEXP lambda
     cout << "Using Subgradient Coordinate Descent\n";
     cv = cross_validation_subgrad_cd(X, y, K_fold, alpha, lambdas);
   } else {
-    cv = cross_validation_proximal_gradient_cd(X, y, K_fold, alpha, lambdas, max_iter, tolerance);
+    cv = cross_validation_proximal_gradient_cd(X, y, K_fold, alpha, lambdas, max_iter, tolerance, random_seed);
   }
   vector<double> cv_lambdas = cv.lambdas;
   VectorXd cv_risks = cv.risks;
