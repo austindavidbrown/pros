@@ -17,6 +17,9 @@ y_test = as.vector(test[, 9])
 X_train = scale(X_train)
 X_test = scale(X_test)
 
+###
+# Glmnet
+###
 cv_glmnet_lasso = cv.glmnet(X_train, y_train, alpha = 1, nfolds = 10, standardize = F)
 mean((y_test - predict(cv_glmnet_lasso, X_test))^2)
 
@@ -32,7 +35,9 @@ I = which.min(risks)
 alphas[I]
 risks[I]
 
-# Don't touch
+###
+# Pros
+###
 alpha = c(.2, 0, 0, 0, 0, 1 -.2)
 fit = pros(X_train, y_train, lambda = 54.02, alpha = alpha, max_iter = 100000, tolerance = 10^(-3))
 mean((y_test - predict(fit, X_test))^2)
@@ -40,6 +45,7 @@ mean((y_test - predict(fit, X_test))^2)
 alpha = c(1/5, 0, 1/5, 1/5, 1/5, 1/5)
 fit = pros(X_train, y_train, lambda = 54, alpha = alpha, max_iter = 100000, tolerance = 10^(-3))
 mean((y_test - predict(fit, X_test))^2)
+
 
 
 

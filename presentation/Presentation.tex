@@ -359,9 +359,9 @@ New Penalty (pros) & $\alpha = (1/2, 0, 0, 0, 0, 1/2), \lambda = 21.05$ & 0.4441
 
 \item Currently, you have to tune a step size. I need to implement a fast line search. This is not too difficult actually just ran out of time.
 
-\item C++ offers many random number generators. I need to make sure I am handling this correctly and interopting with R properly.
-This is subtle and tricky.
-Also am I using a good one? I don't know.
+\item C++ offers many random number generators.
+I believe I handled this in the same way that XGboost does.
+You need to pass in a seed from R and I use the 64-bit Mersenne Twister by Matsumoto and Nishimura (2000).
 
 \item overflow fixes
 
