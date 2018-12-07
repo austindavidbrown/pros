@@ -48,15 +48,15 @@
 \section*{Motivation}
 
 \begin{itemize}
+
 \item In statistics and probability theory it is common to impose moment assumptions on a random variable $X : \Omega \to \R^n$ such as $E(\norm{X}^k) < \infty$ for $k \in \R$.
 
 \item These constraints correspond to the $L^p$ spaces which allow control over the width and the height of such random variables.
-This can be interpreted as imposing "stability" on the random variable $X$.
+Thus, these norms give us some "statistics" about the random variable.
 
-\item If statisticians so freely impose such constraints then we should build a tool to allow scientists and researchers to impose such constraints on their real problems.
+\item If statisticians so freely impose such constraints then we should build a tool to allow scientists and researchers to impose similar constraints on their real problems.
 
-\item  In this project, we build a package implements this idea.
-The goal is to build upon the idea of ElasticNet \cite{elasticnet} and create a tool available to scientists and researchers.
+\item  In this project, I built an R package to expand upon the idea of ElasticNet \cite{elasticnet} that can hopefully be useful to scientists and researchers.
 
 \end{itemize}
 
@@ -81,7 +81,7 @@ shown on the left. Extending this idea, a new penalty $P(x) = \frac{1}{2} |x| + 
 \end{center}
 \vspace{.5cm}
 
-It seems reasonable that a scientist or researcher may want the option to "bow" out the feasible set.
+It is possible that a scientist or researcher may want the option to "bow" out the feasible set even more.
 
 %%%
 % Slide
@@ -89,7 +89,7 @@ It seems reasonable that a scientist or researcher may want the option to "bow" 
 \newpage
 \section*{The Setup}
 
-Define a new penalty to try to impose more "stability" for scientists and researchers (try to extend the Elasticnet idea). Let
+Define a new penalty to try to impose more "stability" for scientists and researchers (try to extend the Elasticnet \cite{elasticnet} idea). Let
 \[
 L_{\lambda}(\beta) = \frac{1}{2} \norm{y - X \beta}_2^2 + \lambda P(\beta)
 \]
@@ -103,7 +103,7 @@ with penalty
 where $y \in \R^n$, $X \in M_{n \times p}(\R)$, and $\beta \in \R^p$, $\lambda \in \R_{+}$ and $\alpha$'s are convex combinations or use separate tuning parameters instead.
 
 \vspace{1cm}
-This is a convex, separable penalty, but the derivative is not Lipschitz.
+An important property is that this is a convex and completely separable penalty.
 
 %%%
 % Slide
@@ -120,15 +120,11 @@ Set $k \gets 0$
 
 \Repeat{Until the loss difference $\Delta L$ is less than $\delta$}{ 
 
-  Set the step size $h^k \gets \frac{R}{\sqrt{1 + k}}$ for some $R > 0$ or use a constant step size.
+  Randomly choose $i_k \in \{1, \ldots, p\}$
 
-  Permute $I = \{1, \ldots, p\}$
+  $h_i^k \gets \frac{R}{\sqrt{1 + k}}$ for some $R > 0$ or use $\frac{R}{\sqrt{1 + N}}$ where $N$ is the length of the algorithm.
 
-  \For {$i \in I$}{
-
-    $\beta^{k + 1}_i \gets \beta^{k}_i - h^i g^i$ where $g^i \in (\partial L)_i$
-
-  }
+  $\beta_{i_{k + 1}} \gets \beta_{i_k} - h^k g^{i_k}$ where $g^{i_k} \in (\partial L)_{i_k}$
 
   $k \gets k + 1$
 }
@@ -142,11 +138,11 @@ Set $k \gets 0$
 \section*{Drawbacks}
 
 \begin{itemize}
-\item Not a descent method.
+\item Not a descent method, so you cannot do line search.
 
 \item No good stopping criterion.
 
-\item Convergence theory is worse.
+\item There are many choices for the subgradient.
 
 \item Tends to produce really small values instead of truly sparse solutions.
 
@@ -156,7 +152,7 @@ Set $k \gets 0$
 % Slide
 %%%
 \newpage
-\section*{A Much Better Algorithm}
+\section*{A Better Algorithm}
 
 \vspace{.5cm}
 \begin{algorithm}[H]
@@ -167,15 +163,11 @@ Set $k \gets 0$
 
 \Repeat{Until the Moreau-Yoshida mapping $M_{h_k, f} < \delta$}{ 
 
-  Set the step size $h^k > 0$ with diminishing or line search.
+  Set the step size $h^k > 0$ constant, diminishing or by line search.
 
-  Randomly permute $I = \{1, \ldots, p\}$
+  Randomly choose $i_k \in \{1, \ldots, p\}$
 
-  \For {$i \in I$}{
-
-    $\beta^{k + 1}_i \gets (\textbf{prox}_{h^k L})_i ( \beta^k_i - h^k \langle X_i, y - X \beta \rangle )$
-
-  }
+  $\beta^{k + 1}_i \gets (\textbf{prox}_{h^k L})_i ( \beta^k_i - h^k \langle X_i, y - X \beta \rangle )$
 
   $k \gets k + 1$
 }
@@ -188,13 +180,15 @@ Set $k \gets 0$
 \section*{Benefits}
 
 \begin{itemize}
-\item A descent method, so can do line search.
+\item A descent method, so line search can be implemented.
 
-\item Good stopping criterion at $O(p^2)$ flops.
+\item Can be accelerated.
+
+\item Good stopping criterion at approximately $O(p)$ flops.
 
 \item Convergence theory is unchanged from differentiable functions.
 
-\item Coordinate descent theory is possibly developed here by Nesterov (2012). The iterations are cheap so 1/k convergence is actually really good.
+\item Coordinate descent theory is developed by Nesterov (2012).
 
 \end{itemize}
 
@@ -228,12 +222,12 @@ $\beta^{Warm} \gets \beta^0$
 \newpage
 \section*{Package Architecture}
 
-Written entirely in C++ for speed using Eigen \cite{eigen} and can be interfaced to many other popular languages.
+Written entirely in C++ for speed and uses Eigen \cite{eigen} for linear algebra. It can be interfaced to many other popular languages.
 
 \vspace{.5cm}
 \begin{tikzpicture}[level distance=8em, sibling distance=10em,
   every node/.style = {shape=rectangle, draw, align=center}]]
-  \node {PROS C++ code}
+  \node {C++ code}
     child { node {R to C Interface} 
       child { node {R Interface} }
     }
@@ -277,55 +271,6 @@ A cross-validation fit function with prediction
 
 There is even a \href{https://github.com/austindavidbrown/pros/blob/master/R-package/pros.pdf}{reference manual}.
 
-
-%%%
-% Slide
-%%%
-\newpage
-\section*{The Prostate Cancer Dataset Analysis}
-
-This is a popular dataset from Stamey et al. \cite{prostate} and analyzed in the ElasticNet paper Zou and Hastie \cite{elasticnet}.
-There are 8 predictors and 1 response is the log of the prostate specific antigen.
-
-\begin{itemize}
-\item The data is split into a training set with 67 observations and a test set with 30 observations.
-
-\item The predictor data was standardized.
-
-\item 10-fold cross-validation and manual tuning due to time constraint of the project were used.
-
-\item The \textbf{glmnet} \cite{glmnet} library was used to fit and tune the Lasso and a naive un-tuned ElasticNet.
-
-\item \textbf{pros} \cite{pros} was used to fit the new penalty.
-
-\item This was not an extensive study due to time and the code is available to you at the \textbf{pros} repository \cite{pros}.
-I also don't really know the best way to tune my own method :(.
-
-\end{itemize}
-
-%%%
-% Slide
-%%%
-\newpage
-\section*{The Prostate Cancer Dataset Results}
-
-Random seed = 8989. Varying results for glmnet: sometimes lower sometimes higher.
-
-\begin{center}
-\begingroup
-\setlength{\tabcolsep}{6pt} % Default value: 6pt
-\renewcommand{\arraystretch}{2} % Default value: 1
-\begin{tabular}{ l l l}
-\textbf{Penalty} & \textbf{Tuning} & \textbf{Test MSE} \\
-Lasso Penalty (glmnet) & $\alpha = (1, 0)$ & 0.4558642 \\
-ElasticNet Penalty (glmnet) & $\alpha = (1/2, 1/2)$  & 0.4554527   \\
-New Penalty (pros) & $\alpha = (1/5, 0, 0, 0, 0, 4/5), \lambda = 54.02$ & 0.4442196 \\
-New Penalty (pros) & $\alpha = (1/5, 0, 1/5, 1/5, 1/5, 1/5), \lambda = 54$ & 0.4474082 \\
-New Penalty (pros) & $\alpha = (1/2, 0, 0, 0, 0, 1/2), \lambda = 21.05$ & 0.4441578 \\
-\end{tabular}
-\endgroup
-\end{center}
-
 %%%
 % Slide
 %%%
@@ -340,11 +285,15 @@ There are 13 predictors and the response is the median value of owner-occupied h
 
 \item The predictor data is standardized.
 
-\item Basic 10-fold cross-validation no real tuning.
+\item Basic 10-fold cross-validation and no special tuning.
 
 \item The \textbf{glmnet} \cite{glmnet} library was used for the Lasso and the ElasticNet.
 
 \item \textbf{pros} \cite{pros} was used to fit the new penalty.
+
+\item The random seed was set to 8989.
+
+\item The code is available to you at the \textbf{pros} repository \cite{pros}.
 \end{itemize}
 
 %%%
@@ -353,8 +302,6 @@ There are 13 predictors and the response is the median value of owner-occupied h
 \newpage
 \section*{The Boston Housing Dataset Results}
 
-Random seed = 8989. Varying results for glmnet: sometimes lower sometimes higher.
-
 \begin{center}
 \begingroup
 \setlength{\tabcolsep}{6pt} % Default value: 6pt
@@ -362,8 +309,78 @@ Random seed = 8989. Varying results for glmnet: sometimes lower sometimes higher
 \begin{tabular}{ l l l}
 \textbf{Penalty} & \textbf{Tuning} & \textbf{Test MSE} \\
 Lasso Penalty (glmnet) & $\alpha = (1, 0)$ & 28.52329 \\
+
 ElasticNet Penalty (glmnet) & $\alpha = (1/2, 1/2)$  & 27.46224   \\
+
+New Penalty (pros) & $\alpha = (1/2, 0, 1/2, 0, 0, 0)$ & 26.31973 \\
+
 New Penalty (pros) & $\alpha = (1/2, 0, 0, 0, 0, 1/2)$ & 26.3852 \\
+
+Tuned ElasticNet Penalty (glmnet) & $\alpha = (.25, .75)$  & 26.80933   \\
+
+New Penalty (pros) & $\alpha = (.25, 0, .75, 0, 0, 0)$ & 26.25065 \\
+
+Tuned New Penalty (pros) & $\alpha = (.1, 0, .9, 0, 0, 0)$ & 26.21775 \\
+\end{tabular}
+\endgroup
+\end{center}
+
+
+%%%
+% Slide
+%%%
+\newpage
+\section*{The Boston Housing Dataset Notes}
+
+\begin{itemize}
+\item It is interesting that the un-tuned 4th moment Penalty and un-tuned Elasticnet both removed age, but have different solutions otherwise.
+
+\item The 10th moment penalty produces no sparsity.
+\end{itemize}
+
+%%%
+% Slide
+%%%
+\newpage
+\section*{The Prostate Cancer Dataset Analysis}
+
+This is a popular dataset from Stamey et al. \cite{prostate} and analyzed in the ElasticNet paper by Zou and Hastie \cite{elasticnet}.
+There are 8 predictors and the response is the log of the prostate specific antigen.
+
+\begin{itemize}
+\item The data is split into a training set with 67 observations and a test set with 30 observations.
+
+\item The predictor data is standardized.
+
+\item The \textbf{glmnet} \cite{glmnet} library was used to fit and tune the Lasso and a naive ElasticNet.
+
+\item \textbf{pros} \cite{pros} was used to fit the new penalty.
+
+\item 10-fold cross-validation and crude manual tuning were used.
+
+\item The code is available to you at the \textbf{pros} repository \cite{pros}.
+
+\end{itemize}
+
+%%%
+% Slide
+%%%
+\newpage
+\section*{The Prostate Cancer Dataset Results}
+
+Varying results for \textbf{glmnet}: sometimes lower sometimes higher.
+
+\begin{center}
+\begingroup
+\setlength{\tabcolsep}{6pt} % Default value: 6pt
+\renewcommand{\arraystretch}{2} % Default value: 1
+\begin{tabular}{ l l l}
+\textbf{Penalty} & \textbf{Tuning} & \textbf{Test MSE} \\
+Lasso Penalty (glmnet) & $\alpha = (1, 0)$ & 0.4558642 \\
+ElasticNet Penalty (glmnet) & $\alpha = (1/2, 1/2)$  & 0.4554527   \\
+New Penalty (pros) & $\alpha = (1/5, 0, 0, 0, 0, 4/5), \lambda = 54.02$ & 0.4442196 \\
+New Penalty (pros) & $\alpha = (1/5, 0, 1/5, 1/5, 1/5, 1/5), \lambda = 54$ & 0.4474082 \\
+New Penalty (pros) & $\alpha = (1/2, 0, 0, 0, 0, 1/2), \lambda = 21.05$ & 0.4441578 \\
 \end{tabular}
 \endgroup
 \end{center}
@@ -401,15 +418,13 @@ New Penalty (pros) & $\alpha = (1/2, 0, 0, 0, 0, 1/2)$ & 26.3852 \\
 
 \item Currently, you have to tune a step size. I need to implement a fast line search. This is not too difficult actually just ran out of time.
 
-\item C++ offers many random number generators.
-I believe I handled this in the same way that XGboost does.
-You need to pass in a seed from R and I use the 64-bit Mersenne Twister by Matsumoto and Nishimura (2000).
+\item Look into convergence analysis.
 
-\item overflow fixes
+\item C++ offers many random number generators. I use the 64-bit Mersenne Twister by Matsumoto and Nishimura (2000).
+
+\item minor bugs like divergence and overflow.
 
 \item passing data between R and C in the fastest way.
-
-\item Look into convergence analysis.
 
 \end{itemize}
 
