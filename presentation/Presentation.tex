@@ -333,7 +333,7 @@ Tuned New Penalty (pros) & $\alpha = (.1, 0, .9, 0, 0, 0)$ & 26.21775 \\
 \section*{The Boston Housing Dataset Notes}
 
 \begin{itemize}
-\item It is interesting that the un-tuned 4th moment Penalty and un-tuned Elasticnet both removed age, but have different solutions otherwise.
+\item The un-tuned 4th moment Penalty and un-tuned Elasticnet both removed age, but have different solutions otherwise.
 
 \item The 10th moment penalty produces no sparsity.
 \end{itemize}
@@ -358,6 +358,8 @@ There are 8 predictors and the response is the log of the prostate specific anti
 
 \item 10-fold cross-validation and crude manual tuning were used.
 
+\item The random seed was set to 8989.
+
 \item The code is available to you at the \textbf{pros} repository \cite{pros}.
 
 \end{itemize}
@@ -368,7 +370,7 @@ There are 8 predictors and the response is the log of the prostate specific anti
 \newpage
 \section*{The Prostate Cancer Dataset Results}
 
-Varying results for \textbf{glmnet}: sometimes lower sometimes higher.
+I need to redo this, but this the new penalty is comparable.
 
 \begin{center}
 \begingroup
@@ -423,6 +425,8 @@ New Penalty (pros) & $\alpha = (1/2, 0, 0, 0, 0, 1/2), \lambda = 21.05$ & 0.4441
 \item C++ offers many random number generators. I use the 64-bit Mersenne Twister by Matsumoto and Nishimura (2000).
 
 \item minor bugs like divergence and overflow.
+
+\item I think my CV implementation can be sped up.
 
 \item passing data between R and C in the fastest way.
 

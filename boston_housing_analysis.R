@@ -55,13 +55,11 @@ lambdas = seq(10^(-3), 1, .1)
 cv_pros2 = cv.pros(X_train, y_train, alpha = alpha, lambdas = lambdas, K_fold = 10, max_iter = 10000, tolerance = 10^(-3), random_seed = random_seed)
 mean((y_test - predict(cv_pros2, X_test))^2)
 
-
 # Use the ElasticNet Tuning for 4th moment
 alpha = c(.25, 0, .75, 0, 0, 0)
 lambdas = seq(10^(-3), 1, .1)
 cv_pros3 = cv.pros(X_train, y_train, alpha = alpha, lambdas = lambdas, K_fold = 10, max_iter = 10000, tolerance = 10^(-3), random_seed = random_seed)
 mean((y_test - predict(cv_pros3, X_test))^2)
-
 
 # Tune 4th moment Pros
 alphas = c(1/2, 1/3, 1/4, 1/5, 1/6, 1/7, 1/8, 1/9, 1/10)
