@@ -372,26 +372,37 @@ There are 8 predictors and the response is the log of the prostate specific anti
 \newpage
 \section*{The Prostate Cancer Dataset Results}
 
-I get varying solutions from glmnet for some reason.
-
 \begin{center}
 \begingroup
 \setlength{\tabcolsep}{1pt} % Default value: 6pt
 \renewcommand{\arraystretch}{2} % Default value: 1
 \begin{tabular}{ l l l}
 \textbf{Penalty} & \textbf{Tuning} & \textbf{Test MSE} \\
-Lasso Penalty (glmnet) & $\alpha = (1, 0)$ & 0.4558642-0.4646501 \\
+Lasso Penalty (glmnet) & $\alpha = (1, 0)$ & 0.4443432-0.4646501 \\
 "Tuned" ElasticNet Penalty (glmnet) & $\alpha = (1/2, 1/2)$  & 0.4539684-0.4554527   \\
-New Penalty (pros) & $\alpha = (1/5, 0, 0, 0, 0, 4/5)$ & 0.4442196 \\
-New Penalty (pros) & $\alpha = (1/5, 0, 1/5, 1/5, 1/5, 1/5)$ & 0.4474082 \\
-New Penalty (pros) & $\alpha = (1/2, 0, 0, 0, 0, 1/2)$ & 0.4441578 \\
+ElasticNet (pros) & $\alpha = (1/2, 1/2, 0, 0, 0, 0)$ & 0.5255658 \\
+New Penalty (pros) & $\alpha = (1/2, 0, 1/2, 0, 0, 0)$ & 0.526071 \\
+New Penalty (pros) & $\alpha = (1/2, 1/4, 1/4, 0, 0, 0)$ & 0.5256688 \\
 \end{tabular}
 \endgroup
 \end{center}
 
-$\lambda = 54.02$
-$\lambda = 54$
-$\lambda = 21.05$
+%%%
+% Slide
+%%%
+\newpage
+\section*{The Prostate Cancer Dataset Results}
+
+\begin{itemize}
+\item Seems Elasticnet \cite{elasticnet} is better for this dataset.
+
+\item I am very confused as to why my results don't match and why glmnet gives varying results.
+
+\item I think it should preform similar. However, the solutions do have different sparsity, which is interesting.
+
+\item With manual tuning I do way better, which is strange. Maybe my CV is wrong? Maybe I broke something when I changed the random number generator.
+
+\end{itemize}
 
 %%%
 % Slide

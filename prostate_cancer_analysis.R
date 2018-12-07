@@ -36,6 +36,49 @@ I = which.min(risks)
 alphas[I]
 risks[I]
 
+
+# Tune Pros
+alphas = c(1/2, 1/3, 1/4, 1/5, 1/6, 1/7, 1/8, 1/9, 1/10)
+risks = c()
+for (alpha in alphas) {
+  lambdas = seq(10^(-3), 10, .1)
+  cv = cv.pros(X_train, y_train, alpha = c(alpha, 1/2*(1 - alpha), 1/2*(1 - alpha), 0, 0, 0), lambdas = lambdas, K_fold = 10, max_iter = 10000, tolerance = 10^(-3))
+  mse = mean((y_test - predict(cv, X_test))^2)
+  risks = c(risks, mse)
+}
+I = which.min(risks)
+alphas[I]
+risks[I]
+
+
+fit = pros(X_train, y_train, lambda = cv$best_lambda, alpha = c(1/2, 1/4, 1/4, 0, 0, 0), max_iter = 10000, tolerance = 10^(-3))
+
+fit_elnet = cv.glmnet(X_train, y_train, alpha = 1/2, standardize = F)
+coef(fit_elnet)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ###
 # Pros
 ###
@@ -48,7 +91,10 @@ fit = pros(X_train, y_train, lambda = 54, alpha = alpha, max_iter = 10000, toler
 mean((y_test - predict(fit, X_test))^2)
 
 
-
+alpha = c(1/5, 0, 1/5, 1/5, 1/5, 1/5)
+lambdas = seq(10^(-3), 5, .5)
+cv = cv.pros(X_train, y_train, alpha = alpha, lambdas = lambdas, K_fold = 10, max_iter = 10000, tolerance = 10^(-3))
+mean((y_test - predict(cv, X_test))^2)
 
 
 
