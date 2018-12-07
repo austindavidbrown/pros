@@ -1,7 +1,9 @@
-devtools::install("R-package")
+devtools::install_github("austindavidbrown/pros/R-package")
 library(pros)
 library(glmnet)
-set.seed(8989)
+
+random_seed = 8989
+set.seed(random_seed)
 
 d = data.matrix(read.table("http://statweb.stanford.edu/~tibs/ElemStatLearn/datasets/prostate.data"))
 train = d[d[, "train"] == TRUE, ]
@@ -17,13 +19,12 @@ y_test = as.vector(test[, 9])
 X_train = scale(X_train)
 X_test = scale(X_test)
 
-###
-# Glmnet
-###
+
+# Lasso (glmnet)
 cv_glmnet_lasso = cv.glmnet(X_train, y_train, alpha = 1, nfolds = 10, standardize = F)
 mean((y_test - predict(cv_glmnet_lasso, X_test))^2)
 
-# Tune ElasticNet
+# "Tuned" ElasticNet (glmnet)
 alphas = c(1/2, 1/3, 1/4, 1/5, 1/6, 1/7, 1/8, 1/9, 1/10)
 risks = c()
 for (alpha in alphas) {
@@ -39,12 +40,36 @@ risks[I]
 # Pros
 ###
 alpha = c(.2, 0, 0, 0, 0, 1 -.2)
-fit = pros(X_train, y_train, lambda = 54.02, alpha = alpha, max_iter = 100000, tolerance = 10^(-3))
+fit = pros(X_train, y_train, lambda = 54.02, alpha = alpha, max_iter = 10000, tolerance = 10^(-3))
 mean((y_test - predict(fit, X_test))^2)
 
 alpha = c(1/5, 0, 1/5, 1/5, 1/5, 1/5)
-fit = pros(X_train, y_train, lambda = 54, alpha = alpha, max_iter = 100000, tolerance = 10^(-3))
+fit = pros(X_train, y_train, lambda = 54, alpha = alpha, max_iter = 10000, tolerance = 10^(-3))
 mean((y_test - predict(fit, X_test))^2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

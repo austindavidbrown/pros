@@ -56,7 +56,7 @@ Thus, these norms give us some "statistics" about the random variable.
 
 \item If statisticians so freely impose such constraints then we should build a tool to allow scientists and researchers to impose similar constraints on their real problems.
 
-\item  In this project, I built an R package to expand upon the idea of ElasticNet \cite{elasticnet} that can hopefully be useful to scientists and researchers.
+\item  In this project, I built an R package to expand upon the idea of ElasticNet \cite{elasticnet}, which I think approximately encapsulates this idea.
 
 \end{itemize}
 
@@ -81,7 +81,7 @@ shown on the left. Extending this idea, a new penalty $P(x) = \frac{1}{2} |x| + 
 \end{center}
 \vspace{.5cm}
 
-It is possible that a scientist or researcher may want the option to "bow" out the feasible set even more.
+It is possible that a scientist or researcher may want the option to "bow" out the feasible set even more or maybe Elasticnet \cite{elasticnet} excludes a good solution.
 
 %%%
 % Slide
@@ -103,7 +103,7 @@ with penalty
 where $y \in \R^n$, $X \in M_{n \times p}(\R)$, and $\beta \in \R^p$, $\lambda \in \R_{+}$ and $\alpha$'s are convex combinations or use separate tuning parameters instead.
 
 \vspace{1cm}
-An important property is that this is a convex and completely separable penalty.
+An important property is that this is a convex and completely separable penalty. This allows us to use coordinate descent.
 
 %%%
 % Slide
@@ -188,7 +188,7 @@ Set $k \gets 0$
 
 \item Convergence theory is unchanged from differentiable functions.
 
-\item Coordinate descent theory is developed by Nesterov (2012).
+\item Coordinate descent theory for differentiable functions is still being actively developed.
 
 \end{itemize}
 
@@ -254,7 +254,6 @@ Installation:
 > devtools::install_github("austindavidbrown/pros/R-package")
 \end{verbatim}
 
-
 A single fit function with prediction
 
 \begin{verbatim}
@@ -270,6 +269,9 @@ A cross-validation fit function with prediction
 \end{verbatim}
 
 There is even a \href{https://github.com/austindavidbrown/pros/blob/master/R-package/pros.pdf}{reference manual}.
+
+\vspace{.5cm}
+Yes, I know the name is bad.
 
 %%%
 % Slide
@@ -370,22 +372,26 @@ There are 8 predictors and the response is the log of the prostate specific anti
 \newpage
 \section*{The Prostate Cancer Dataset Results}
 
-I need to redo this, but this the new penalty is comparable.
+I get varying solutions from glmnet for some reason.
 
 \begin{center}
 \begingroup
-\setlength{\tabcolsep}{6pt} % Default value: 6pt
+\setlength{\tabcolsep}{1pt} % Default value: 6pt
 \renewcommand{\arraystretch}{2} % Default value: 1
 \begin{tabular}{ l l l}
 \textbf{Penalty} & \textbf{Tuning} & \textbf{Test MSE} \\
-Lasso Penalty (glmnet) & $\alpha = (1, 0)$ & 0.4558642 \\
-ElasticNet Penalty (glmnet) & $\alpha = (1/2, 1/2)$  & 0.4554527   \\
-New Penalty (pros) & $\alpha = (1/5, 0, 0, 0, 0, 4/5), \lambda = 54.02$ & 0.4442196 \\
-New Penalty (pros) & $\alpha = (1/5, 0, 1/5, 1/5, 1/5, 1/5), \lambda = 54$ & 0.4474082 \\
-New Penalty (pros) & $\alpha = (1/2, 0, 0, 0, 0, 1/2), \lambda = 21.05$ & 0.4441578 \\
+Lasso Penalty (glmnet) & $\alpha = (1, 0)$ & 0.4558642-0.4646501 \\
+"Tuned" ElasticNet Penalty (glmnet) & $\alpha = (1/2, 1/2)$  & 0.4539684-0.4554527   \\
+New Penalty (pros) & $\alpha = (1/5, 0, 0, 0, 0, 4/5)$ & 0.4442196 \\
+New Penalty (pros) & $\alpha = (1/5, 0, 1/5, 1/5, 1/5, 1/5)$ & 0.4474082 \\
+New Penalty (pros) & $\alpha = (1/2, 0, 0, 0, 0, 1/2)$ & 0.4441578 \\
 \end{tabular}
 \endgroup
 \end{center}
+
+$\lambda = 54.02$
+$\lambda = 54$
+$\lambda = 21.05$
 
 %%%
 % Slide
@@ -394,9 +400,7 @@ New Penalty (pros) & $\alpha = (1/2, 0, 0, 0, 0, 1/2), \lambda = 21.05$ & 0.4441
 \section*{Conclusion}
 
 \begin{itemize}
-\item I think that there are many "good" solutions to real problems.
-
-\item We can get "statistics" on these solutions by imposing more norms on the feasible sets building upon the Elasticnet \cite{elasticnet} idea.
+\item I think that there are many "good" solutions to real problems and we can get "statistics" on these solutions by imposing more norms on the feasible sets building upon the Elasticnet \cite{elasticnet} idea.
 
 \item I would like to explore even more sparsity inducing penalizations such as
 
@@ -420,15 +424,17 @@ New Penalty (pros) & $\alpha = (1/2, 0, 0, 0, 0, 1/2), \lambda = 21.05$ & 0.4441
 
 \item Currently, you have to tune a step size. I need to implement a fast line search. This is not too difficult actually just ran out of time.
 
+\item Add logistic regression
+
 \item Look into convergence analysis.
 
 \item C++ offers many random number generators. I use the 64-bit Mersenne Twister by Matsumoto and Nishimura (2000).
 
-\item minor bugs like divergence and overflow.
+\item minor bugs like overflow checking.
 
-\item I think my CV implementation can be sped up.
+\item I think my Cross-Validation implementation can be sped up.
 
-\item passing data between R and C in the fastest way.
+\item Optimize code to run faster maybe Fortran?
 
 \end{itemize}
 

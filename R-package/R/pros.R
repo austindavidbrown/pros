@@ -33,7 +33,7 @@
 #' @export
 pros = function(X, y, 
                 alpha = c(1, 0, 0, 0, 0, 0), lambda, algorithm = "proximal_gradient_cd", 
-                max_iter = 100000, tolerance = 10^(-3), random_seed = 0) {
+                max_iter = 10000, tolerance = 10^(-3), random_seed = 0) {
   y = matrix(as.vector(t(y)), ncol = 1) # convert to column vector
 
   if (length(alpha) != 6) {
@@ -106,7 +106,7 @@ predict.pros = function(prosObj, X) {
 #' @export
 cv.pros = function(X, y, 
                    K_fold = 10, alpha = c(1, 0, 0, 0, 0, 0), lambdas = seq(10^(-3), 1, .1), algorithm = "proximal_gradient_cd", 
-                   max_iter = 100000, tolerance = 10^(-3), random_seed = 0) {
+                   max_iter = 10000, tolerance = 10^(-3), random_seed = 0) {
   y = matrix(as.vector(t(y)), ncol = 1) # convert to column vector
   alpha = matrix(as.vector(t(alpha)), ncol = 1) # convert to column vector
 

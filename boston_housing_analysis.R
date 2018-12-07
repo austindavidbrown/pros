@@ -1,4 +1,4 @@
-devtools::install("R-package")
+devtools::install_github("austindavidbrown/pros/R-package")
 library(pros)
 
 library(glmnet)
@@ -65,6 +65,7 @@ mean((y_test - predict(cv_pros3, X_test))^2)
 alphas = c(1/2, 1/3, 1/4, 1/5, 1/6, 1/7, 1/8, 1/9, 1/10)
 risks = c()
 for (alpha in alphas) {
+  lambdas = seq(10^(-3), 1, .1)
   cv_pros = cv.pros(X_train, y_train, alpha = c(alpha, 0, 1 - alpha, 0, 0, 0), lambdas = lambdas, K_fold = 10, max_iter = 10000, tolerance = 10^(-3), random_seed = random_seed)
   mse = mean((y_test - predict(cv_pros, X_test))^2)
   risks = c(risks, mse)
