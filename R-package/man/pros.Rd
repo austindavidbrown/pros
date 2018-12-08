@@ -5,7 +5,7 @@
 \title{Pros}
 \usage{
 pros(X, y, alpha = c(1, 0, 0, 0, 0, 0), lambda,
-  algorithm = "proximal_gradient_cd", max_iter = 1e+05,
+  algorithm = "proximal_gradient_cd", max_iter = 10000,
   tolerance = 10^(-3), random_seed = 0)
 }
 \arguments{
