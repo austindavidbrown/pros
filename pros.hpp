@@ -29,7 +29,7 @@ struct CVType {
 // Utils
 //
 double mean_squared_error(const VectorXd& v, const VectorXd& w) {
-  return (v - w).squaredNorm(); 
+  return 1/((double)v.rows()) * (v - w).squaredNorm(); 
 }
 
 template<typename T>

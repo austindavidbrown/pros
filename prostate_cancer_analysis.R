@@ -20,9 +20,19 @@ X_train = scale(X_train)
 X_test = scale(X_test)
 
 
+write.table(X_train,file="prostate_X_train.csv",row.names=FALSE, col.names=FALSE, sep = ",")
+write.table(y_train,file="prostate_y_train.csv",row.names=FALSE, col.names=FALSE, sep = ",")
+write.table(X_test,file="prostate_X_test.csv",row.names=FALSE, col.names=FALSE, sep = ",")
+write.table(y_test,file="prostate_y_test.csv",row.names=FALSE, col.names=FALSE, sep = ",")
+
 # Lasso (glmnet)
 cv_glmnet_lasso = cv.glmnet(X_train, y_train, alpha = 1, nfolds = 10, standardize = F)
 mean((y_test - predict(cv_glmnet_lasso, X_test))^2)
+
+coef(cv_glmnet_lasso)
+fit = pros(X_train, y_train, alpha = c(1, 0, 0, 0, 0, 0), lambda = cv_glmnet_lasso$min.lambda, max_iter = 100000, tolerance = 10^(-7), random_seed = random_seed)
+mean((y_test - predict(fit, sX_test))^2)
+fit$B
 
 # "Tuned" ElasticNet (glmnet)
 alphas = c(1/2, 1/3, 1/4, 1/5, 1/6, 1/7, 1/8, 1/9, 1/10)
@@ -36,6 +46,14 @@ I = which.min(risks)
 alphas[I]
 risks[I]
 
+
+lambdas = seq(10^(-3), 1, .01)
+lambdas
+cv = cv.pros(X_train, y_train, alpha = c(1, 0, 0, 0, 0, 0), lambdas = lambdas, K_fold = 10, max_iter = 10000, tolerance = 10^(-3))
+mean((y_test - predict(cv, X_test))^2)
+
+fit = pros(X_train, y_train, alpha = c(1, 0, 0, 0, 0, 0), lambda = 0.0100293, max_iter = 10000, tolerance = 10^(-3), random_seed = random_seed)
+mean((y_test - predict(fit, X_test))^2)
 
 # Tune Pros
 alphas = c(1/2, 1/3, 1/4, 1/5, 1/6, 1/7, 1/8, 1/9, 1/10)

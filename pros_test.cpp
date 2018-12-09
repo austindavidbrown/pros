@@ -36,15 +36,19 @@ M load_csv (const std::string & path) {
 void test_prostate() {
   MatrixXd X_train = load_csv<MatrixXd>("data/prostate_X_train.csv");
   VectorXd y_train = load_csv<MatrixXd>("data/prostate_y_train.csv");
+
   MatrixXd X_test = load_csv<MatrixXd>("data/prostate_X_test.csv");
   VectorXd y_test = load_csv<MatrixXd>("data/prostate_y_test.csv");
   VectorXd B_0 = VectorXd::Zero(X_train.cols());
 
+  int n_train = X_train.rows();
+  int n_test = X_test.rows();
+
   int K_fold = 10;
   double lambda = .01;
-  int max_iter = 100000;
+  int max_iter = 10000;
   double tolerance = pow(10, -3);
-  int random_seed = 145235342;
+  int random_seed = 0;
 
   // create alpha
   double alpha_data[] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
@@ -61,15 +65,14 @@ void test_prostate() {
   // Single fit test
   //
   cout << "\nProstate Single fit test\n";
-  VectorXd B = proximal_gradient_cd(B_0, X_train, y_train, alpha, lambda, max_iter, tolerance, random_seed);
+  VectorXd B = proximal_gradient_cd(B_0, X_train, y_train, alpha, .001, max_iter, tolerance, random_seed);
   cout << "\nB:\n" << B << "\n";
 
-  int n = X_train.rows();
-  double intercept = 1/((double)n) *  VectorXd::Ones(n).transpose() * (y_train.mean() * VectorXd::Ones(n) - (X_train * B)); // mean
+  double intercept = 1/((double)n_train) *  VectorXd::Ones(n_train).transpose() * (y_train.mean() * VectorXd::Ones(n_train) - (X_train * B)); // mean
   cout << "\nintercept:\n" << intercept << "\n";
 
-  cout << "\nMSE: " << (y_train - predict(B, intercept, X_train)).squaredNorm() << "\n";
-  cout << "\nTest MSE: " << (y_test - predict(B, intercept, X_test)).squaredNorm() << "\n";
+  cout << "\nMSE: " << 1/((double)n_train) * (y_train - predict(B, intercept, X_train)).squaredNorm() << "\n";
+  cout << "\nTest MSE: " << 1/((double)n_test) * (y_test - predict(B, intercept, X_test)).squaredNorm() << "\n";
 
   //
   // Warm start test
@@ -96,6 +99,11 @@ void test_prostate() {
   cv.risks.minCoeff(&min_row);
   double best_lambda = cv.lambdas[min_row];
   cout << "\nBest Lambda:\n" << best_lambda << "\n";
+
+  VectorXd B_best = proximal_gradient_cd(B_0, X_train, y_train, alpha, best_lambda, max_iter, tolerance, random_seed);
+  double intercept_best = 1/((double)n_train) *  VectorXd::Ones(n_train).transpose() * (y_train.mean() * VectorXd::Ones(n_train) - (X_train * B_best));
+  cout << "\nTest MSE: " << 1/((double)n_test) * (y_test - predict(B_best, intercept_best, X_test)).squaredNorm() << "\n";
+
 
 }
 
@@ -238,8 +246,8 @@ void test_random_gen() {
 }
 
 int main() {
-  //test_prostate();
-  test_prox();
+  test_prostate();
+  //test_prox();
   //test_random_gen();
 }
 
