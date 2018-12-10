@@ -111,7 +111,7 @@ VectorXd proximal_gradient_cd(VectorXd B, const MatrixXd& X, const VectorXd& y,
     }
 
     // Stop if the norm of the Moreau-Yoshida convolution gradient is less than tolerance
-    if ( ((B_old - B)).squaredNorm() < tolerance ) {
+    if ( (1/h_j * (B_old - B)).squaredNorm() < tolerance ) {
       return B;
     }
   }
