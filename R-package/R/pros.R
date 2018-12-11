@@ -34,7 +34,7 @@
 #' @export
 pros = function(X, y, 
                 alpha = c(1, 0, 0, 0, 0, 0), lambda, step_size = 1/1000,
-                algorithm = "proximal_gradient_cd", max_iter = 10000, tolerance = 10^(-3), random_seed = 0) {
+                algorithm = "proximal_gradient_cd", max_iter = 10000, tolerance = 10^(-8), random_seed = 0) {
   y = matrix(as.vector(t(y)), ncol = 1) # convert to column vector
 
   if (length(alpha) != 6) {
@@ -108,7 +108,7 @@ predict.pros = function(prosObj, X) {
 #' @export
 cv.pros = function(X, y, 
                    K_fold = 10, alpha = c(1, 0, 0, 0, 0, 0), lambdas = seq(.001, 1.001, .01), step_size = 1/1000,
-                   algorithm = "proximal_gradient_cd", max_iter = 10000, tolerance = 10^(-3), random_seed = 0) {
+                   algorithm = "proximal_gradient_cd", max_iter = 10000, tolerance = 10^(-8), random_seed = 0) {
   y = matrix(as.vector(t(y)), ncol = 1) # convert to column vector
   alpha = matrix(as.vector(t(alpha)), ncol = 1) # convert to column vector
 
@@ -174,7 +174,7 @@ test = function() {
   lambdas = c(.01, .5, 1)
   algorithm = "proximal_gradient_cd"
   K_fold = 10
-  tolerance = 10^(-3)
+  tolerance = 10^(-8)
   random_seed = 1032432;
 
   ###
