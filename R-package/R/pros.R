@@ -14,10 +14,11 @@
 #'   \item l10 penalty
 #' }
 #' @param lambda the dual penalization value
+#' @param step_size step size
 #' @param algorithm the optimization algorithm 
 #' \itemize{
-#'   \item proximal_gradient_cd
-#'   \item subgradient_cd
+#'   \item \code{proximal_gradient_cd} (proximal gradient coordinate descent)
+#'   \item \code{subgradient_cd} (subgradient coordinate algorithm)
 #' }
 #' @param max_iter maximum iterations. This also tunes the step size.
 #' @param tolerance tolerance
@@ -32,8 +33,8 @@
 #'
 #' @export
 pros = function(X, y, 
-                alpha = c(1, 0, 0, 0, 0, 0), lambda, algorithm = "proximal_gradient_cd", 
-                max_iter = 10000, tolerance = 10^(-3), random_seed = 0) {
+                alpha = c(1, 0, 0, 0, 0, 0), lambda, step_size = 1/1000,
+                algorithm = "proximal_gradient_cd", max_iter = 10000, tolerance = 10^(-3), random_seed = 0) {
   y = matrix(as.vector(t(y)), ncol = 1) # convert to column vector
 
   if (length(alpha) != 6) {
@@ -42,8 +43,8 @@ pros = function(X, y,
   alpha = matrix(as.vector(t(alpha)), ncol = 1) # convert to column vector
 
   res = .Call("R_fit", as.matrix(X), y, 
-            alpha, as.double(lambda), toString(algorithm), 
-            as.integer(max_iter), as.double(tolerance), as.integer(random_seed))
+            alpha, as.double(lambda), as.double(step_size),
+            toString(algorithm), as.integer(max_iter), as.double(tolerance), as.integer(random_seed))
   class(res) = "pros"
   return ( res )
 }
@@ -87,10 +88,11 @@ predict.pros = function(prosObj, X) {
 #'   \item l10 penalty
 #' }
 #' @param lambdas A vector of dual penalization values to be evaluated
+#' @param step_size step size
 #' @param algorithm the optimization algorithm 
 #' \itemize{
-#'   \item proximal_gradient_cd
-#'   \item subgradient_cd
+#'   \item \code{proximal_gradient_cd} (proximal gradient coordinate descent)
+#'   \item \code{subgradient_cd} (subgradient coordinate algorithm)
 #' }
 #' @param max_iter maximum iterations. This also tunes the step size.
 #' @param tolerance tolerance
@@ -105,14 +107,14 @@ predict.pros = function(prosObj, X) {
 #'
 #' @export
 cv.pros = function(X, y, 
-                   K_fold = 10, alpha = c(1, 0, 0, 0, 0, 0), lambdas = seq(10^(-3), 1, .1), algorithm = "proximal_gradient_cd", 
-                   max_iter = 10000, tolerance = 10^(-3), random_seed = 0) {
+                   K_fold = 10, alpha = c(1, 0, 0, 0, 0, 0), lambdas = seq(.001, 1.001, .01), step_size = 1/1000,
+                   algorithm = "proximal_gradient_cd", max_iter = 10000, tolerance = 10^(-3), random_seed = 0) {
   y = matrix(as.vector(t(y)), ncol = 1) # convert to column vector
   alpha = matrix(as.vector(t(alpha)), ncol = 1) # convert to column vector
 
   res = .Call("R_cross_validation", as.matrix(X), y, 
-              as.double(K_fold), alpha, as.vector(lambdas), toString(algorithm), 
-              as.integer(max_iter), as.double(tolerance), as.integer(random_seed))
+              as.double(K_fold), alpha, as.vector(lambdas), as.double(step_size),
+              toString(algorithm), as.integer(max_iter), as.double(tolerance), as.integer(random_seed))
   res$X = X
   res$y = y
   res$alpha = alpha
@@ -168,6 +170,7 @@ test = function() {
   max_iter = 10000
   alpha = c(1, 0, 0, 0, 0, 0)
   lambda = .01
+  step_size = 1/1000
   lambdas = c(.01, .5, 1)
   algorithm = "proximal_gradient_cd"
   K_fold = 10
@@ -178,8 +181,8 @@ test = function() {
   # fit test
   ###
   .Call("R_fit", as.matrix(X_train), matrix(as.vector(t(y_train)), ncol = 1),
-                 matrix(as.vector(t(alpha)), ncol = 1), as.double(lambda), toString(algorithm),
-                 as.integer(max_iter), as.double(tolerance), as.integer(random_seed))
+                 matrix(as.vector(t(alpha)), ncol = 1), as.double(lambda), as.double(step_size),
+                 toString(algorithm), as.integer(max_iter), as.double(tolerance), as.integer(random_seed))
   fit = pros(X_train, y_train, lambda = .1)
   fit
 
@@ -196,8 +199,8 @@ test = function() {
   # CV test
   ###
   .Call("R_cross_validation", as.matrix(X_train), matrix(as.vector(t(y_train)), ncol = 1), as.double(K_fold), 
-        matrix(as.vector(t(alpha)), ncol = 1), lambdas, toString(algorithm), 
-        as.integer(max_iter), as.double(tolerance), as.integer(random_seed))
+        matrix(as.vector(t(alpha)), ncol = 1), lambdas, as.double(step_size),
+        toString(algorithm), as.integer(max_iter), as.double(tolerance), as.integer(random_seed))
   cv = cv.pros(X_train, y_train)
 
   print(mean((y_train - predict(cv, X_train))^2))

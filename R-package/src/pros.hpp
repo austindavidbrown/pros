@@ -29,11 +29,11 @@ struct CVType {
 // Utils
 //
 double mean_squared_error(const VectorXd& v, const VectorXd& w) {
-  return (v - w).squaredNorm(); 
+  return 1/((double)v.rows()) * (v - w).squaredNorm(); 
 }
 
 template<typename T>
-vector<vector<T>> partition(const vector<T>& S, size_t n) {
+vector<vector<T>> partition(const vector<T>& S, const size_t n) {
   vector<vector<T>> partitions;
 
   size_t length = S.size() / n;
@@ -70,7 +70,7 @@ VectorXd predict(const VectorXd& B, const double intercept, const MatrixXd& X) {
 // Possible change: Diminishing from Nesterov's Lecture Notes: pow(1 + j, -1/2.0f)
 //
 VectorXd proximal_gradient_cd(VectorXd B, const MatrixXd& X, const VectorXd& y, 
-                              const Vector6d& alpha, const double lambda, 
+                              const Vector6d& alpha, const double lambda, const double step_size,
                               const int max_iter, const double tolerance, const int random_seed) {
   const int n = X.rows();
   const int p = X.cols();
@@ -89,7 +89,7 @@ VectorXd proximal_gradient_cd(VectorXd B, const MatrixXd& X, const VectorXd& y,
 
   for (int j = 0; j < max_iter; j++) {
     const VectorXd B_old = B; // Copy B for stopping criterion
-    const double h_j = 1/((double)max_iter); // step size
+    const double h_j = step_size; // step size
 
     std::shuffle(std::begin(I), std::end(I), rng); // permute
     for (int& i : I) {
@@ -123,7 +123,7 @@ VectorXd proximal_gradient_cd(VectorXd B, const MatrixXd& X, const VectorXd& y,
 // Returns a matrix of B
 // We do not sort the lambdas here, they are ordered how you want them
 MatrixXd warm_start_proximal_gradient_cd(const MatrixXd& X, const VectorXd& y, 
-                                         const Vector6d& alpha, vector<double> lambdas, 
+                                         const Vector6d& alpha, vector<double> lambdas, const double step_size,
                                          const int max_iter, const double tolerance, const int random_seed) {
   int p = X.cols();
   int L = lambdas.size();
@@ -131,12 +131,12 @@ MatrixXd warm_start_proximal_gradient_cd(const MatrixXd& X, const VectorXd& y,
 
   // do the first one normally
   VectorXd B_0 = VectorXd::Zero(p);
-  B_matrix.row(0) = proximal_gradient_cd(B_0, X, y, alpha, lambdas[0], max_iter, tolerance, random_seed);
+  B_matrix.row(0) = proximal_gradient_cd(B_0, X, y, alpha, lambdas[0], step_size, max_iter, tolerance, random_seed);
 
   // Warm start after the first one
   for (int l = 1; l < L; l++) {
     VectorXd B_warm = B_matrix.row((l - 1)); // warm start
-    B_matrix.row(l) = proximal_gradient_cd(B_warm, X, y, alpha, lambdas[l], max_iter, tolerance, random_seed);
+    B_matrix.row(l) = proximal_gradient_cd(B_warm, X, y, alpha, lambdas[l], step_size, max_iter, tolerance, random_seed);
   }
 
   return B_matrix;
@@ -144,7 +144,7 @@ MatrixXd warm_start_proximal_gradient_cd(const MatrixXd& X, const VectorXd& y,
 
 // Prox Gradient Cross Validation
 CVType cross_validation_proximal_gradient_cd(const MatrixXd& X, const VectorXd& y, 
-                                             const double K, const Vector6d& alpha, vector<double> lambdas, 
+                                             const double K, const Vector6d& alpha, vector<double> lambdas, const double step_size,
                                              const int max_iter, const double tolerance, const int random_seed) {
   int n = X.rows();
   int p = X.cols();
@@ -193,7 +193,7 @@ CVType cross_validation_proximal_gradient_cd(const MatrixXd& X, const VectorXd& 
     }
 
     // do the computation
-    MatrixXd B_matrix = warm_start_proximal_gradient_cd(X_train, y_train, alpha, lambdas, max_iter, tolerance, random_seed);
+    MatrixXd B_matrix = warm_start_proximal_gradient_cd(X_train, y_train, alpha, lambdas, step_size, max_iter, tolerance, random_seed);
     for (int l = 0; l < L; l++) {
       VectorXd B = B_matrix.row(l).transpose();
 
