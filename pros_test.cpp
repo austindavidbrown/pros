@@ -42,12 +42,12 @@ void test_prostate() {
   VectorXd B_0 = VectorXd::Zero(X_train.cols());
 
   int n_train = X_train.rows();
-  int n_test = X_test.rows();
 
   int K_fold = 10;
   double lambda = .01;
+  double step_size = 1/((double) 80);
   int max_iter = 10000;
-  double tolerance = pow(10, -3);
+  double tolerance = pow(10, -8);
   int random_seed = 0;
 
   // create alpha
@@ -56,36 +56,36 @@ void test_prostate() {
 
   // create lambdas
   vector<double> lambdas;
-  lambdas.push_back(pow(10, -3));
-  for (int i = 1; i < 10; i++) {
-    lambdas.push_back(lambdas[i - 1] + .1);
+  lambdas.push_back(pow(10, -8));
+  for (int i = 1; i < 100; i++) {
+    lambdas.push_back(lambdas[i - 1] + .01);
   }
 
   //
   // Single fit test
   //
   cout << "\nProstate Single fit test\n";
-  VectorXd B = proximal_gradient_cd(B_0, X_train, y_train, alpha, .001, max_iter, tolerance, random_seed);
+  VectorXd B = proximal_gradient_cd(B_0, X_train, y_train, alpha, lambda, step_size, max_iter, tolerance, random_seed);
   cout << "\nB:\n" << B << "\n";
 
   double intercept = 1/((double)n_train) *  VectorXd::Ones(n_train).transpose() * (y_train.mean() * VectorXd::Ones(n_train) - (X_train * B)); // mean
   cout << "\nintercept:\n" << intercept << "\n";
 
-  cout << "\nMSE: " << 1/((double)n_train) * (y_train - predict(B, intercept, X_train)).squaredNorm() << "\n";
-  cout << "\nTest MSE: " << 1/((double)n_test) * (y_test - predict(B, intercept, X_test)).squaredNorm() << "\n";
+  cout << "\nMSE: " << mean_squared_error(y_train, predict(B, intercept, X_train)) << "\n";
+  cout << "\nTest MSE: " << mean_squared_error(y_test, predict(B, intercept, X_test)) << "\n";
 
   //
   // Warm start test
   //
   cout << "\nWarm start test\n";
-  MatrixXd B_matrix = warm_start_proximal_gradient_cd(X_train, y_train, alpha, lambdas, max_iter, tolerance, random_seed);
+  MatrixXd B_matrix = warm_start_proximal_gradient_cd(X_train, y_train, alpha, lambdas, step_size, max_iter, tolerance, random_seed);
   cout << "\nB Matrix last:\n" << B_matrix.row(B_matrix.rows() - 1).transpose() << "\n";
 
   //
   // CV test
   //
   cout << "\nCV test\n";
-  CVType cv = cross_validation_proximal_gradient_cd(X_train, y_train, K_fold, alpha, lambdas, max_iter, tolerance, random_seed);
+  CVType cv = cross_validation_proximal_gradient_cd(X_train, y_train, K_fold, alpha, lambdas, step_size, max_iter, tolerance, random_seed);
   cout << "\nCV Risks:\n" << cv.risks << "\n";
 
   cout << "\nOrdered Lambdas\n";
@@ -100,9 +100,9 @@ void test_prostate() {
   double best_lambda = cv.lambdas[min_row];
   cout << "\nBest Lambda:\n" << best_lambda << "\n";
 
-  VectorXd B_best = proximal_gradient_cd(B_0, X_train, y_train, alpha, best_lambda, max_iter, tolerance, random_seed);
+  VectorXd B_best = proximal_gradient_cd(B_0, X_train, y_train, alpha, best_lambda, step_size, max_iter, tolerance, random_seed);
   double intercept_best = 1/((double)n_train) *  VectorXd::Ones(n_train).transpose() * (y_train.mean() * VectorXd::Ones(n_train) - (X_train * B_best));
-  cout << "\nTest MSE: " << 1/((double)n_test) * (y_test - predict(B_best, intercept_best, X_test)).squaredNorm() << "\n";
+  cout << "\nTest MSE: " << mean_squared_error(y_test, predict(B_best, intercept_best, X_test)) << "\n";
 
 
 }
@@ -118,9 +118,10 @@ void test_prox() {
 
   int K_fold = 10;
   double lambda = .1;
+  double step_size = 1/((double) 10000);
   int max_iter = 10000;
   double tolerance = pow(10, -3);
-  int random_seed = 34525345;
+  int random_seed = 0;
 
   // create alpha
   double alpha_data[] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
@@ -142,28 +143,28 @@ void test_prox() {
   // Single fit test
   //
   cout << "\nSingle fit test\n";
-  VectorXd B = proximal_gradient_cd(B_0, X_train, y_train, alpha, lambda, max_iter, tolerance, random_seed);
+  VectorXd B = proximal_gradient_cd(B_0, X_train, y_train, alpha, lambda, step_size, max_iter, tolerance, random_seed);
 
   int n = X_train.rows();
   double intercept = 1/((double)n) *  VectorXd::Ones(n).transpose() * (y_train.mean() * VectorXd::Ones(n) - (X_train * B));
   cout << "\nintercept:\n" << intercept << "\n";
 
   cout << "\nB:\n" << B << "\n";
-  cout << "\ntest MSE: " << (y_test - predict(B, intercept, X_test)).squaredNorm() << "\n";
+  cout << "\ntest MSE: " << mean_squared_error(y_test, predict(B, intercept, X_test)) << "\n";
 
   
   //
   // Warm start test
   //
   cout << "\nWarm start test\n";
-  MatrixXd B_matrix = warm_start_proximal_gradient_cd(X_train, y_train, alpha, lambdas, max_iter, tolerance, random_seed);
+  MatrixXd B_matrix = warm_start_proximal_gradient_cd(X_train, y_train, alpha, lambdas, step_size, max_iter, tolerance, random_seed);
   cout << "\nB Matrix last:\n" << B_matrix.row(B_matrix.rows() - 1).transpose() << "\n";
 
   //
   // CV test
   //
   cout << "\nCV test\n";
-  CVType cv = cross_validation_proximal_gradient_cd(X_train, y_train, K_fold, alpha, lambdas, max_iter, tolerance, random_seed);
+  CVType cv = cross_validation_proximal_gradient_cd(X_train, y_train, K_fold, alpha, lambdas, step_size, max_iter, tolerance, random_seed);
   cout << "\nCV Risks:\n" << cv.risks << "\n";
 
   cout << "\nOrdered Lambdas\n";
@@ -177,44 +178,6 @@ void test_prox() {
   cv.risks.minCoeff(&min_row);
   double best_lambda = cv.lambdas[min_row];
   cout << "\nBest Lambda:\n" << best_lambda << "\n";
-}
-
-void test_subgrad() {
-  // -----------------
-  // Subgradient Testing
-  // -----------------
-
-  /*
-  //
-  // Single fit test
-  //
-  VectorXd B = subgrad_cd(B_0, X_train, y_train, alpha, lambda);
-  cout << "\nB:\n" << B << "\n";
-  cout << "\nMSE: " << mean_squared_error(y_train, predict(B, intercept, X_train)) << "\n";
-  */
-
-  /*
-  //
-  // Warm start test
-  //
-  MatrixXd B_matrix = warm_start_subgrad_cd(X_train, y_train, alpha, lambdas);
-  cout << B_matrix.row(B_matrix.rows() - 1).transpose() << "\n";
-
-  //
-  // CV test
-  //
-  CVType cv = cross_validation_subgrad_cd(X_train, y_train, K_fold, alpha, lambdas);
-  cout << cv.risks << "\n";
-
-  for (auto& lambda : cv.lambdas) {
-    cout << lambda << " ";
-  }
-
-  // get the best lambda
-  MatrixXf::Index min_row;
-  double min = cv.risks.minCoeff(&min_row);
-  double best_lambda = cv.lambdas[min_row];
-  */
 }
 
 // Benchmark for compiler optimization
