@@ -33,7 +33,7 @@
 #'
 #' @export
 pros = function(X, y, 
-                alpha = c(1, 0, 0, 0, 0, 0), lambda, step_size = 1/1000,
+                alpha = c(1, 0, 0, 0, 0, 0), lambda, step_size = 1/100,
                 algorithm = "proximal_gradient_cd", max_iter = 10000, tolerance = 10^(-8), random_seed = 0) {
   y = matrix(as.vector(t(y)), ncol = 1) # convert to column vector
 
@@ -107,7 +107,7 @@ predict.pros = function(prosObj, X) {
 #'
 #' @export
 cv.pros = function(X, y, 
-                   K_fold = 10, alpha = c(1, 0, 0, 0, 0, 0), lambdas = seq(.001, 1.001, .01), step_size = 1/1000,
+                   K_fold = 10, alpha = c(1, 0, 0, 0, 0, 0), lambdas = seq(.001, 1.001, .01), step_size = 1/100,
                    algorithm = "proximal_gradient_cd", max_iter = 10000, tolerance = 10^(-8), random_seed = 0) {
   y = matrix(as.vector(t(y)), ncol = 1) # convert to column vector
   alpha = matrix(as.vector(t(alpha)), ncol = 1) # convert to column vector
@@ -118,6 +118,7 @@ cv.pros = function(X, y,
   res$X = X
   res$y = y
   res$alpha = alpha
+  res$step_size = step_size
   res$max_iter = max_iter
   res$tolerance = tolerance
   res$random_seed = random_seed
@@ -145,10 +146,11 @@ predict.cv_pros = function(cv_prosObj, X_new) {
   y = cv_prosObj$y
   alpha = cv_prosObj$alpha
   lambda = cv_prosObj$best_lambda
+  step_size = cv_prosObj$step_size
   max_iter = cv_prosObj$max_iter
   tolerance = cv_prosObj$tolerance
   random_seed = cv_prosObj$random_seed
-  fit = pros(X, y, alpha = alpha, lambda = lambda, max_iter = max_iter, tolerance = tolerance, random_seed = random_seed)
+  fit = pros(X, y, alpha = alpha, lambda = lambda, step_size = step_size, max_iter = max_iter, tolerance = tolerance, random_seed = random_seed)
   res = predict(fit, X_new)
   return ( res )
 }
