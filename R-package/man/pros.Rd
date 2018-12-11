@@ -6,7 +6,7 @@
 \usage{
 pros(X, y, alpha = c(1, 0, 0, 0, 0, 0), lambda, step_size = 1/1000,
   algorithm = "proximal_gradient_cd", max_iter = 10000,
-  tolerance = 10^(-3), random_seed = 0)
+  tolerance = 10^(-8), random_seed = 0)
 }
 \arguments{
 \item{X}{the matrix of the data}
