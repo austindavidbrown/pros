@@ -116,7 +116,7 @@ VectorXd proximal_gradient_cd(VectorXd B, const MatrixXd& X, const VectorXd& y,
     }
   }
 
-  std::cout << "Failed to converge!\n";
+  std::cout << "Failed to converge! Tune the step size.\n";
   return B;
 }
 
