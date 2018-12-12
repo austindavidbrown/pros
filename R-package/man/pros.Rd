@@ -4,7 +4,7 @@
 \alias{pros}
 \title{Pros}
 \usage{
-pros(X, y, alpha = c(1, 0, 0, 0, 0, 0), lambda, step_size = 1/1000,
+pros(X, y, alpha = c(1, 0, 0, 0, 0, 0), lambda, step_size,
   algorithm = "proximal_gradient_cd", max_iter = 10000,
   tolerance = 10^(-8), random_seed = 0)
 }
