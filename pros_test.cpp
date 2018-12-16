@@ -1,4 +1,4 @@
-#include "pros.hpp"
+#include "pros.h"
 
 #include <time.h>
 #include <iostream>

@@ -1,7 +1,7 @@
 // Libraries here ORDER MATTERS
 #include <Eigen/Dense>
 #include <vector>
-#include "pros.hpp"
+#include "pros.h"
 
 // R stuff here ORDER MATTERS
 #include <R.h>
