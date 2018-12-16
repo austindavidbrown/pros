@@ -17,7 +17,7 @@ See the [Reference Manual](https://github.com/austindavidbrown/pros/blob/master/
 
 License
 -------
-© Contributors, 2018. Licensed under the [Apache-2](https://www.apache.org/licenses/LICENSE-2.0) license.
+Licensed under GPL-2.
 
 References
 ---------

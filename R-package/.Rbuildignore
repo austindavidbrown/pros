@@ -1,3 +1,6 @@
+\.DS_STORE$
+..Rcheck/
+
 \.o$
 \.so$
 \.dll$

@@ -1,7 +1,6 @@
 // Libraries here ORDER MATTERS
 #include <Eigen/Dense>
 #include <vector>
-#include <iostream>
 #include "pros.hpp"
 
 // R stuff here ORDER MATTERS
@@ -10,7 +9,6 @@
 
 using namespace Eigen;
 using std::vector;
-using std::cout;
 
 // This allows visibility
 extern "C" {
@@ -62,7 +60,6 @@ SEXP R_fit(SEXP X_, SEXP y_,
   VectorXd B_0 = VectorXd::Zero(X.cols());
   VectorXd B;
   if (strcmp("subgradient_cd", alg_name) == 0) {
-    cout << "Using Subgradient Coordinate Descent!\n";
     B = subgrad_cd(B_0, X, y, alpha, lambda);
   } else {
     B = proximal_gradient_cd(B_0, X, y, alpha, lambda, step_size, max_iter, tolerance, random_seed);
@@ -144,7 +141,6 @@ SEXP R_cross_validation(SEXP X_, SEXP y_,
   // CV
   CVType cv;
   if (strcmp("subgradient_cd", alg_name) == 0) {
-    cout << "Using Subgradient Coordinate Descent\n";
     cv = cross_validation_subgrad_cd(X, y, K_fold, alpha, lambdas);
   } else {
     cv = cross_validation_proximal_gradient_cd(X, y, K_fold, alpha, lambdas, step_size, max_iter, tolerance, random_seed);
