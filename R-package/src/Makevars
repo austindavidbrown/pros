@@ -1,6 +1,6 @@
 CXX = g++
-CXX_STD = CXX14
 PKG_CXXFLAGS = -Ieigen
+CXX_STD = CXX11
 
 # Comment this line to submit to CRAN
-PKG_CXXFLAGS += -std=c++14 -O3 -march=native -mfpmath=sse
+PKG_CXXFLAGS += -O3 -march=native -mfpmath=sse
