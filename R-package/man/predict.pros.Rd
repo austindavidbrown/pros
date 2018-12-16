@@ -17,8 +17,3 @@ A \code{vector} of prediction values.
 \description{
 The prediction function for \code{pros}.
 }
-\examples{
-fit = pros(X_train, y_train, lambda = .1)
-pred = predict(fit, X_test)
-
-}

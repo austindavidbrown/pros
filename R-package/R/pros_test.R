@@ -1,9 +1,8 @@
-source("pros.R")
-
 ###
 # Test
 ###
 test = function() {
+  source("pros.R")
   system("cd ../src; R CMD SHLIB R_interface.cpp")
   dyn.load("../src/R_interface.so")
 

@@ -8,6 +8,7 @@ devtools::check(manual = T)
 devtools::document()
 R CMD Rd2pdf ./ --force -o pros.pdf
 
+R CMD check .
 
 ##
 # Test

@@ -56,10 +56,6 @@ pros = function(X, y,
 #' @return 
 #' A \code{vector} of prediction values.
 #'
-#' @examples
-#' fit = pros(X_train, y_train, lambda = .1)
-#' pred = predict(fit, X_test)
-#'
 #' @export
 predict.pros = function(prosObj, X) {
   B = matrix(as.vector(t(prosObj$B)), ncol = 1) # convert to column vector
@@ -135,10 +131,6 @@ cv.pros = function(X, y,
 #' 
 #' @return 
 #' A \code{vector} of prediction values.
-#'
-#' @examples
-#' cv = cv.pros(X_train, y_train)
-#' pred = predict(cv, X_test)
 #'
 #' @export
 predict.cv_pros = function(cv_prosObj, X_new) {
