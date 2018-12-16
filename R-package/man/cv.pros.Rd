@@ -13,6 +13,8 @@ cv.pros(X, y, K_fold = 10, alpha = c(1, 0, 0, 0, 0, 0),
 
 \item{y}{is an \eqn{n \times m}-dimensional matrix of the data.}
 
+\item{K_fold}{is the number of folds in cross-validation.}
+
 \item{alpha}{is a \eqn{6}-dimensional vector of the convex combination corresponding to the penalization:
 \itemize{
   \item \eqn{\alpha_1} is the \eqn{l^1} penalty.

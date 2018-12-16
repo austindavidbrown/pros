@@ -79,6 +79,7 @@ predict.pros = function(prosObj, X) {
 #'   \item \eqn{\alpha_5} is the \eqn{l^8} penalty.
 #'   \item \eqn{\alpha_6} is the \eqn{l^10} penalty.
 #' }
+#' @param K_fold is the number of folds in cross-validation.
 #' @param lambdas is a vector of dual penalization values to be evaluated.
 #' @param step_size is a tuning parameter defining the step size. Larger values are more aggressive and smaller values are less aggressive.
 #' @param algorithm is the optimization algorithm 
