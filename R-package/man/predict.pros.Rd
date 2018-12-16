@@ -9,13 +9,13 @@
 \arguments{
 \item{prosObj}{an object of class \code{pros}}
 
-\item{X}{the matrix of the data to predict}
+\item{X}{is an \eqn{n \times m}-dimensional matrix of the data.}
 }
 \value{
 A \code{vector} of prediction values.
 }
 \description{
-The prediction function.
+The prediction function for \code{pros}.
 }
 \examples{
 fit = pros(X_train, y_train, lambda = .1)

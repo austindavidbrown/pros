@@ -9,13 +9,13 @@
 \arguments{
 \item{cv_prosObj}{an object of class \code{cv_pros}}
 
-\item{X_new}{the matrix of the data to predict}
+\item{X_new}{is an \eqn{n \times m}-dimensional matrix of the data.}
 }
 \value{
 A \code{vector} of prediction values.
 }
 \description{
-The cross-validation prediction function.
+The prediction function for \code{cv.pros}.
 }
 \examples{
 cv = cv.pros(X_train, y_train)

@@ -252,7 +252,7 @@ The \textbf{pros} function is used to fit a single regression model with a speci
    \item $\alpha_6$ is the $l^{10}$ penalty.
 \end{itemize}
 
-\item \code{lambdas} is a vector of dual penalization values to be evaluated.
+\item \code{lambda} is the Lagrangian dual penalization parameter.
 
 \item \code{step\_size} is a tuning parameter defining the step size. Larger values are more aggressive and smaller values are less aggressive.
 
@@ -272,7 +272,7 @@ The \textbf{pros} function is used to fit a single regression model with a speci
 
 \subsection{The Cross-Validation Function}
 
-The \textbf{cv.pros} function is used for cross-validation.
+The \textbf{cv.pros} function is used for K-fold cross-validation.
 The signature of this function at the time of this paper is as follows:
 
 \begin{itemize}
@@ -290,7 +290,7 @@ The signature of this function at the time of this paper is as follows:
    \item $\alpha_6$ is the $l^{10}$ penalty.
 \end{itemize}
 
-\item \code{lambda} is the Lagrangian dual penalization parameter.
+\item \code{lambdas} is a vector of dual penalization values to be evaluated.
 
 \item \code{step\_size} is a tuning parameter defining the step size. Larger values are more aggressive and smaller values are less aggressive.
 

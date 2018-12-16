@@ -44,7 +44,7 @@ void test_prostate() {
   int n_train = X_train.rows();
 
   int K_fold = 10;
-  double lambda = .01;
+  double lambda = 11;
   double step_size = 1/((double) 80);
   int max_iter = 10000;
   double tolerance = pow(10, -8);
@@ -56,9 +56,9 @@ void test_prostate() {
 
   // create lambdas
   vector<double> lambdas;
-  lambdas.push_back(pow(10, -8));
+  lambdas.push_back(X_train.cols());
   for (int i = 1; i < 100; i++) {
-    lambdas.push_back(lambdas[i - 1] + .01);
+    lambdas.push_back(lambdas[i - 1] + .1);
   }
 
   //

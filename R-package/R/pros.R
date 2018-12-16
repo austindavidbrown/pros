@@ -1,35 +1,31 @@
 #' Pros
 #' 
-#' The fit function for a specific lambda value.
+#' The \code{pros} function is used to fit a single regression model with a specified penalization. 
 #' 
-#' @param X the matrix of the data
-#' @param y the vector of response values
-#' @param alpha the convex combination of length 7 corresponding to the penalties:
+#' @param X is an \eqn{n \times m}-dimensional matrix of the data.
+#' @param y is an \eqn{n \times m}-dimensional matrix of the data.
+#' @param alpha is a \eqn{6}-dimensional vector of the convex combination corresponding to the penalization:
 #' \itemize{
-#'   \item l1 penalty
-#'   \item l2 penalty
-#'   \item l4 penalty
-#'   \item l6 penalty
-#'   \item l8 penalty
-#'   \item l10 penalty
+#'   \item \eqn{\alpha_1} is the \eqn{l^1} penalty.
+#'   \item \eqn{\alpha_2} is the \eqn{l^2} penalty.
+#'   \item \eqn{\alpha_3} is the \eqn{l^4} penalty.
+#'   \item \eqn{\alpha_4} is the \eqn{l^6} penalty.
+#'   \item \eqn{\alpha_5} is the \eqn{l^8} penalty.
+#'   \item \eqn{\alpha_6} is the \eqn{l^10} penalty.
 #' }
-#' @param lambda the dual penalization value
-#' @param step_size step size
-#' @param algorithm the optimization algorithm 
+#' @param lambda is the Lagrangian dual penalization parameter.
+#' @param step_size is a tuning parameter defining the step size. Larger values are more aggressive and smaller values are less aggressive.
+#' @param algorithm is the optimization algorithm 
 #' \itemize{
-#'   \item \code{proximal_gradient_cd} (proximal gradient coordinate descent)
-#'   \item \code{subgradient_cd} (subgradient coordinate algorithm)
+#'   \item \code{proximal_gradient_cd} uses proximal gradient coordinate descent.
+#'   \item \code{subgradient_cd} uses subgradient coordinate descent.
 #' }
-#' @param max_iter maximum iterations. This also tunes the step size.
-#' @param tolerance tolerance
-#' @param random_seed random seed
+#' @param max_iter is the maximum iterations the algorithm will run regardless of convergence.
+#' @param tolerance is the accuracy of the stopping criterion.
+#' @param random_seed is the random seed used in the algorithms.
 #' 
 #' @return 
 #' A class \code{pros}
-#'
-#' @examples
-#' fit = pros(X_train, y_train, lambda = .1)
-#' pred = predict(fit, X_test)
 #'
 #' @export
 pros = function(X, y, 
@@ -52,10 +48,10 @@ pros = function(X, y,
 
 #' Pros Prediction
 #' 
-#' The prediction function.
+#' The prediction function for \code{pros}.
 #' 
 #' @param prosObj an object of class \code{pros}
-#' @param X the matrix of the data to predict
+#' @param X is an \eqn{n \times m}-dimensional matrix of the data.
 #' 
 #' @return 
 #' A \code{vector} of prediction values.
@@ -74,36 +70,33 @@ predict.pros = function(prosObj, X) {
 
 #' Cross-validation
 #' 
-#' The K-fold cross-validation function.
+#' The \code{cv.pros} function is used for K-fold cross-validation.
 #' 
-#' @param X the matrix of the data
-#' @param y the vector of response values
-#' @param alpha the convex combination of length 7 corresponding to the penalties:
+#' @param X is an \eqn{n \times m}-dimensional matrix of the data.
+#' @param y is an \eqn{n \times m}-dimensional matrix of the data.
+#' @param alpha is a \eqn{6}-dimensional vector of the convex combination corresponding to the penalization:
 #' \itemize{
-#'   \item l1 penalty
-#'   \item l2 penalty
-#'   \item l4 penalty
-#'   \item l6 penalty
-#'   \item l8 penalty
-#'   \item l10 penalty
+#'   \item \eqn{\alpha_1} is the \eqn{l^1} penalty.
+#'   \item \eqn{\alpha_2} is the \eqn{l^2} penalty.
+#'   \item \eqn{\alpha_3} is the \eqn{l^4} penalty.
+#'   \item \eqn{\alpha_4} is the \eqn{l^6} penalty.
+#'   \item \eqn{\alpha_5} is the \eqn{l^8} penalty.
+#'   \item \eqn{\alpha_6} is the \eqn{l^10} penalty.
 #' }
-#' @param lambdas A vector of dual penalization values to be evaluated
-#' @param step_size step size
-#' @param algorithm the optimization algorithm 
+#' @param lambdas is a vector of dual penalization values to be evaluated.
+#' @param step_size is a tuning parameter defining the step size. Larger values are more aggressive and smaller values are less aggressive.
+#' @param algorithm is the optimization algorithm 
 #' \itemize{
-#'   \item \code{proximal_gradient_cd} (proximal gradient coordinate descent)
-#'   \item \code{subgradient_cd} (subgradient coordinate algorithm)
+#'   \item \code{proximal_gradient_cd} uses proximal gradient coordinate descent.
+#'   \item \code{subgradient_cd} uses subgradient coordinate descent.
 #' }
-#' @param max_iter maximum iterations. This also tunes the step size.
-#' @param tolerance tolerance
-#' @param random_seed random seed
+#' @param max_iter is the maximum iterations the algorithm will run regardless of convergence.
+#' @param tolerance is the accuracy of the stopping criterion.
+#' @param random_seed is the random seed used in the algorithms.
+#'
 #'
 #' @return 
 #' A class \code{cv_pros}
-#'
-#' @examples
-#' cv = cv.pros(X_train, y_train)
-#' pred = predict(cv, X_test)
 #'
 #' @export
 cv.pros = function(X, y, 
@@ -135,10 +128,10 @@ cv.pros = function(X, y,
 
 #' Cross-validation Prediction
 #' 
-#' The cross-validation prediction function.
+#' The prediction function for \code{cv.pros}.
 #' 
 #' @param cv_prosObj an object of class \code{cv_pros}
-#' @param X_new the matrix of the data to predict
+#' @param X_new is an \eqn{n \times m}-dimensional matrix of the data.
 #' 
 #' @return 
 #' A \code{vector} of prediction values.

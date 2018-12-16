@@ -9,44 +9,39 @@ pros(X, y, alpha = c(1, 0, 0, 0, 0, 0), lambda, step_size,
   tolerance = 10^(-8), random_seed = 0)
 }
 \arguments{
-\item{X}{the matrix of the data}
+\item{X}{is an \eqn{n \times m}-dimensional matrix of the data.}
 
-\item{y}{the vector of response values}
+\item{y}{is an \eqn{n \times m}-dimensional matrix of the data.}
 
-\item{alpha}{the convex combination of length 7 corresponding to the penalties:
+\item{alpha}{is a \eqn{6}-dimensional vector of the convex combination corresponding to the penalization:
 \itemize{
-  \item l1 penalty
-  \item l2 penalty
-  \item l4 penalty
-  \item l6 penalty
-  \item l8 penalty
-  \item l10 penalty
+  \item \eqn{\alpha_1} is the \eqn{l^1} penalty.
+  \item \eqn{\alpha_2} is the \eqn{l^2} penalty.
+  \item \eqn{\alpha_3} is the \eqn{l^4} penalty.
+  \item \eqn{\alpha_4} is the \eqn{l^6} penalty.
+  \item \eqn{\alpha_5} is the \eqn{l^8} penalty.
+  \item \eqn{\alpha_6} is the \eqn{l^10} penalty.
 }}
 
-\item{lambda}{the dual penalization value}
+\item{lambda}{is the Lagrangian dual penalization parameter.}
 
-\item{step_size}{step size}
+\item{step_size}{is a tuning parameter defining the step size. Larger values are more aggressive and smaller values are less aggressive.}
 
-\item{algorithm}{the optimization algorithm 
+\item{algorithm}{is the optimization algorithm 
 \itemize{
-  \item \code{proximal_gradient_cd} (proximal gradient coordinate descent)
-  \item \code{subgradient_cd} (subgradient coordinate algorithm)
+  \item \code{proximal_gradient_cd} uses proximal gradient coordinate descent.
+  \item \code{subgradient_cd} uses subgradient coordinate descent.
 }}
 
-\item{max_iter}{maximum iterations. This also tunes the step size.}
+\item{max_iter}{is the maximum iterations the algorithm will run regardless of convergence.}
 
-\item{tolerance}{tolerance}
+\item{tolerance}{is the accuracy of the stopping criterion.}
 
-\item{random_seed}{random seed}
+\item{random_seed}{is the random seed used in the algorithms.}
 }
 \value{
 A class \code{pros}
 }
 \description{
-The fit function for a specific lambda value.
-}
-\examples{
-fit = pros(X_train, y_train, lambda = .1)
-pred = predict(fit, X_test)
-
+The \code{pros} function is used to fit a single regression model with a specified penalization.
 }
