@@ -1,6 +1,5 @@
 #include <cmath>
 #include <vector>
-#include <array>
 #include <algorithm>
 #include <random>
 #include <Eigen/Dense>
@@ -9,7 +8,6 @@
 
 using namespace Eigen;
 using std::vector;
-using std::array;
 using std::sort;
 using std::cout;
 
@@ -65,9 +63,6 @@ VectorXd predict(const VectorXd& B, const double intercept, const MatrixXd& X) {
 
 //
 // Proximal Gradient Coordinate Descent
-// Step size: 
-// Constant is performing better: 1/((double)max_iter)
-// Possible change: Diminishing from Nesterov's Lecture Notes: pow(1 + j, -1/2.0f)
 //
 VectorXd proximal_gradient_cd(VectorXd B, const MatrixXd& X, const VectorXd& y, 
                               const Vector6d& alpha, const double lambda, const double step_size,
@@ -233,7 +228,26 @@ CVType cross_validation_proximal_gradient_cd(const MatrixXd& X, const VectorXd& 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /// DEPRECATED!!!!!
+// DELETE THIS AFTER PROJECT IS OVER WITH
 // Subgradient Coordinate Descent
 /// =====================================================================================
 
