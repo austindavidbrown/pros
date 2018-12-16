@@ -2,11 +2,14 @@
 \BOOKMARK [1][-]{Section.1.Penalized Regression Implementation.1}{Penalized Regression Implementation}{}% 2
 \BOOKMARK [2][-]{Subsection.2.0.Optimization Algorithms and Implementation.2}{Optimization Algorithms and Implementation}{Section.1.Penalized Regression Implementation.1}% 3
 \BOOKMARK [2][-]{Subsection.2.1.Cross-Validation Algorithms and Implementation.2}{Cross-Validation Algorithms and Implementation}{Section.1.Penalized Regression Implementation.1}% 4
-\BOOKMARK [2][-]{Subsection.2.2.Discussion.2}{Discussion}{Section.1.Penalized Regression Implementation.1}% 5
+\BOOKMARK [2][-]{Subsection.2.2.Step Size Rules and Line Search Implementation.2}{Step Size Rules and Line Search Implementation}{Section.1.Penalized Regression Implementation.1}% 5
 \BOOKMARK [1][-]{Section.2.The Penalized Regression on Steroids Package.1}{The Penalized Regression on Steroids Package}{}% 6
 \BOOKMARK [2][-]{Subsection.3.0.Package Architecture.2}{Package Architecture}{Section.2.The Penalized Regression on Steroids Package.1}% 7
 \BOOKMARK [2][-]{Subsection.3.1.The Regression Fitting Function.2}{The Regression Fitting Function}{Section.2.The Penalized Regression on Steroids Package.1}% 8
 \BOOKMARK [2][-]{Subsection.3.2.The Cross-Validation Function.2}{The Cross-Validation Function}{Section.2.The Penalized Regression on Steroids Package.1}% 9
-\BOOKMARK [1][-]{Section.3.Numerical Examples.1}{Numerical Examples}{}% 10
-\BOOKMARK [2][-]{Subsection.4.0.The Boston Housing Dataset.2}{The Boston Housing Dataset}{Section.3.Numerical Examples.1}% 11
-\BOOKMARK [2][-]{Subsection.4.1.The Prostate Dataset Analysis.2}{The Prostate Dataset Analysis}{Section.3.Numerical Examples.1}% 12
+\BOOKMARK [2][-]{Subsection.3.3.CRAN Issues.2}{CRAN Issues}{Section.2.The Penalized Regression on Steroids Package.1}% 10
+\BOOKMARK [1][-]{Section.3.Numerical Examples.1}{Numerical Examples}{}% 11
+\BOOKMARK [2][-]{Subsection.4.0.The Analysis Procedure.2}{The Analysis Procedure}{Section.3.Numerical Examples.1}% 12
+\BOOKMARK [2][-]{Subsection.4.1.The Boston Housing Dataset.2}{The Boston Housing Dataset}{Section.3.Numerical Examples.1}% 13
+\BOOKMARK [2][-]{Subsection.4.2.The Prostate Dataset Analysis.2}{The Prostate Dataset Analysis}{Section.3.Numerical Examples.1}% 14
+\BOOKMARK [2][-]{Subsection.4.3.Discussion.2}{Discussion}{Section.3.Numerical Examples.1}% 15

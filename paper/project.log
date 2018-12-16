@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.5.15)  15 DEC 2018 19:49
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.5.15)  16 DEC 2018 11:50
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -856,27 +856,27 @@ File: tikzlibrarytopaths.code.tex 2008/06/17 v3.0.1a (rcs-revision 1.2)
 ))) (./project.aux)
 \openout1 = `project.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 45.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 45.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 44.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 44.
 
 (/usr/local/texlive/2018basic/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
 
 (/usr/local/texlive/2018basic/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -908,7 +908,7 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 \AtBeginShipoutBox=\box49
-Package hyperref Info: Link coloring ON on input line 45.
+Package hyperref Info: Link coloring ON on input line 44.
  (/usr/local/texlive/2018basic/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 
@@ -918,9 +918,9 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
 \c@section@level=\count146
 )
-LaTeX Info: Redefining \ref on input line 45.
-LaTeX Info: Redefining \pageref on input line 45.
-LaTeX Info: Redefining \nameref on input line 45.
+LaTeX Info: Redefining \ref on input line 44.
+LaTeX Info: Redefining \pageref on input line 44.
+LaTeX Info: Redefining \nameref on input line 44.
  (./project.out) (./project.out)
 \@outlinefile=\write5
 \openout5 = `project.out'.
@@ -928,57 +928,57 @@ LaTeX Info: Redefining \nameref on input line 45.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\\' on input line 45.
+(hyperref)                removing `\\' on input line 44.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 45.
+(hyperref)                removing `math shift' on input line 44.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 45.
+(hyperref)                removing `superscript' on input line 44.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 45.
+(hyperref)                removing `math shift' on input line 44.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 45.
+(hyperref)                removing `math shift' on input line 44.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 45.
+(hyperref)                removing `superscript' on input line 44.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 45.
+(hyperref)                removing `math shift' on input line 44.
 
-<jsslogo.jpg, id=55, 540.0175pt x 393.47pt>
+<jsslogo.jpg, id=67, 540.0175pt x 393.47pt>
 File: jsslogo.jpg Graphic file (type jpg)
 <use jsslogo.jpg>
-Package pdftex.def Info: jsslogo.jpg  used on input line 45.
+Package pdftex.def Info: jsslogo.jpg  used on input line 44.
 (pdftex.def)             Requested size: 89.80768pt x 65.43607pt.
-LaTeX Font Info:    Try loading font information for T1+pzc on input line 45.
+LaTeX Font Info:    Try loading font information for T1+pzc on input line 44.
 (/usr/local/texlive/2018basic/texmf-dist/tex/latex/psnfss/t1pzc.fd
 File: t1pzc.fd 2001/06/04 font definitions for T1/pzc.
 )
 LaTeX Font Info:    Font shape `T1/pzc/m/n' in size <28> not available
-(Font)              Font shape `T1/pzc/mb/it' tried instead on input line 45.
+(Font)              Font shape `T1/pzc/mb/it' tried instead on input line 44.
 
 
-Package xcolor Warning: Incompatible color definition on input line 45.
+Package xcolor Warning: Incompatible color definition on input line 44.
 
-LaTeX Font Info:    Try loading font information for U+msa on input line 45.
+LaTeX Font Info:    Try loading font information for U+msa on input line 44.
 (/usr/local/texlive/2018basic/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 45.
+LaTeX Font Info:    Try loading font information for U+msb on input line 44.
 
 (/usr/local/texlive/2018basic/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for T1+aess on input line 45.
+LaTeX Font Info:    Try loading font information for T1+aess on input line 44.
 
 (/usr/local/texlive/2018basic/texmf-dist/tex/latex/ae/t1aess.fd
 File: t1aess.fd 1997/11/16 Font definitions for T1/aess.
@@ -987,57 +987,54 @@ Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 
 ABD: EveryShipout initializing macros
-<elasticnet.png, id=57, 828.696pt x 529.98pt>
+<elasticnet.png, id=69, 828.696pt x 529.98pt>
 File: elasticnet.png Graphic file (type png)
 <use elasticnet.png>
-Package pdftex.def Info: elasticnet.png  used on input line 59.
-(pdftex.def)             Requested size: 199.19283pt x 127.38379pt.
-<new_penalty_4_moment.png, id=59, 828.696pt x 529.98pt>
+Package pdftex.def Info: elasticnet.png  used on input line 56.
+(pdftex.def)             Requested size: 177.06216pt x 113.23183pt.
+<new_penalty_4_moment.png, id=71, 828.696pt x 529.98pt>
 File: new_penalty_4_moment.png Graphic file (type png)
 <use new_penalty_4_moment.png>
-Package pdftex.def Info: new_penalty_4_moment.png  used on input line 63.
-(pdftex.def)             Requested size: 199.19283pt x 127.38379pt.
+Package pdftex.def Info: new_penalty_4_moment.png  used on input line 60.
+(pdftex.def)             Requested size: 177.06216pt x 113.23183pt.
 
 
 Package caption Warning: \captionsetup{type*=...} or \captionof
-(caption)                outside box or environment on input line 65.
+(caption)                outside box or environment on input line 62.
 See the caption package documentation for explanation.
 
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
-(caption)                particular \caption on input line 65.
+(caption)                particular \caption on input line 62.
 See the caption package documentation for explanation.
 
 
-Underfull \vbox (badness 3460) has occurred while \output is active []
+Package xcolor Warning: Incompatible color definition on input line 65.
 
- [1
+
+Package xcolor Warning: Incompatible color definition on input line 65.
+
+[1
 
 {/usr/local/texlive/2018basic/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./
 jsslogo.jpg> <./elasticnet.png> <./new_penalty_4_moment.png>]
 
-Package xcolor Warning: Incompatible color definition on input line 69.
+Package xcolor Warning: Incompatible color definition on input line 80.
 
 
-Package xcolor Warning: Incompatible color definition on input line 69.
+Package xcolor Warning: Incompatible color definition on input line 80.
 
 
-Package xcolor Warning: Incompatible color definition on input line 84.
+Package xcolor Warning: Incompatible color definition on input line 81.
 
 
-Package xcolor Warning: Incompatible color definition on input line 84.
+Package xcolor Warning: Incompatible color definition on input line 81.
 
 
-Package xcolor Warning: Incompatible color definition on input line 85.
+Package xcolor Warning: Incompatible color definition on input line 113.
 
 
-Package xcolor Warning: Incompatible color definition on input line 85.
-
-
-Package xcolor Warning: Incompatible color definition on input line 117.
-
-
-Package xcolor Warning: Incompatible color definition on input line 117.
+Package xcolor Warning: Incompatible color definition on input line 113.
 
 
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
@@ -1046,22 +1043,16 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 
 [2]
 
-Package xcolor Warning: Incompatible color definition on input line 149.
+Package xcolor Warning: Incompatible color definition on input line 145.
 
 
-Package xcolor Warning: Incompatible color definition on input line 149.
+Package xcolor Warning: Incompatible color definition on input line 145.
 
 
-Package xcolor Warning: Incompatible color definition on input line 192.
+Package xcolor Warning: Incompatible color definition on input line 181.
 
 
-Package xcolor Warning: Incompatible color definition on input line 192.
-
-
-Package xcolor Warning: Incompatible color definition on input line 192.
-
-
-Package xcolor Warning: Incompatible color definition on input line 192.
+Package xcolor Warning: Incompatible color definition on input line 181.
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -1072,73 +1063,89 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
  []
 
 [3]
+
+Package xcolor Warning: Incompatible color definition on input line 206.
+
+
+Package xcolor Warning: Incompatible color definition on input line 206.
+
+
+Package xcolor Warning: Incompatible color definition on input line 206.
+
+
+Package xcolor Warning: Incompatible color definition on input line 206.
+
 Missing character: There is no ] in font nullfont!
 
-
 Package caption Warning: The option `hypcap=true' will be ignored for this
-(caption)                particular \caption on input line 215.
+(caption)                particular \caption on input line 229.
 See the caption package documentation for explanation.
 
-LaTeX Font Info:    Try loading font information for T1+aett on input line 222.
+LaTeX Font Info:    Try loading font information for T1+aett on input line 236.
 
 (/usr/local/texlive/2018basic/texmf-dist/tex/latex/ae/t1aett.fd
 File: t1aett.fd 1997/11/16 Font definitions for T1/aett.
 )
-LaTeX Font Info:    Try loading font information for TS1+aer on input line 241.
-
-LaTeX Font Info:    No file TS1aer.fd. on input line 241.
-
-
-LaTeX Font Warning: Font shape `TS1/aer/m/n' undefined
-(Font)              using `TS1/cmr/m/n' instead
-(Font)              for symbol `textbullet' on input line 241.
-
-
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 \T1/aer/m/n/10.95 4 []
  []
 
 [4]
+LaTeX Font Info:    Try loading font information for TS1+aer on input line 255.
+
+LaTeX Font Info:    No file TS1aer.fd. on input line 255.
+
+
+LaTeX Font Warning: Font shape `TS1/aer/m/n' undefined
+(Font)              using `TS1/cmr/m/n' instead
+(Font)              for symbol `textbullet' on input line 255.
+
+
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 [] \T1/aer/m/n/10.95 5
  []
 
 [5]
-
-Package xcolor Warning: Incompatible color definition on input line 315.
-
-
-Package xcolor Warning: Incompatible color definition on input line 315.
-
-
-Package xcolor Warning: Incompatible color definition on input line 328.
-
-
-Package xcolor Warning: Incompatible color definition on input line 328.
-
-
-Package xcolor Warning: Incompatible color definition on input line 364.
-
-
-Package xcolor Warning: Incompatible color definition on input line 364.
-
-
-Package xcolor Warning: Incompatible color definition on input line 364.
-
-
-Package xcolor Warning: Incompatible color definition on input line 364.
-
-
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 \T1/aer/m/n/10.95 6 []
  []
 
 [6]
 
-Package xcolor Warning: Incompatible color definition on input line 376.
+Package xcolor Warning: Incompatible color definition on input line 357.
 
 
-Package xcolor Warning: Incompatible color definition on input line 376.
+Package xcolor Warning: Incompatible color definition on input line 357.
+
+
+Package xcolor Warning: Incompatible color definition on input line 363.
+
+
+Package xcolor Warning: Incompatible color definition on input line 363.
+
+
+Package xcolor Warning: Incompatible color definition on input line 399.
+
+
+Package xcolor Warning: Incompatible color definition on input line 399.
+
+
+Package xcolor Warning: Incompatible color definition on input line 399.
+
+
+Package xcolor Warning: Incompatible color definition on input line 399.
+
+
+Overfull \hbox (5.47499pt too wide) has occurred while \output is active
+[] \T1/aer/m/n/10.95 7
+ []
+
+[7]
+
+Package xcolor Warning: Incompatible color definition on input line 434.
+
+
+Package xcolor Warning: Incompatible color definition on input line 434.
 
 (./project.bbl
 
@@ -1148,61 +1155,63 @@ Package xcolor Warning: Incompatible color definition on input line 19.
 Package xcolor Warning: Incompatible color definition on input line 31.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 34--37
+Package xcolor Warning: Incompatible color definition on input line 38.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 41--44
 []\T1/aer/m/n/10.95 Brown A (2018).  ``Pe-nal-ized Re-gres-sion on Steroids.''
  []
 
 
-Overfull \hbox (5.47499pt too wide) has occurred while \output is active
-[] \T1/aer/m/n/10.95 7
- []
-
-[7]
-
-Package xcolor Warning: Incompatible color definition on input line 64.
-
-)
-
-Package xcolor Warning: Incompatible color definition on input line 414.
-
-LaTeX Font Info:    Font shape `T1/pzc/m/n' in size <13> not available
-(Font)              Font shape `T1/pzc/mb/it' tried instead on input line 414.
-
-Package xcolor Warning: Incompatible color definition on input line 414.
-
-
-Package xcolor Warning: Incompatible color definition on input line 414.
-
-
-Package xcolor Warning: Incompatible color definition on input line 414.
+Package xcolor Warning: Incompatible color definition on input line 71.
 
 
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 \T1/aer/m/n/10.95 8 []
  []
 
-[8]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 414.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 414.
+[8])
+
+Package xcolor Warning: Incompatible color definition on input line 439.
+
+LaTeX Font Info:    Font shape `T1/pzc/m/n' in size <13> not available
+(Font)              Font shape `T1/pzc/mb/it' tried instead on input line 439.
+
+Package xcolor Warning: Incompatible color definition on input line 439.
+
+
+Package xcolor Warning: Incompatible color definition on input line 439.
+
+
+Package xcolor Warning: Incompatible color definition on input line 439.
+
+
+Overfull \hbox (5.47499pt too wide) has occurred while \output is active
+[] \T1/aer/m/n/10.95 9
+ []
+
+[9]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 439.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 439.
  (./project.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 414.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 414.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 439.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 439.
 Package rerunfilecheck Info: File `project.out' has not changed.
-(rerunfilecheck)             Checksum: 8ADE498D086AB574C7C5E872EDE24E2D;1552.
+(rerunfilecheck)             Checksum: 9D2F9546A9BFB0B400B2C29AF6348953;1958.
 
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 414.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 439.
  ) 
 Here is how much of TeX's memory you used:
- 19787 strings out of 494091
- 361744 string characters out of 6163523
- 426839 words of memory out of 5000000
- 23014 multiletter control sequences out of 15000+600000
+ 19804 strings out of 494091
+ 362202 string characters out of 6163523
+ 427876 words of memory out of 5000000
+ 23021 multiletter control sequences out of 15000+600000
  55330 words of font info for 110 fonts, out of 8000000 for 9000
  319 hyphenation exceptions out of 8191
- 55i,16n,54p,388b,909s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 55i,16n,54p,441b,909s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2018basic/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts
 1.enc}{/usr/local/texlive/2018basic/texmf-dist/fonts/enc/dvips/base/8r.enc}</us
 r/local/texlive/2018basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb>
@@ -1227,10 +1236,10 @@ asic/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2
 018basic/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/
 texlive/2018basic/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb></usr/loc
 al/texlive/2018basic/texmf-dist/fonts/type1/urw/zapfchan/uzcmi8a.pfb>
-Output written on project.pdf (8 pages, 343741 bytes).
+Output written on project.pdf (9 pages, 350910 bytes).
 PDF statistics:
- 264 PDF objects out of 1000 (max. 8388607)
- 225 compressed objects within 3 object streams
- 50 named destinations out of 1000 (max. 500000)
- 124 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 291 PDF objects out of 1000 (max. 8388607)
+ 251 compressed objects within 3 object streams
+ 60 named destinations out of 1000 (max. 500000)
+ 148 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -1,4 +1,4 @@
-\begin{thebibliography}{9}
+\begin{thebibliography}{10}
 \newcommand{\enquote}[1]{``#1''}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
@@ -29,6 +29,13 @@ Anderson E, Bai Z, Dongarra J, Greenbaum A, McKenney A, Du~Croz J, Hammarling
   Los Alamitos, CA, USA.
 \newblock ISBN 0-89791-412-0.
 \newblock \urlprefix\url{http://dl.acm.org/citation.cfm?id=110382.110385}.
+
+\bibitem[{Beck and Teboulle(2009)}]{beck_teboulle}
+Beck A, Teboulle M (2009).
+\newblock \emph{Gradient-based algorithms with applications to signal-recovery
+  problems}, p. 42–88.
+\newblock Cambridge University Press.
+\newblock \doi{10.1017/CBO9780511804458.003}.
 
 \bibitem[{Brown(2018)}]{pros}
 Brown A (2018).

@@ -1,4 +1,3 @@
-
 \documentclass[article]{jss}
 \usepackage[utf8]{inputenc}
 
@@ -46,24 +45,21 @@ We create the package Penalized Regression on Steroids (\textbf{pros}) to combin
 
 \section{Introduction}
 
-In statistics and probability theory it is common to impose moment assumptions on a random variable $X : \Omega \to \R^n$ such as $E(|X|^k) < \infty$ for $k \in \R$.
+In statistics and probability theory it is common to impose moment assumptions on a random variable $X : \Omega \to \R^n$ such as $E(|X|^k) < \infty$ for $k \in \N$.
 These constraints correspond to the $L^p$ spaces which allow control over the width and the height of such random variables.
-We believe that analogous tools should be available for scientists tackling real problems.
-The problem may also be motivated geometrically.
+Constraints of this type may also be motivated geometrically.
 Consider for example an Elasticnet penalty $Q(x) = \frac{1}{2} |x| + \frac{1}{2} |y| + \frac{1}{2} |x|^2 + \frac{1}{2} |y|^2 \le 1$
 shown on the left and a new penalty $P(x) = \frac{1}{2} |x| + \frac{1}{2} |y| + \frac{1}{2} |x|^4 + \frac{1}{2} |y|^4 \le 1$ shown on the right.
 
-
 \begin{minipage}{.5\textwidth}
   \centering
-  \includegraphics[width=.9\linewidth]{elasticnet.png}
+  \includegraphics[width=.8\linewidth]{elasticnet.png}
 \end{minipage}%
 \begin{minipage}{.5\textwidth}
   \centering
-  \includegraphics[width=.9\linewidth]{new_penalty_4_moment.png}
+  \includegraphics[width=.8\linewidth]{new_penalty_4_moment.png}
 \end{minipage}
 \captionof{figure}{A particular ElasticNet penalty shown on the left and a new penalty shown on the right shown to "bow" out the penalization while retaining convexity.}
-
 
 A scientist may want the ability to control the height and width of the penalization while still retaining sparse solutions.
 In this project, we build the Penalized Regression on Steroids (\textbf{pros}) package available to the R programming language to expand upon the idea of ElasticNet by \cite{elasticnet}, which we believe approximately encapsulates this idea.
@@ -174,16 +170,34 @@ $\beta^{Warm} \gets \beta^0$
 
 A difficult problem in general is choosing the sequence of $\lambda$'s.
 In \textbf{glmnet}, the default is to choose a sequence of length $100$ starting from the first $\lambda_{max}$ where $\beta$ is completely zero to the lower value $.001 \lambda_{max}$ on a log-scale.
-We believe, the lower $\lambda$ value in the sequence is the real difficulty and this implementation does not address this.
+The lower $\lambda$ value in the sequence is a real difficulty and this implementation does not fully address this.
 Due to time, we implement a similar default choice.
 We choose the lower $\lambda = c p$ where $c > 0$ is a tuning parameter and then create a sequence of length $100$ from this lower value.
 The default choice comparisons are explored in a subsequent section.
 
+\subsection{Step Size Rules and Line Search Implementation}
 
-\subsection{Discussion}
+The lack of an analytic solution introduces a necessary step size rule in order to fit a regression model with the new penalization.
+A good line search method due to \cite{beck_teboulle} requires an evaluation of the objective function over the entire dataset at each iteration. This has a computational complexity of $O(n^3)$ flops at each iteration. This was attempted, but never fully implemented in this package for this reason. Instead, a user defined step size rule is required. Thus, poor step size choices do not guarantee convergence.
+This is a suboptimal choice, but allows the potential for the package to be applied to very large datasets.
 
-One source of serious confusion for the author that soaked up a lot of time was that \textbf{glmnet} uses a transformation for their $\lambda$ values and these do not correspond with the typical Lasso model. Thus, direct comparisons are extremely confusing.
+We introduce an alternative algorithm to solve this issue described below.
 
+\vspace{.2cm}
+\begin{algorithm}[H]
+\caption{Step Size Tuning Avoidance Algorithm}
+Choose initial value $\beta^0$, initial step size $h$, and maximum iterations $N$.
+
+\Repeat{Until Proximal Gradient Descent convergences}{
+$h \gets \frac{1}{2}h$
+
+$\beta \gets$ by Proximal Gradient Descent with step size $h$
+}
+
+\end{algorithm}
+\vspace{.2cm}
+
+If the maximum iterations for the algorithm are not too large, this may allow users to avoid having to tune a step size while retaining good performance. Currently, this is not implemented due to time constraints for the project.
 
 \section{The Penalized Regression on Steroids Package}
 
@@ -310,28 +324,46 @@ The signature of this function at the time of this paper is as follows:
 
 \end{itemize}
 
+\subsection{CRAN Issues}
+
+At the time of this paper, the package in its current form will not be accepted onto the Comprehensive R Archive Network (CRAN).
+There are some minor changes needed to comply with the CRAN policies and one larger issue.
+In order to get good performance out of C++, the compiler needs to be aggressive. It seems that R allows many options for Fortran, but some modern options for C++ possibly need to be added. These options need to be available in general so the author will reach out to the R developers about this.
+
+
 \section{Numerical Examples}
 
-\subsection{The Boston Housing Dataset}
+\subsection{The Analysis Procedure}
 
-The Boston Housing dataset is popular from \cite{boston_housing}.
-There are 13 predictors and the response is the median value of owner-occupied homes in \$1000's. The analysis is setup in the following way:
+The analysis in the following experiments is performed in the following way:
 
 \begin{itemize}
-\item The data is randomly split into a training set with 404 observations and a test set with 102 observations.
 
+\item The data is split into a training and test.
 
 \item The predictor data is standardized.
 
-\item The \textbf{glmnet} library and the \textbf{pros} library were used for fitting.
+\item The \textbf{glmnet} library and the \textbf{pros} library were used for fitting. The \textbf{glmnet} gives varying results for a single seed so we report a range of values.
 
 \item 10-fold cross-validation was used to tune the Lagrangian dual variable $\lambda$.
+
+\item The metric for comparison is the \textit{test mean squared error} defined as
+\[
+\frac{1}{n}\sum_{k = 1}^n \left( y_i - \hat \beta_0 1 - X_i^T \hat \beta \right)^2
+\]
+
+where $\hat \beta_0, \hat \beta$ are fit over the training set and $y$ and $X$ are the response and predictor matrix belonging to the test set.
 
 \item The source code for this analysis is openly available at the \textbf{pros} repository available here \cite{pros}.
 
 \end{itemize}
 
-We compare default settings between the libraries
+\subsection{The Boston Housing Dataset}
+
+The Boston Housing dataset is popular from \cite{boston_housing}.
+There are 13 predictors and the response is the median value of owner-occupied homes in \$1000's. 
+The data is randomly split into a training set with 404 observations and a test set with 102 observations.
+We compare default implementations between the two libraries:
 
 \begin{center}
 \setlength{\tabcolsep}{20pt} % Default value: 6pt
@@ -339,15 +371,16 @@ We compare default settings between the libraries
 \begin{tabular}{lllp{7.4cm}}
 \hline
 Penalty & Tuning & Test Mean Squared Error \\ \hline
-Lasso (glmnet) & $\alpha = 1$ & TODO \\
-ElasticNet (glmnet) & $\alpha = 1/2$  & TODO   \\
-Lasso (pros) & $\alpha = 1$ &  \\
-ElasticNet (pros) & $\alpha = 1/2$ &  \\
-4th Moment (pros) & $\alpha = 1/2$ &  \\ \hline
+Lasso (glmnet) & $\alpha = 1$ & 26.96866-28.45781 \\
+ElasticNet (glmnet) & $\alpha = 1/2$  & 26.55704-26.86488   \\
+Lasso (pros) & $\alpha = 1$ &  26.47315 \\
+ElasticNet (pros) & $\alpha = 1/2$ &  26.07919 \\
+4th Moment (pros) & $\alpha = 1/2$ &  25.5008 \\
+10th Moment (pros) & $\alpha = 1/2$ &  30.54759 \\ \hline
 \end{tabular}
 \end{center}
 
-Next, we compare tuned results using pros
+Next, we compare manually tuned results using \textbf{pros}:
 
 \begin{center}
 \setlength{\tabcolsep}{20pt} % Default value: 6pt
@@ -355,32 +388,17 @@ Next, we compare tuned results using pros
 \begin{tabular}{lllp{7.4cm}}
 \hline
 Penalty & Tuning & Test Mean Squared Error \\ \hline
-ElasticNet (pros) & $\alpha = .98$ & TODO \\
-4th Moment (pros) & $\alpha = 0.96$ &  TODO \\
-10th Moment (pros) & $\alpha = 0.96$ &  TODo \\ \hline
+ElasticNet (pros) & $\alpha = 0.1$ & 25.52578 \\
+4th Moment (pros) & $\alpha = 0.6$ &  25.44149 \\
+10th Moment (pros) & $\alpha = 0.9$ &  25.68279 \\ \hline
 \end{tabular}
 \end{center}
 
 \subsection{The Prostate Dataset Analysis}
 
 This is a popular dataset from \cite{prostate} and analyzed in the ElasticNet paper \cite{elasticnet}.
-There are 8 predictors and the response is the log of the prostate specific antigen. The analysis is setup in the following way:
-
-\begin{itemize}
-\item The data is split into a training set with 67 observations and a test set with 30 observations.
-
-\item The predictor data is standardized.
-
-\item The \textbf{glmnet} library and the \textbf{pros} library were used for fitting.
-
-\item 10-fold cross-validation was used to choose the Lagrangian dual variable $\lambda$.
-
-\item The source code for this analysis is openly available at the \textbf{pros} repository available here \cite{pros}.
-
-\end{itemize}
-
-
-We compare default settings between the libraries
+There are 8 predictors and the response is the log of the prostate specific antigen.
+We compare default implementations between the two libraries:
 
 \begin{center}
 \setlength{\tabcolsep}{20pt} % Default value: 6pt
@@ -389,14 +407,14 @@ We compare default settings between the libraries
 \hline
 Penalty & Tuning & Test Mean Squared Error \\ \hline
 Lasso (glmnet) & $\alpha = 1$ & 0.4443432-0.4646501 \\
-ElasticNet (glmnet) & $\alpha = 1/2$  & 0.4539684-0.4554527   \\
-Lasso (pros) & $\alpha = 1$ &  \\
-ElasticNet (pros) & $\alpha = 1/2$ &  \\
-4th Moment (pros) & $\alpha = 1/2$ &  \\ \hline
+ElasticNet (glmnet) & $\alpha = 1/2$  & 0.4539684-0.4633808   \\
+Lasso (pros) & $\alpha = 1$ &  0.4457657 \\
+ElasticNet (pros) & $\alpha = 1/2$ &  0.4637193 \\
+4th Moment (pros) & $\alpha = 1/2$ &  0.4621351 \\ \hline
 \end{tabular}
 \end{center}
 
-Next, we compare tuned results using pros
+Next, we compare manually tuned results using \textbf{pros}:
 
 \begin{center}
 \setlength{\tabcolsep}{20pt} % Default value: 6pt
@@ -409,6 +427,11 @@ ElasticNet (pros) & $\alpha = .98$ & 0.4442702 \\
 10th Moment (pros) & $\alpha = 0.96$ &  0.4441322 \\ \hline
 \end{tabular}
 \end{center}
+
+\subsection{Discussion}
+
+One source of confusion where the author spent an embarrassingly long amount of time was noticing that \textbf{glmnet} uses a transformation for their $\lambda$ values and these do not correspond with the typical Lasso model. Thus, direct comparisons are extremely confusing. Further complicating comparisons is that \textbf{glmnet} provides varying results for fixed random seeds.
+The author should have spent more time carefully reviewing the \textbf{glmnet} paper by \cite{glmnet}. Due to this, the values in the corresponding slides for this project are incorrect. 
 
 
 \bibliography{project}

@@ -4,44 +4,46 @@ The top-level auxiliary file: project.aux
 The style file: jss.bst
 Database file #1: project.bib
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
-You've used 9 entries,
+Warning--can't use both author and editor fields in beck_teboulle
+You've used 10 entries,
             3215 wiz_defined-function locations,
-            692 strings with 6723 characters,
-and the built_in function-call counts, 9877 in all, are:
-= -- 997
-> -- 271
-< -- 6
-+ -- 102
-- -- 94
-* -- 715
-:= -- 1191
-add.period$ -- 39
-call.type$ -- 9
-change.case$ -- 69
-chr.to.int$ -- 10
-cite$ -- 9
-duplicate$ -- 1031
-empty$ -- 744
-format.name$ -- 118
-if$ -- 1992
+            701 strings with 7006 characters,
+and the built_in function-call counts, 10826 in all, are:
+= -- 1091
+> -- 290
+< -- 8
++ -- 109
+- -- 100
+* -- 772
+:= -- 1300
+add.period$ -- 43
+call.type$ -- 10
+change.case$ -- 75
+chr.to.int$ -- 11
+cite$ -- 11
+duplicate$ -- 1127
+empty$ -- 821
+format.name$ -- 129
+if$ -- 2203
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 92
-newline$ -- 58
-num.names$ -- 36
-pop$ -- 516
+missing$ -- 103
+newline$ -- 64
+num.names$ -- 40
+pop$ -- 561
 preamble$ -- 1
-purify$ -- 67
+purify$ -- 73
 quote$ -- 0
-skip$ -- 167
+skip$ -- 204
 stack$ -- 0
-substring$ -- 1053
-swap$ -- 212
-text.length$ -- 1
+substring$ -- 1126
+swap$ -- 247
+text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 81
-warning$ -- 0
-while$ -- 66
+type$ -- 87
+warning$ -- 1
+while$ -- 72
 width$ -- 0
-write$ -- 128
+write$ -- 143
+(There was 1 warning)
