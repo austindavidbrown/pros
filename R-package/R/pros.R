@@ -27,10 +27,22 @@
 #' @return 
 #' A class \code{pros}
 #'
+#' @examples
+#' n = 1000
+#' X1 <- rnorm(n)
+#' X2 <- rnorm(n)
+#' y = 3 + 5 * X1 + 0 * X2
+#' X = matrix(c(X1, X2), ncol = 2)
+#' fit = pros(X, y, lambda = 2, step_size = .001)
+#' predict(fit, X)
+#'
 #' @export
 pros = function(X, y, 
                 alpha = c(1, 0, 0, 0, 0, 0), lambda, step_size,
                 algorithm = "proximal_gradient_cd", max_iter = 10000, tolerance = 10^(-8), random_seed = 0) {
+  if (!is.matrix(X)) {
+    stop("X must be a matrix")
+  }
   y = matrix(as.vector(t(y)), ncol = 1) # convert to column vector
 
   if (length(alpha) != 6) {
@@ -100,7 +112,9 @@ predict.pros = function(object, X, ...) {
 cv.pros = function(X, y, 
                    K_fold = 10, alpha = c(1, 0, 0, 0, 0, 0), lambdas = c(), step_size,
                    algorithm = "proximal_gradient_cd", max_iter = 10000, tolerance = 10^(-8), random_seed = 0) {
-
+  if (!is.matrix(X)) {
+    stop("X must be a matrix")
+  }
   # Set default lambdas for the user
   # There is no theoretical justification here.
   if (length(lambdas) == 0) {
@@ -134,6 +148,15 @@ cv.pros = function(X, y,
 #' 
 #' @return 
 #' A \code{vector} of prediction values.
+#'
+#' @examples
+#' n = 1000
+#' X1 <- rnorm(n)
+#' X2 <- rnorm(n)
+#' y = 3 + 5 * X1 + 0 * X2
+#' X = matrix(c(X1, X2), ncol = 2)
+#' cv = cv.pros(X, y, step_size = .001)
+#' predict(cv, X)
 #'
 #' @export
 predict.cv_pros = function(object, X_new, ...) {

@@ -45,3 +45,13 @@ A class \code{pros}
 \description{
 The \code{pros} function is used to fit a single regression model with a specified penalization.
 }
+\examples{
+n = 1000
+X1 <- rnorm(n)
+X2 <- rnorm(n)
+y = 3 + 5 * X1 + 0 * X2
+X = matrix(c(X1, X2), ncol = 2)
+fit = pros(X, y, lambda = 2, step_size = .001)
+predict(fit, X)
+
+}

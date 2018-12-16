@@ -10,7 +10,7 @@ devtools::document("./R-package")
 roxygen2::roxygenise("./R-package")
 
 # Check
-R CMD check ./R-package
+R CMD check --as-cran ./R-package
 devtools::check("./R-package")
 
 ##

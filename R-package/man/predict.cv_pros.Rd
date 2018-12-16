@@ -19,3 +19,13 @@ A \code{vector} of prediction values.
 \description{
 The prediction function for \code{cv.pros}.
 }
+\examples{
+n = 1000
+X1 <- rnorm(n)
+X2 <- rnorm(n)
+y = 3 + 5 * X1 + 0 * X2
+X = matrix(c(X1, X2), ncol = 2)
+cv = cv.pros(X, y, step_size = .001)
+predict(cv, X)
+
+}

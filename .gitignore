@@ -8,5 +8,11 @@ R-package/..Rcheck/
 R-package/src/symbols.rds
 R-package.Rcheck
 
+paper/project.aux
+paper/project.log
+paper/project.out
+paper/project.bbl
+paper/project.blg
+
 *.o
 *.so
