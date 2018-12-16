@@ -5,6 +5,8 @@ references/
 R-package/src/R_interface.o
 R-package/src/R_interface.so
 R-package/..Rcheck/
+R-package/src/symbols.rds
+R-package.Rcheck
 
 *.o
 *.so

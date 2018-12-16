@@ -13,7 +13,7 @@ devtools::install_github("austindavidbrown/pros/R-package")
 
 Documentation
 -------
-See the [Reference Manual](https://github.com/austindavidbrown/pros/blob/master/R-package/pros-manual.pdf) for the R package.
+See the [Reference Manual](https://github.com/austindavidbrown/pros/blob/master/pros-manual.pdf) for the R package.
 
 License
 -------
