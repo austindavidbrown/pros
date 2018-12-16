@@ -4,12 +4,14 @@
 \alias{predict.cv_pros}
 \title{Cross-validation Prediction}
 \usage{
-\method{predict}{cv_pros}(cv_prosObj, X_new)
+\method{predict}{cv_pros}(object, X_new, ...)
 }
 \arguments{
-\item{cv_prosObj}{an object of class \code{cv_pros}}
+\item{object}{an object of class \code{cv_pros}}
 
 \item{X_new}{is an \eqn{n \times m}-dimensional matrix of the data.}
+
+\item{...}{Other parameters (this is required by R)}
 }
 \value{
 A \code{vector} of prediction values.

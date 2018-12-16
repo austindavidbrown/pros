@@ -4,12 +4,14 @@
 \alias{predict.pros}
 \title{Pros Prediction}
 \usage{
-\method{predict}{pros}(prosObj, X)
+\method{predict}{pros}(object, X, ...)
 }
 \arguments{
-\item{prosObj}{an object of class \code{pros}}
+\item{object}{an object of class \code{pros}}
 
 \item{X}{is an \eqn{n \times m}-dimensional matrix of the data.}
+
+\item{...}{Other parameters (this is required by R)}
 }
 \value{
 A \code{vector} of prediction values.

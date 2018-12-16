@@ -50,16 +50,17 @@ pros = function(X, y,
 #' 
 #' The prediction function for \code{pros}.
 #' 
-#' @param prosObj an object of class \code{pros}
+#' @param object an object of class \code{pros}
 #' @param X is an \eqn{n \times m}-dimensional matrix of the data.
+#' @param ... Other parameters (this is required by R)
 #' 
 #' @return 
 #' A \code{vector} of prediction values.
 #'
 #' @export
-predict.pros = function(prosObj, X) {
-  B = matrix(as.vector(t(prosObj$B)), ncol = 1) # convert to column vector
-  intercept = prosObj$intercept
+predict.pros = function(object, X, ...) {
+  B = matrix(as.vector(t(object$B)), ncol = 1) # convert to column vector
+  intercept = object$intercept
   return ( .Call("R_predict", B, as.double(intercept), as.matrix(X)) )
 }
 
@@ -127,22 +128,23 @@ cv.pros = function(X, y,
 #' 
 #' The prediction function for \code{cv.pros}.
 #' 
-#' @param cv_prosObj an object of class \code{cv_pros}
+#' @param object an object of class \code{cv_pros}
 #' @param X_new is an \eqn{n \times m}-dimensional matrix of the data.
+#' @param ... Other parameters (this is required by R)
 #' 
 #' @return 
 #' A \code{vector} of prediction values.
 #'
 #' @export
-predict.cv_pros = function(cv_prosObj, X_new) {
-  X = cv_prosObj$X
-  y = cv_prosObj$y
-  alpha = cv_prosObj$alpha
-  lambda = cv_prosObj$best_lambda
-  step_size = cv_prosObj$step_size
-  max_iter = cv_prosObj$max_iter
-  tolerance = cv_prosObj$tolerance
-  random_seed = cv_prosObj$random_seed
+predict.cv_pros = function(object, X_new, ...) {
+  X = object$X
+  y = object$y
+  alpha = object$alpha
+  lambda = object$best_lambda
+  step_size = object$step_size
+  max_iter = object$max_iter
+  tolerance = object$tolerance
+  random_seed = object$random_seed
   fit = pros(X, y, alpha = alpha, lambda = lambda, step_size = step_size, max_iter = max_iter, tolerance = tolerance, random_seed = random_seed)
   res = predict(fit, X_new)
   return ( res )
