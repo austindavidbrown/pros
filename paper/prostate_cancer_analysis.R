@@ -50,20 +50,20 @@ mean((y_test - predict(cv_pros_10_moment, X_test))^2)
 # Compare tuned
 ###
 
-4th moment best
-[1] 11
-[1] 0.96
-[1] 0.4441759
+# 4th moment best
+#[1] 11
+#[1] 0.96
+#[1] 0.4441759
 
-10th moment best
-[1] 11
-[1] 0.96
-[1] 0.4441322
+# 10th moment best
+#[1] 11
+#[1] 0.96
+#[1] 0.4441322
 
-elnet best
-[1] 11
-[1] 0.98
-[1] 0.4442702
+# Elnet best
+#[1] 11
+#[1] 0.98
+#[1] 0.4442702
 
 for (i in 8:30) {
   # Tune Pros

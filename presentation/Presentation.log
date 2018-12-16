@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.5.15)  7 DEC 2018 12:42
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.5.15)  15 DEC 2018 13:58
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -791,35 +791,29 @@ Overfull \hbox (9.98232pt too wide) in paragraph at lines 243--244
  []
 
 [10] [11] [12] [13] [14] [15]
-Overfull \hbox (18.40602pt too wide) in paragraph at lines 381--390
+Overfull \hbox (4.40596pt too wide) in paragraph at lines 379--388
  [] 
  []
 
-./Presentation.tex:392: Missing $ inserted.
-<inserted text> 
-                $
-l.392 \lambda
-              = 54.02
-? 
-./Presentation.tex:392: Emergency stop.
-<inserted text> 
-                $
-l.392 \lambda
-              = 54.02
-End of file on the terminal!
-
- 
-Here is how much of TeX's memory you used:
- 18530 strings out of 494091
- 344637 string characters out of 6163523
- 420342 words of memory out of 5000000
- 21858 multiletter control sequences out of 15000+600000
- 13576 words of font info for 53 fonts, out of 8000000 for 9000
- 319 hyphenation exceptions out of 8191
- 55i,13n,54p,393b,909s stack positions out of 5000i,500n,10000p,200000b,80000s
-./Presentation.tex:392:  ==> Fatal error occurred, no output PDF file produced!
+[16] [17] [18] [19]
+Underfull \hbox (badness 10000) in paragraph at lines 472--473
+[]\OT1/cmr/m/n/9 Neal Parikh and Stephen Boyd. 2014. Prox-i-mal Al-go-rithms. F
+ound.
+ []
 
 
+Underfull \hbox (badness 10000) in paragraph at lines 472--473
+\OT1/cmr/m/n/9 Trends Op-tim. 1, 3 (Jan-uary 2014), 127-239. DOI=10.1561/240000
+0003
+ []
+
+[20] [21]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 491.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 491.
+ (./Presentation.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 491.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 491.
+Package rerunfilecheck Info: File `Presentation.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 491.
  ) 
@@ -850,7 +844,7 @@ xmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2018basic
 /texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2018b
 asic/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2
 018basic/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on Presentation.pdf (21 pages, 295178 bytes).
+Output written on Presentation.pdf (21 pages, 295258 bytes).
 PDF statistics:
  242 PDF objects out of 1000 (max. 8388607)
  195 compressed objects within 2 object streams
