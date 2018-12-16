@@ -6,5 +6,5 @@ R-package/src/R_interface.o
 R-package/src/R_interface.so
 R-package/..Rcheck/
 
--*.o
--*.so
+*.o
+*.so
