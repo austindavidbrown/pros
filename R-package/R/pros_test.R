@@ -7,10 +7,10 @@ test = function() {
   dyn.load("../src/R_interface.so")
 
   X_train = data.matrix(read.csv("../../data/X_train.csv", header = F))
-  y_train = data.matrix(read.csv("../../data/y_train.csv", header = F))
+  y_train = as.vector(data.matrix(read.csv("../../data/y_train.csv", header = F)))
 
   X_test = data.matrix(read.csv("../../data/X_test.csv", header = F))
-  y_test = data.matrix(read.csv("../../data/y_test.csv", header = F))
+  y_test = as.vector(data.matrix(read.csv("../../data/y_test.csv", header = F)))
 
   max_iter = 10000
   alpha = c(1, 0, 0, 0, 0, 0)

@@ -43,12 +43,32 @@ pros = function(X, y,
   if (!is.matrix(X)) {
     stop("X must be a matrix")
   }
+
+  if (!is.vector(y)) {
+    stop("y must be a vector")
+  }
   y = matrix(as.vector(t(y)), ncol = 1) # convert to column vector
 
   if (length(alpha) != 6) {
     stop("alpha needs to be length 6")
   }
   alpha = matrix(as.vector(t(alpha)), ncol = 1) # convert to column vector
+
+  if (!(is.atomic(lambda) && length(lambda) == 1L)) {
+    stop("lambda must be a scalar")
+  }
+  if (!(is.atomic(step_size) && length(step_size) == 1L)) {
+    stop("step_size must be a scalar")
+  }
+  if (!(is.atomic(max_iter) && length(max_iter) == 1L)) {
+    stop("max_iter must be a integer")
+  }
+  if (!(is.atomic(tolerance) && length(tolerance) == 1L)) {
+    stop("tolerance must be a scalar")
+  }
+  if (!(is.atomic(random_seed) && length(random_seed) == 1L)) {
+    stop("random_seed must be a integer")
+  }
 
   res = .Call("R_fit", as.matrix(X), y, 
             alpha, as.double(lambda), as.double(step_size),
@@ -71,6 +91,10 @@ pros = function(X, y,
 #'
 #' @export
 predict.pros = function(object, X, ...) {
+  if (!is.matrix(X)) {
+    stop("X must be a matrix")
+  }
+
   B = matrix(as.vector(t(object$B)), ncol = 1) # convert to column vector
   intercept = object$intercept
   return ( .Call("R_predict", B, as.double(intercept), as.matrix(X)) )
@@ -115,10 +139,27 @@ cv.pros = function(X, y,
   if (!is.matrix(X)) {
     stop("X must be a matrix")
   }
+  if (!is.vector(y)) {
+    stop("y must be a vector")
+  }
   # Set default lambdas for the user
   # There is no theoretical justification here.
   if (length(lambdas) == 0) {
     lambdas = seq(3/2 * ncol(X), 3 * ncol(X), .1)
+  } else if (!is.vector(lambdas)) {
+    stop("lambdas must be a vector")
+  }
+  if (!(is.atomic(step_size) && length(step_size) == 1L)) {
+    stop("step_size must be a scalar")
+  }
+  if (!(is.atomic(max_iter) && length(max_iter) == 1L)) {
+    stop("max_iter must be a integer")
+  }
+  if (!(is.atomic(tolerance) && length(tolerance) == 1L)) {
+    stop("tolerance must be a scalar")
+  }
+  if (!(is.atomic(random_seed) && length(random_seed) == 1L)) {
+    stop("random_seed must be a integer")
   }
 
   y = matrix(as.vector(t(y)), ncol = 1) # convert to column vector
@@ -160,6 +201,10 @@ cv.pros = function(X, y,
 #'
 #' @export
 predict.cv_pros = function(object, X_new, ...) {
+  if (!is.matrix(X_new)) {
+    stop("X_new must be a matrix")
+  }
+
   X = object$X
   y = object$y
   alpha = object$alpha
@@ -168,7 +213,7 @@ predict.cv_pros = function(object, X_new, ...) {
   max_iter = object$max_iter
   tolerance = object$tolerance
   random_seed = object$random_seed
-  fit = pros(X, y, alpha = alpha, lambda = lambda, step_size = step_size, max_iter = max_iter, tolerance = tolerance, random_seed = random_seed)
+  fit = pros(X, as.vector(y), alpha = alpha, lambda = lambda, step_size = step_size, max_iter = max_iter, tolerance = tolerance, random_seed = random_seed)
   res = predict(fit, X_new)
   return ( res )
 }
