@@ -54,21 +54,31 @@ mean((y_test - predict(cv_pros_10_moment, X_test))^2)
 # Compare tuned
 ###
 
-elnet best
-[1] 51
-[1] 0.1
-[1] 25.52578
+# elnet best
+# [1] 51
+# [1] 0.1
+# [1] 25.52578
+fit = pros(X_train, y_train, alpha = c(.1, 1 - .1, 0, 0, 0, 0), lambda = 51, step_size = 1/1000)
+fit$B
+mean((y_test - predict(fit, X_test))^2)
 
-4th moment best
-[1] 16
-[1] 0.6
-[1] 25.44149
+# 4th moment best
+# [1] 16
+# [1] 0.6
+# [1] 25.44149
+fit = pros(X_train, y_train, alpha = c(.6, 0, 1 - .6, 0, 0, 0), lambda = 16, step_size = 1/1000)
+fit$B
+mean((y_test - predict(fit, X_test))^2)
 
-10th moment best
-[1] 0.1
-[1] 0.9
-[1] 25.68279
+# 10th moment best
+# [1] 0.1
+# [1] 0.9
+# [1] 25.68279
+fit = pros(X_train, y_train, alpha = c(.9, 0, 0, 0, 0,  1 - .9), lambda = .1, step_size = 1/1000)
+fit$B
+mean((y_test - predict(fit, X_test))^2)
 
+# Tune
 for (i in 8:20) {
   # Tune Pros
   alphas = seq(.1, .99, .1)
@@ -84,12 +94,6 @@ for (i in 8:20) {
   print(alphas[I])
   print(risks[I])
 }
-
-
-
-
-
-
 
 
 

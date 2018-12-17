@@ -43,7 +43,7 @@ cv_pros_4_moment = cv.pros(X_train, y_train, alpha = c(1/2, 0, 1/2, 0, 0, 0), K_
 mean((y_test - predict(cv_pros_4_moment, X_test))^2)
 
 # 10th moment (pros)
-cv_pros_10_moment = cv.pros(X_train, y_train, alpha = c(1/2, 0, 0, 0, 0, 1/2), K_fold = 10, step_size = 1/500)
+cv_pros_10_moment = cv.pros(X_train, y_train, alpha = c(1/2, 0, 0, 0, 0, 1/2), K_fold = 10, step_size = 1/100)
 mean((y_test - predict(cv_pros_10_moment, X_test))^2)
 
 ###
@@ -51,23 +51,33 @@ mean((y_test - predict(cv_pros_10_moment, X_test))^2)
 ###
 
 # 4th moment best
-#[1] 11
-#[1] 0.96
-#[1] 0.4441759
+#[1] 10.6
+#[1] 0.99
+#[1] 0.4441405
+fit = pros(X_train, y_train, alpha = c(.99, 0, 1 - .99, 0, 0, 0), lambda = 10.6, step_size = 1/100)
+fit$B
+mean((y_test - predict(fit, X_test))^2)
 
 # 10th moment best
-#[1] 11
-#[1] 0.96
-#[1] 0.4441322
+# [1] 10.6
+# [1] 0.99
+# [1] 0.4441301
+fit = pros(X_train, y_train, alpha = c(.99, 0, 0, 0, 0, 1 - .99), lambda = 10.6, step_size = 1/100)
+fit$B
+mean((y_test - predict(fit, X_test))^2)
 
 # Elnet best
-#[1] 11
-#[1] 0.98
-#[1] 0.4442702
+#[1] 10.6
+#[1] 0.99
+#[1] 0.4441737
+fit = pros(X_train, y_train, alpha = c(.99, 1 - .99, 0, 0, 0, 0), lambda = 10.6, step_size = 1/100)
+fit$B
+mean((y_test - predict(fit, X_test))^2)
 
-for (i in 8:30) {
+# Tune
+for (i in seq(10, 12, .1)) {
   # Tune Pros
-  alphas = seq(.5, .99, .01)
+  alphas = seq(.1, .99, .01)
   lambdas = seq(i, i + 10, .1)
   risks = c()
   for (alpha in alphas) {
@@ -80,13 +90,6 @@ for (i in 8:30) {
   print(alphas[I])
   print(risks[I])
 }
-
-
-
-
-
-
-
 
 
 

@@ -113,7 +113,7 @@ Set the step size $h \gets \frac{R}{\sqrt{1 + N}}$
 The drawbacks of this algorithm include lack of the descent property, no good stopping criterion, and many possible choices for the subgradient.
 The step size is optimal and chosen due to \cite{nesterov} with a worst case convergence rate of $O(\frac{1}{\sqrt{k}})$.
 Ultimately, no line search can be implemented and the step size must be tuned by the user, which may be difficult for inexperienced users.
-Another drawback is that the stopping criterion is expensive at $O(n^2)$ flops at each iteration.
+Another drawback is that this particular stopping criterion is expensive at $O(n^2)$ flops at each iteration.
 
 Due to the separability of the penalization, a better algorithm is proximal gradient coordinate descent shown below.
 
@@ -393,6 +393,8 @@ $l^1$ and $l^{10}$ (pros) & $\alpha = 0.9$ &  25.68279 \\ \hline
 \end{tabular}
 \end{center}
 
+All of the variables are selected in each of the penalizations for the manually tuned scenario.
+
 \subsection{The Prostate Dataset Analysis}
 
 This is a popular dataset from \cite{prostate}.
@@ -421,16 +423,22 @@ Next, we compare manually tuned results using \textbf{pros}:
 \begin{tabular}{lllp{7.4cm}}
 \hline
 Penalty & Tuning & Test Mean Squared Error \\ \hline
-elastic-net (pros) & $\alpha = .98$ & 0.4442702 \\
-$l^1$ and $l^{4}$ (pros) & $\alpha = 0.96$ &  0.4441759 \\
-$l^1$ and $l^{10}$ (pros) & $\alpha = 0.96$ &  0.4441322 \\ \hline
+elastic-net (pros) & $\alpha = .99$ & 0.4441737 \\
+$l^1$ and $l^{4}$ (pros) & $\alpha = .99$ &  0.4441405 \\
+$l^1$ and $l^{10}$ (pros) & $\alpha = .99$ &  0.4441301 \\ \hline
 \end{tabular}
 \end{center}
 
-\subsection{Discussion}
+In the manually tuned case, all three penalizations select the same variables $(\beta_1, \beta_2, \beta_4, \beta_5, \beta_8)$, which is not the optimal choice according to \cite{elasticnet}. Interestingly, all of the best values share the same $\lambda$ value.
 
-One source of confusion where an embarrassingly large amount of time was spent was noticing that \textbf{glmnet} uses a transformation for their $\lambda$ values and these do not correspond with the typical Lasso model. Thus, direct comparisons are extremely confusing. Further complicating comparisons is that \textbf{glmnet} provides varying results for fixed random seeds.
-The author should have spent more time carefully reviewing the \textbf{glmnet} paper by \cite{glmnet}. Due to this, the values in the corresponding slides for this project are incorrect. 
+\subsection{Conclusion}
+
+It appears the new penalty can sometimes produce a minor improvement over the elastic-net penalty.
+However, there was much to learn in the implementation.
+Creating an R package is much more difficult than anticipated and CRAN is stringent on the requirements.
+Comparing against other packages can also be difficult.
+One source of confusion was noticing that \textbf{glmnet} uses a transformation for their $\lambda$ values and these do not correspond with the typical Lasso model. Thus, direct comparisons are complicated. Further adding to the complication is that \textbf{glmnet} provides varying results for fixed random seeds.
+More time should have been spent carefully reviewing the \textbf{glmnet} paper by \cite{glmnet}. Due to this, the values in the corresponding slides for this project are incorrect. 
 
 
 \bibliography{project}
