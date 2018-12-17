@@ -28,7 +28,7 @@
 \title{Combining $l^1$ and Higher Order $l^p$ Penalization in Regression Models}
 
 \Abstract{
-We create the package Penalized Regression on Steroids (\textbf{pros}) to combine $l^1$ penalized regression with higher order $l^p$ penalizations built upon the elastic-net idea. The package is able to fit regression models with penalizations ranging from $l^1$ to $l^{10}$.
+We create the Penalized Regression on Steroids (\textbf{pros}) package to combine $l^1$ penalized regression with higher order $l^p$ penalizations built upon the elastic-net idea. The package is able to fit regression models with penalizations ranging from $l^1$ to $l^{10}$.
 }
 
 \Keywords{Penalized Regression, \proglang{C++}, \proglang{Python}, \proglang{R}}
@@ -340,7 +340,7 @@ The analysis for the subsequent experiments is performed in the following way:
 
 \item The data is split into a training and test set.
 
-\item The predictor data are standardized.
+\item The predictor data is standardized.
 
 \item The \textbf{glmnet} library and the \textbf{pros} library are used for fitting. The \textbf{glmnet} library provides varying results for a single seed so a range of values are reported.
 
@@ -359,10 +359,10 @@ where $\hat \beta_0, \hat \beta$ are fit over the training set and $y$ and $X$ a
 
 \subsection{The Boston Housing Dataset}
 
-The Boston Housing dataset is popular from \cite{boston_housing}.
+The Boston Housing data is a popular dataset from \cite{boston_housing}.
 There are 13 predictors and the response is the median value of owner-occupied homes in \$1000's. 
 The data is randomly split into a training set with 404 observations and a test set with 102 observations.
-We compare default implementations between the two libraries:
+We compare the default cross-validation implementations between the two libraries:
 
 \begin{center}
 \setlength{\tabcolsep}{20pt} % Default value: 6pt
@@ -379,7 +379,7 @@ $l^1$ and $l^{10}$ (pros) & $\alpha = 1/2$ &  30.54759 \\ \hline
 \end{tabular}
 \end{center}
 
-Next, we compare manually tuned results using \textbf{pros}:
+Next, we compare the tuned results using \textbf{pros}:
 
 \begin{center}
 \setlength{\tabcolsep}{20pt} % Default value: 6pt
@@ -393,13 +393,13 @@ $l^1$ and $l^{10}$ (pros) & $\alpha = 0.9$ &  25.68279 \\ \hline
 \end{tabular}
 \end{center}
 
-The three different penalizations each select all of the variables and provide no sparsity in the manually tuned scenario.
+The three different penalizations each select all of the variables and provide no sparsity in the tuned results.
 
 \subsection{The Prostate Dataset Analysis}
 
-This is a popular dataset from \cite{prostate}.
+The prostate dataset is from \cite{prostate}.
 There are 8 predictors and the response is the log of the prostate specific antigen.
-We compare default implementations between the two libraries:
+We compare the default cross-validation implementations between the two libraries:
 
 \begin{center}
 \setlength{\tabcolsep}{20pt} % Default value: 6pt
@@ -415,7 +415,7 @@ $l^1$ and $l^{4}$ (pros) & $\alpha = 1/2$ &  0.4621351 \\ \hline
 \end{tabular}
 \end{center}
 
-Next, we compare manually tuned results using \textbf{pros}:
+Next, we compare the tuned results using \textbf{pros}:
 
 \begin{center}
 \setlength{\tabcolsep}{20pt} % Default value: 6pt
@@ -429,7 +429,7 @@ $l^1$ and $l^{10}$ (pros) & $\alpha = .99$ &  0.4441301 \\ \hline
 \end{tabular}
 \end{center}
 
-In the manually tuned case, all three penalizations select the same variables $(\beta_1, \beta_2, \beta_4, \beta_5, \beta_8)$, which is not the optimal choice according to \cite{elasticnet}. Interestingly, all of the best values share the same $\lambda$ value.
+In the tuned case, all three penalizations select the same variables $(\beta_1, \beta_2, \beta_4, \beta_5, \beta_8)$, which is not the optimal choice according to \cite{elasticnet}. Interestingly, all of the best values share the same $\lambda$ value.
 
 \subsection{Conclusion}
 
