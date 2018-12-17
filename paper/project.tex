@@ -28,7 +28,7 @@
 \title{Combining $l^1$ and Higher Order $l^p$ Penalization in Regression Models}
 
 \Abstract{
-We create the package Penalized Regression on Steroids (\textbf{pros}) to combine $l^1$ penalized regression with higher order $l^p$ penalizations built upon the Elasticnet idea. The package is able to fit regression models with penalizations ranging from $l^1$ to $l^{10}$.
+We create the package Penalized Regression on Steroids (\textbf{pros}) to combine $l^1$ penalized regression with higher order $l^p$ penalizations built upon the elastic-net idea. The package is able to fit regression models with penalizations ranging from $l^1$ to $l^{10}$.
 }
 
 \Keywords{Penalized Regression, \proglang{C++}, \proglang{Python}, \proglang{R}}
@@ -48,7 +48,7 @@ We create the package Penalized Regression on Steroids (\textbf{pros}) to combin
 In statistics and probability theory it is common to impose moment assumptions on a random variable $X : \Omega \to \R^n$ such as $E(|X|^k) < \infty$ for $k \in \N$.
 These constraints correspond to the $L^p$ spaces which allow control over the width and the height of such random variables.
 Constraints of this type may also be motivated geometrically.
-Consider for example an Elasticnet penalty $Q(x) = \frac{1}{2} |x| + \frac{1}{2} |y| + \frac{1}{2} |x|^2 + \frac{1}{2} |y|^2 \le 1$
+Consider for example an elastic-net penalty $Q(x) = \frac{1}{2} |x| + \frac{1}{2} |y| + \frac{1}{2} |x|^2 + \frac{1}{2} |y|^2 \le 1$
 shown on the left and a new penalty $P(x) = \frac{1}{2} |x| + \frac{1}{2} |y| + \frac{1}{2} |x|^4 + \frac{1}{2} |y|^4 \le 1$ shown on the right.
 
 \begin{minipage}{.5\textwidth}
@@ -59,26 +59,27 @@ shown on the left and a new penalty $P(x) = \frac{1}{2} |x| + \frac{1}{2} |y| + 
   \centering
   \includegraphics[width=.8\linewidth]{new_penalty_4_moment.png}
 \end{minipage}
-\captionof{figure}{A particular ElasticNet penalty shown on the left and a new penalty shown on the right shown to "bow" out the penalization while retaining convexity.}
+\captionof{figure}{A particular elastic-net penalty shown on the left and a new penalty shown on the right shown to "bow" out the penalization while retaining convexity.}
 
-A scientist may want the ability to control the height and width of the penalization while still retaining sparse solutions.
-In this project, we build the Penalized Regression on Steroids (\textbf{pros}) package available to the R programming language to expand upon the idea of ElasticNet by \cite{elasticnet}, which we believe approximately encapsulates this idea.
+It seems reasonable that a scientist may want more control over the height and width of the penalization while still retaining sparse solutions in regression models.
+In this project, we build the Penalized Regression on Steroids (\textbf{pros}) package to expand upon the idea of the elastic-net by \cite{elasticnet}, which we believe approximately encapsulates this idea.
 
 \section{Penalized Regression Implementation}
 
-In this section, we discuss how the package was implemented. In particular, the construction of the problem and the algorithms used.
+In this section, we discuss how the \textbf{pros} package was implemented. In particular, the construction of the problem and the algorithms used.
+First, we formulate the regression model with a new penalization.
 Let
 \[
-L_{\lambda}(\beta) = \frac{1}{2} \norm{y - X \beta}_2^2 + \lambda P(\beta)
+L_{\lambda}(\beta) = \frac{1}{2} \norm{y - \beta_0 1 - X \beta}_2^2 + \lambda P(\beta)
 \]
 be the objective to minimize with penalty
 \[
 \lambda P(\beta) = \lambda \alpha_0 \norm{\beta}_1 + \lambda \sum_{k = 1}^{5} \alpha_k \norm{\beta}_{2k}^{2k} 
 \]
-where $y \in \R^n$, $X \in M_{n \times p}(\R)$, and $\beta \in \R^p$, $\lambda \in \R_{+}$ and $\alpha$'s are convex combinations.
-An important property of this penalty is convex and completely separable which allows for coordinate-wise optimization.
-In \textbf{glmnet} by \cite{glmnet}, the authors use coordinate descent.
-Further, with the Elasticnet penalty by \cite{elasticnet}, the coordinate wise minimization yields an analytic, closed form solution at each iteration avoiding any need for a line search or step size.
+where $y \in \R^n$, $X \in M_{n \times p}(\R)$, and $(\beta_0, \beta) \in \R^p$, $\lambda \in \R_{+}$ and $\alpha$'s are convex combinations.
+This penalty is convex and completely separable which allows for coordinate-wise optimization.
+The coordinate descent algorithm is very successful for the elastic-net penalty due to the \textbf{glmnet} package by \cite{glmnet}.
+Further, with the elastic-net penalty, the coordinate wise minimization yields an analytic, closed form solution at each iteration avoiding any need for a line search or step size.
 The penalty that we propose lacks an analytic solution and thus a new algorithm is needed.
 
 \subsection{Optimization Algorithms and Implementation}
@@ -111,8 +112,8 @@ Set the step size $h \gets \frac{R}{\sqrt{1 + N}}$
 
 The drawbacks of this algorithm include lack of the descent property, no good stopping criterion, and many possible choices for the subgradient.
 The step size is optimal and chosen due to \cite{nesterov} with a worst case convergence rate of $O(\frac{1}{\sqrt{k}})$.
-Ultimately, no line search can be implemented and the step size must be tuned by the user, which may be difficult for many users.
-The stopping criterion is also expensive at $O(n^2)$ flops at each iteration.
+Ultimately, no line search can be implemented and the step size must be tuned by the user, which may be difficult for inexperienced users.
+Another drawback is that the stopping criterion is expensive at $O(n^2)$ flops at each iteration.
 
 Due to the separability of the penalization, a better algorithm is proximal gradient coordinate descent shown below.
 
@@ -140,9 +141,7 @@ Set $k \gets 0$
 \end{algorithm}
 \vspace{.2cm}
 
-The major benefit of this algorithm is that it is a descent method and thus line search may be implemented.
-Moreover, the stopping criterion is cheap to compute at $O(p)$ flops.
-The Moreau-Yoshida map recovers the worst case convergence of $O(\frac{1}{k})$ generally and coordinate descent algorithms are explored by \cite{nesterov2}.
+A major benefit of this algorithm is that it recovers the worst case convergence of $O(\frac{1}{k})$ even though the objective is not differentiable. The convergence analysis of coordinate descent algorithms is explored by \cite{nesterov2}. The stopping criterion chosen here is cheap to compute at $O(p)$ flops. Finally, since this is a descent method, line search may be implemented, which potentially makes the algorithm easier to use by inexperienced users.
 
 \subsection{Cross-Validation Algorithms and Implementation}
 
@@ -171,33 +170,33 @@ $\beta^{Warm} \gets \beta^0$
 A difficult problem in general is choosing the sequence of $\lambda$'s.
 In \textbf{glmnet}, the default is to choose a sequence of length $100$ starting from the first $\lambda_{max}$ where $\beta$ is completely zero to the lower value $.001 \lambda_{max}$ on a log-scale.
 The lower $\lambda$ value in the sequence is a real difficulty and this implementation does not fully address this.
-Due to time, we implement a similar default choice.
-We choose the lower $\lambda = c p$ where $c > 0$ is a tuning parameter and then create a sequence of length $100$ from this lower value.
+Due to time, we implement a similar but cruder default choice.
+We choose the lower $\lambda_{min} = cp$ where $p$ number of columns in the predictor matrix $X$ and $c$ is chosen to be $\frac{3}{2}$. We then create a sequence of length $100$ from this lower value.
 The default choice comparisons are explored in a subsequent section.
 
 \subsection{Step Size Rules and Line Search Implementation}
 
 The lack of an analytic solution introduces a necessary step size rule in order to fit a regression model with the new penalization.
-A good line search method due to \cite{beck_teboulle} requires an evaluation of the objective function over the entire dataset at each iteration. This has a computational complexity of $O(n^3)$ flops at each iteration. This was attempted, but never fully implemented in this package for this reason. Instead, a user defined step size rule is required. Thus, poor step size choices do not guarantee convergence.
+A good line search method due to \cite{beck_teboulle} requires an evaluation of the objective function over the entire dataset at each iteration. This has a computational complexity of $O(n^3)$ flops at each iteration. This was attempted, but never fully implemented for this reason. Instead, a user defined step size rule is required. Thus, poor step size choices do not guarantee convergence.
 This is a suboptimal choice, but allows the potential for the package to be applied to very large datasets.
 
-We introduce an alternative algorithm to solve this issue described below.
+We introduce a possible alternative algorithm to address this issue.
 
 \vspace{.2cm}
 \begin{algorithm}[H]
 \caption{Step Size Tuning Avoidance Algorithm}
 Choose initial value $\beta^0$, initial step size $h$, and maximum iterations $N$.
 
-\Repeat{Until Proximal Gradient Descent convergences}{
+\Repeat{Until Proximal Gradient Coordinate Descent convergences}{
 $h \gets \frac{1}{2}h$
 
-$\beta \gets$ by Proximal Gradient Descent with step size $h$
+$\beta \gets$ by Proximal Gradient Coordinate Descent with step size $h$
 }
 
 \end{algorithm}
 \vspace{.2cm}
 
-If the maximum iterations for the algorithm are not too large, this may allow users to avoid having to tune a step size while retaining good performance. Currently, this is not implemented due to time constraints for the project.
+If the maximum iterations are not too large, this may allow users to avoid having to tune a step size while retaining good performance. We can also modify this algorithm to be run in parallel. Currently, this is not implemented due to time constraints for the project.
 
 \section{The Penalized Regression on Steroids Package}
 
@@ -249,7 +248,7 @@ We illustrate the usage of these functions in the following sections.
 
 \subsection{The Regression Fitting Function}
 
-The \textbf{pros} function is used to fit a single regression model with a specified penalization. The signature of this function at the time of this paper is as follows:
+The \textbf{pros} function is used to fit a single regression model with a specified $\lambda$ for penalization. The signature of this function at the time of this paper is as follows:
 
 \begin{itemize}
 \item \code{X} is an $n \times m$-dimensional matrix of the data.
@@ -287,7 +286,8 @@ The \textbf{pros} function is used to fit a single regression model with a speci
 \subsection{The Cross-Validation Function}
 
 The \textbf{cv.pros} function is used for K-fold cross-validation.
-The signature of this function at the time of this paper is as follows:
+The warm-start algorithm and default choices are implemented from the previous section.
+The arguments of this function are similar to the previous function:
 
 \begin{itemize}
 \item \code{X} is an $n \times m$-dimensional matrix of the data.
@@ -326,15 +326,15 @@ The signature of this function at the time of this paper is as follows:
 
 \subsection{Possible CRAN Submission}
 
-At the time of this paper, the package in its current form should be accepted onto the Comprehensive R Archive Network (CRAN) if submitted.
+At the time of this paper, the \textbf{pros} package could potentially be submitted to the Comprehensive R Archive Network (CRAN).
 According to the R check, there are no warnings.
-One issue with CRAN is that in order for the user to get high performance, they will need to update their own Makevars file. The instructions for this are outlined in the \textbf{pros} repository.
+However, one issue with CRAN is that in order for the user to get high performance, they will need to update their own Makevars file. The instructions for this are outlined in the \textbf{pros} repository.
 
 \section{Numerical Examples}
 
 \subsection{The Analysis Procedure}
 
-The analysis in the following experiments is performed in the following way:
+The analysis for the following experiments is performed in the following way:
 
 \begin{itemize}
 
@@ -371,11 +371,11 @@ We compare default implementations between the two libraries:
 \hline
 Penalty & Tuning & Test Mean Squared Error \\ \hline
 Lasso (glmnet) & $\alpha = 1$ & 26.96866-28.45781 \\
-ElasticNet (glmnet) & $\alpha = 1/2$  & 26.55704-26.86488   \\
+elastic-net (glmnet) & $\alpha = 1/2$  & 26.55704-26.86488   \\
 Lasso (pros) & $\alpha = 1$ &  26.47315 \\
-ElasticNet (pros) & $\alpha = 1/2$ &  26.07919 \\
-4th Moment (pros) & $\alpha = 1/2$ &  25.5008 \\
-10th Moment (pros) & $\alpha = 1/2$ &  30.54759 \\ \hline
+elastic-net (pros) & $\alpha = 1/2$ &  26.07919 \\
+$l^1$ and $l^{4}$ (pros) & $\alpha = 1/2$ &  25.5008 \\
+$l^1$ and $l^{10}$ (pros) & $\alpha = 1/2$ &  30.54759 \\ \hline
 \end{tabular}
 \end{center}
 
@@ -387,15 +387,15 @@ Next, we compare manually tuned results using \textbf{pros}:
 \begin{tabular}{lllp{7.4cm}}
 \hline
 Penalty & Tuning & Test Mean Squared Error \\ \hline
-ElasticNet (pros) & $\alpha = 0.1$ & 25.52578 \\
-4th Moment (pros) & $\alpha = 0.6$ &  25.44149 \\
-10th Moment (pros) & $\alpha = 0.9$ &  25.68279 \\ \hline
+elastic-net (pros) & $\alpha = 0.1$ & 25.52578 \\
+$l^1$ and $l^{4}$ (pros) & $\alpha = 0.6$ &  25.44149 \\
+$l^1$ and $l^{10}$ (pros) & $\alpha = 0.9$ &  25.68279 \\ \hline
 \end{tabular}
 \end{center}
 
 \subsection{The Prostate Dataset Analysis}
 
-This is a popular dataset from \cite{prostate} and analyzed in the ElasticNet paper \cite{elasticnet}.
+This is a popular dataset from \cite{prostate}.
 There are 8 predictors and the response is the log of the prostate specific antigen.
 We compare default implementations between the two libraries:
 
@@ -406,10 +406,10 @@ We compare default implementations between the two libraries:
 \hline
 Penalty & Tuning & Test Mean Squared Error \\ \hline
 Lasso (glmnet) & $\alpha = 1$ & 0.4443432-0.4646501 \\
-ElasticNet (glmnet) & $\alpha = 1/2$  & 0.4539684-0.4633808   \\
+elastic-net (glmnet) & $\alpha = 1/2$  & 0.4539684-0.4633808   \\
 Lasso (pros) & $\alpha = 1$ &  0.4457657 \\
-ElasticNet (pros) & $\alpha = 1/2$ &  0.4637193 \\
-4th Moment (pros) & $\alpha = 1/2$ &  0.4621351 \\ \hline
+elastic-net (pros) & $\alpha = 1/2$ &  0.4637193 \\
+$l^1$ and $l^{4}$ (pros) & $\alpha = 1/2$ &  0.4621351 \\ \hline
 \end{tabular}
 \end{center}
 
@@ -421,15 +421,15 @@ Next, we compare manually tuned results using \textbf{pros}:
 \begin{tabular}{lllp{7.4cm}}
 \hline
 Penalty & Tuning & Test Mean Squared Error \\ \hline
-ElasticNet (pros) & $\alpha = .98$ & 0.4442702 \\
-4th Moment (pros) & $\alpha = 0.96$ &  0.4441759 \\
-10th Moment (pros) & $\alpha = 0.96$ &  0.4441322 \\ \hline
+elastic-net (pros) & $\alpha = .98$ & 0.4442702 \\
+$l^1$ and $l^{4}$ (pros) & $\alpha = 0.96$ &  0.4441759 \\
+$l^1$ and $l^{10}$ (pros) & $\alpha = 0.96$ &  0.4441322 \\ \hline
 \end{tabular}
 \end{center}
 
 \subsection{Discussion}
 
-One source of confusion where the author spent an embarrassingly long amount of time was noticing that \textbf{glmnet} uses a transformation for their $\lambda$ values and these do not correspond with the typical Lasso model. Thus, direct comparisons are extremely confusing. Further complicating comparisons is that \textbf{glmnet} provides varying results for fixed random seeds.
+One source of confusion where an embarrassingly large amount of time was spent was noticing that \textbf{glmnet} uses a transformation for their $\lambda$ values and these do not correspond with the typical Lasso model. Thus, direct comparisons are extremely confusing. Further complicating comparisons is that \textbf{glmnet} provides varying results for fixed random seeds.
 The author should have spent more time carefully reviewing the \textbf{glmnet} paper by \cite{glmnet}. Due to this, the values in the corresponding slides for this project are incorrect. 
 
 
