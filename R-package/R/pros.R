@@ -27,6 +27,9 @@
 #' @return 
 #' A class \code{pros}
 #'
+#' @references
+#' Zou, Hui. “Regularization and variable selection via the elastic net.” (2004).
+#'
 #' @examples
 #' n = 1000
 #' X1 <- rnorm(n)
@@ -189,6 +192,9 @@ cv.pros = function(X, y,
 #' 
 #' @return 
 #' A \code{vector} of prediction values.
+#'
+#' @references
+#' Zou, Hui. “Regularization and variable selection via the elastic net.” (2004).
 #'
 #' @examples
 #' n = 1000

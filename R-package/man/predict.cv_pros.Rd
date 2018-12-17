@@ -29,3 +29,6 @@ cv = cv.pros(X, y, step_size = .001)
 predict(cv, X)
 
 }
+\references{
+Zou, Hui. “Regularization and variable selection via the elastic net.” (2004).
+}

@@ -22,7 +22,7 @@ cv.pros(X, y, K_fold = 10, alpha = c(1, 0, 0, 0, 0, 0),
   \item \eqn{\alpha_3} is the \eqn{l^4} penalty.
   \item \eqn{\alpha_4} is the \eqn{l^6} penalty.
   \item \eqn{\alpha_5} is the \eqn{l^8} penalty.
-  \item \eqn{\alpha_6} is the \eqn{l^10} penalty.
+  \item \eqn{\alpha_6} is the \eqn{l^{10}} penalty.
 }}
 
 \item{lambdas}{is a vector of dual penalization values to be evaluated.}

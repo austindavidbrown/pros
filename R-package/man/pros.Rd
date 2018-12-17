@@ -20,7 +20,7 @@ pros(X, y, alpha = c(1, 0, 0, 0, 0, 0), lambda, step_size,
   \item \eqn{\alpha_3} is the \eqn{l^4} penalty.
   \item \eqn{\alpha_4} is the \eqn{l^6} penalty.
   \item \eqn{\alpha_5} is the \eqn{l^8} penalty.
-  \item \eqn{\alpha_6} is the \eqn{l^10} penalty.
+  \item \eqn{\alpha_6} is the \eqn{l^{10}} penalty.
 }}
 
 \item{lambda}{is the Lagrangian dual penalization parameter.}
@@ -54,4 +54,7 @@ X = matrix(c(X1, X2), ncol = 2)
 fit = pros(X, y, lambda = 2, step_size = .001)
 predict(fit, X)
 
+}
+\references{
+Zou, Hui. “Regularization and variable selection via the elastic net.” (2004).
 }
