@@ -6,17 +6,18 @@ This is a project for STAT8053 at the University of Minnesota.
 Installation
 -------
 
-Add this to your `~/.R/Makevars` file to improve performance.
-
-```bash
-CXXFLAGS = -O3 -march=native -mfpmath=sse
-```
-
-Install
-
 ```r
 install.packages("devtools") # Install devtools from CRAN
 devtools::install_github("austindavidbrown/pros/R-package")
+```
+
+Performance Improvements
+-------
+
+Add this to your `~/.R/Makevars` file to improve performance:
+
+```bash
+CXXFLAGS = -O3 -march=native -mfpmath=sse
 ```
 
 Documentation

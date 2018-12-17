@@ -172,15 +172,15 @@ In \textbf{glmnet}, the default is to choose a sequence of length $100$ starting
 The lower $\lambda$ value in the sequence is a real difficulty and this implementation does not fully address this.
 Due to time, we implement a similar but cruder default choice.
 We choose the lower $\lambda_{min} = cp$ where $p$ number of columns in the predictor matrix $X$ and $c$ is chosen to be $\frac{3}{2}$. We then create a sequence of length $100$ from this lower value.
-The default choice comparisons are explored in a subsequent section.
+A comparison of the default choices is explored in a subsequent section.
 
 \subsection{Step Size Rules and Line Search Implementation}
 
 The lack of an analytic solution introduces a necessary step size rule in order to fit a regression model with the new penalization.
 A good line search method due to \cite{beck_teboulle} requires an evaluation of the objective function over the entire dataset at each iteration. This has a computational complexity of $O(n^3)$ flops at each iteration. This was attempted, but never fully implemented for this reason. Instead, a user defined step size rule is required. Thus, poor step size choices do not guarantee convergence.
-This is a suboptimal choice, but allows the potential for the package to be applied to very large datasets.
+This is a suboptimal choice, but allows the potential for the package to be applied to large datasets.
 
-We introduce a possible alternative algorithm to address this issue.
+We introduce a possible alternative algorithm to address the issue.
 
 \vspace{.2cm}
 \begin{algorithm}[H]
@@ -286,8 +286,8 @@ The \textbf{pros} function is used to fit a single regression model with a speci
 \subsection{The Cross-Validation Function}
 
 The \textbf{cv.pros} function is used for K-fold cross-validation.
-The warm-start algorithm and default choices are implemented from the previous section.
-The arguments of this function are similar to the previous function:
+The warm-start algorithm and default choices for the $\lambda$ sequence are implemented as described in the previous section.
+The arguments of this function are similar to the \textbf{pros} function:
 
 \begin{itemize}
 \item \code{X} is an $n \times m$-dimensional matrix of the data.
@@ -334,17 +334,17 @@ However, one issue with CRAN is that in order for the user to get high performan
 
 \subsection{The Analysis Procedure}
 
-The analysis for the following experiments is performed in the following way:
+The analysis for the subsequent experiments is performed in the following way:
 
 \begin{itemize}
 
-\item The data is split into a training and test.
+\item The data is split into a training and test set.
 
-\item The predictor data is standardized.
+\item The predictor data are standardized.
 
-\item The \textbf{glmnet} library and the \textbf{pros} library were used for fitting. The \textbf{glmnet} gives varying results for a single seed so we report a range of values.
+\item The \textbf{glmnet} library and the \textbf{pros} library are used for fitting. The \textbf{glmnet} library provides varying results for a single seed so a range of values are reported.
 
-\item 10-fold cross-validation was used to tune the Lagrangian dual variable $\lambda$.
+\item 10-fold cross-validation is used to tune the Lagrangian dual variable $\lambda$.
 
 \item The metric for comparison is the \textit{test mean squared error} defined as
 \[
@@ -393,7 +393,7 @@ $l^1$ and $l^{10}$ (pros) & $\alpha = 0.9$ &  25.68279 \\ \hline
 \end{tabular}
 \end{center}
 
-All of the variables are selected in each of the penalizations for the manually tuned scenario.
+The three different penalizations each select all of the variables and provide no sparsity in the manually tuned scenario.
 
 \subsection{The Prostate Dataset Analysis}
 
@@ -437,7 +437,7 @@ It appears the new penalty can sometimes produce a minor improvement over the el
 However, there was much to learn in the implementation.
 Creating an R package is much more difficult than anticipated and CRAN is stringent on the requirements.
 Comparing against other packages can also be difficult.
-One source of confusion was noticing that \textbf{glmnet} uses a transformation for their $\lambda$ values and these do not correspond with the typical Lasso model. Thus, direct comparisons are complicated. Further adding to the complication is that \textbf{glmnet} provides varying results for fixed random seeds.
+One source of confusion was noticing that \textbf{glmnet} uses a transformation for their $\lambda$ values and these do not correspond with the typical Lasso model formulation. Thus, direct comparisons are complicated. Further adding to the complication is that \textbf{glmnet} provides varying results for fixed random seeds.
 More time should have been spent carefully reviewing the \textbf{glmnet} paper by \cite{glmnet}. Due to this, the values in the corresponding slides for this project are incorrect. 
 
 
