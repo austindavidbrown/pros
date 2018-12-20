@@ -1,5 +1,5 @@
 # Build registration
-tools::package_native_routine_registration_skeleton("./R-package", "src/init.c")
+tools::package_native_routine_registration_skeleton("./R-package", "R-package/src/init.c")
 
 # Generate reference manual
 R CMD Rd2pdf ./R-package --force -o pros-manual.pdf

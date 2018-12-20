@@ -26,7 +26,7 @@ See the [Reference Manual](https://github.com/austindavidbrown/pros/blob/master/
 
 License
 -------
-The code is licensed under GPL-2.
+The code is licensed under GPL-3.
 
 References
 ---------

@@ -16,7 +16,7 @@ extern "C" {
 
 SEXP R_fit(SEXP X_, SEXP y_, 
            SEXP alpha_, SEXP lambda_, SEXP step_size_,
-           SEXP algorithm_, SEXP max_iter_, SEXP tolerance_, SEXP random_seed_){
+           SEXP max_iter_, SEXP tolerance_, SEXP random_seed_){
   SEXP res;
 
   // Handle X
@@ -39,9 +39,6 @@ SEXP R_fit(SEXP X_, SEXP y_,
   // Handle step size
   double step_size = REAL(step_size_)[0];
 
-  // Handle algorithm
-  const char* alg_name = CHAR(asChar(algorithm_));
-
   // Handle max_iter
   const int max_iter = INTEGER(max_iter_)[0];
 
@@ -58,12 +55,7 @@ SEXP R_fit(SEXP X_, SEXP y_,
 
   // fit
   VectorXd B_0 = VectorXd::Zero(X.cols());
-  VectorXd B;
-  if (strcmp("subgradient_cd", alg_name) == 0) {
-    B = subgrad_cd(B_0, X, y, alpha, lambda);
-  } else {
-    B = proximal_gradient_cd(B_0, X, y, alpha, lambda, step_size, max_iter, tolerance, random_seed);
-  }
+  VectorXd B = proximal_gradient_cd(B_0, X, y, alpha, lambda, step_size, max_iter, tolerance, random_seed);
 
   // compute intercept
   int n = X.rows();
@@ -93,7 +85,7 @@ SEXP R_fit(SEXP X_, SEXP y_,
 
 SEXP R_cross_validation(SEXP X_, SEXP y_, 
                         SEXP K_fold_, SEXP alpha_, SEXP lambdas_, SEXP step_size_, 
-                        SEXP algorithm_, SEXP max_iter_, SEXP tolerance_, SEXP random_seed_){  
+                        SEXP max_iter_, SEXP tolerance_, SEXP random_seed_){  
   SEXP res;
 
   // Handle X
@@ -116,9 +108,6 @@ SEXP R_cross_validation(SEXP X_, SEXP y_,
   // Handle step size
   double step_size = REAL(step_size_)[0];
 
-  // Handle algorithm
-  const char *alg_name = CHAR(asChar(algorithm_));
-
   // Handle max_iter
   const int max_iter = INTEGER(max_iter_)[0];
 
@@ -139,12 +128,7 @@ SEXP R_cross_validation(SEXP X_, SEXP y_,
   lambdas.assign(REAL(lambdas_), REAL(lambdas_) + L);
 
   // CV
-  CVType cv;
-  if (strcmp("subgradient_cd", alg_name) == 0) {
-    cv = cross_validation_subgrad_cd(X, y, K_fold, alpha, lambdas);
-  } else {
-    cv = cross_validation_proximal_gradient_cd(X, y, K_fold, alpha, lambdas, step_size, max_iter, tolerance, random_seed);
-  }
+  CVType cv = cross_validation_proximal_gradient_cd(X, y, K_fold, alpha, lambdas, step_size, max_iter, tolerance, random_seed);
   vector<double> cv_lambdas = cv.lambdas;
   VectorXd cv_risks = cv.risks;
 

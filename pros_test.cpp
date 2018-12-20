@@ -210,7 +210,8 @@ void test_random_gen() {
 
 int main() {
   test_prostate();
-  //test_prox();
-  //test_random_gen();
+  // test_prox();
+  // test_random_gen();
+  // bench();
 }
 

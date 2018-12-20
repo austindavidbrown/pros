@@ -15,11 +15,6 @@
 #' }
 #' @param lambda is the Lagrangian dual penalization parameter.
 #' @param step_size is a tuning parameter defining the step size. Larger values are more aggressive and smaller values are less aggressive.
-#' @param algorithm is the optimization algorithm 
-#' \itemize{
-#'   \item \code{proximal_gradient_cd} uses proximal gradient coordinate descent.
-#'   \item \code{subgradient_cd} uses subgradient coordinate descent.
-#' }
 #' @param max_iter is the maximum iterations the algorithm will run regardless of convergence.
 #' @param tolerance is the accuracy of the stopping criterion.
 #' @param random_seed is the random seed used in the algorithms.
@@ -42,7 +37,7 @@
 #' @export
 pros = function(X, y, 
                 alpha = c(1, 0, 0, 0, 0, 0), lambda, step_size,
-                algorithm = "proximal_gradient_cd", max_iter = 10000, tolerance = 10^(-8), random_seed = 0) {
+                max_iter = 10000, tolerance = 10^(-8), random_seed = 0) {
   if (!is.matrix(X)) {
     stop("X must be a matrix")
   }
@@ -75,7 +70,7 @@ pros = function(X, y,
 
   res = .Call("R_fit", as.matrix(X), y, 
             alpha, as.double(lambda), as.double(step_size),
-            toString(algorithm), as.integer(max_iter), as.double(tolerance), as.integer(random_seed))
+            as.integer(max_iter), as.double(tolerance), as.integer(random_seed))
   class(res) = "pros"
   return ( res )
 }
@@ -122,11 +117,6 @@ predict.pros = function(object, X, ...) {
 #' @param K_fold is the number of folds in cross-validation.
 #' @param lambdas is a vector of dual penalization values to be evaluated.
 #' @param step_size is a tuning parameter defining the step size. Larger values are more aggressive and smaller values are less aggressive.
-#' @param algorithm is the optimization algorithm 
-#' \itemize{
-#'   \item \code{proximal_gradient_cd} uses proximal gradient coordinate descent.
-#'   \item \code{subgradient_cd} uses subgradient coordinate descent.
-#' }
 #' @param max_iter is the maximum iterations the algorithm will run regardless of convergence.
 #' @param tolerance is the accuracy of the stopping criterion.
 #' @param random_seed is the random seed used in the algorithms.
@@ -138,7 +128,7 @@ predict.pros = function(object, X, ...) {
 #' @export
 cv.pros = function(X, y, 
                    K_fold = 10, alpha = c(1, 0, 0, 0, 0, 0), lambdas = c(), step_size,
-                   algorithm = "proximal_gradient_cd", max_iter = 10000, tolerance = 10^(-8), random_seed = 0) {
+                   max_iter = 10000, tolerance = 10^(-8), random_seed = 0) {
   if (!is.matrix(X)) {
     stop("X must be a matrix")
   }
@@ -170,7 +160,7 @@ cv.pros = function(X, y,
 
   res = .Call("R_cross_validation", as.matrix(X), y, 
               as.double(K_fold), alpha, as.vector(lambdas), as.double(step_size),
-              toString(algorithm), as.integer(max_iter), as.double(tolerance), as.integer(random_seed))
+              as.integer(max_iter), as.double(tolerance), as.integer(random_seed))
   res$X = X
   res$y = y
   res$alpha = alpha
