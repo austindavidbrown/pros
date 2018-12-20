@@ -51,4 +51,3 @@ test = function() {
   print(mean((y_test - predict(cv, X_test))^2))
 
 }
-test()
