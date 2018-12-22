@@ -1,6 +1,9 @@
 Penalized Regression on Steroids
 ===========
 
+THIS PROJECT HAS MOVED TO [l-net](https://github.com/austindavidbrown/l-net/).
+
+
 Adds the ability to combine l1 to l10 penalties in regression extending the elastic-net.
 
 Python Installation
