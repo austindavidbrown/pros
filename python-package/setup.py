@@ -8,6 +8,9 @@ setup(
     author_email = "brow5079@umn.edu",
     url = "github.com/austindavidbrown/pros",
     license = "GPL3",
+    install_requires=[
+      "numpy",
+    ],
     ext_modules = [
       Extension(
       "pros",
